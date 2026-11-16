@@ -43,18 +43,20 @@ internal static class Program
         router.Map("POST", "/api/user/signout", users.SignOutAsync);
         router.Map("GET", "/api/user/me", users.MeAsync);
 
-        var staticFiles = new StaticFilesMiddleware(
+        var staticFilesMiddleware = new StaticFilesMiddleware(
             Path.Combine(AppContext.BaseDirectory, "static")
         );
 
-        var routing = new RoutingMiddleware(router);
-        var authentication = new AuthenticationMiddleware(authService);
+        var routingMiddleware = new RoutingMiddleware(router);
+        var authenticationMiddleware = new AuthenticationMiddleware(authService);
+        var csrfMiddleware = new CsrfMiddleware(new Uri(settings.Url));
 
         var pipeline = new MiddlewarePipeline()
             .Use(ErrorMiddleware.InvokeAsync)
-            .Use(staticFiles.InvokeAsync)
-            .Use(authentication.InvokeAsync)
-            .Use(routing.InvokeAsync)
+            .Use(staticFilesMiddleware.InvokeAsync)
+            .Use(csrfMiddleware.InvokeAsync)
+            .Use(authenticationMiddleware.InvokeAsync)
+            .Use(routingMiddleware.InvokeAsync)
             .Build(_ => throw new HttpException(ApiError.NotFound, ErrorMessages.PageNotFound));
 
         var server = new HttpServer(settings.Url, pipeline);

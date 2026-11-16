@@ -15,4 +15,6 @@ public static class ErrorMessages
     public const string DuplicateRoute = "Маршрут уже зарегистрирован.";
     public const string InvalidCredentials = "Неверный email или пароль.";
     public const string EmailAlreadyExists = "Пользователь с таким email уже зарегистрирован.";
+    public const string CsrfValidationFailed =
+        "Запрос отклонён: не удалось подтвердить его источник.";
 }
