@@ -39,6 +39,7 @@ internal static class Program
         var router = new Router();
         router.Map("GET", "/", pages.HomeAsync);
         router.Map("POST", "/api/user/signin", users.SignInAsync);
+        router.Map("POST", "/api/user/signup", users.SignUpAsync);
         router.Map("POST", "/api/user/signout", users.SignOutAsync);
         router.Map("GET", "/api/user/me", users.MeAsync);
 

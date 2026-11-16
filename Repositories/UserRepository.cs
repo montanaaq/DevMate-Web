@@ -5,6 +5,13 @@ namespace DevMate.Repositories;
 
 public interface IUserRepository
 {
+    Task<int?> CreateAsync(
+        string email,
+        string fullName,
+        string passwordHash,
+        CancellationToken cancellationToken
+    );
+
     Task<User?> FindByEmailAsync(string email, CancellationToken ct);
 
     Task<User?> FindByIdAsync(int userId, CancellationToken cancellationToken);
@@ -12,6 +19,23 @@ public interface IUserRepository
 
 public sealed class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
 {
+    public async Task<int?> CreateAsync(
+        string email,
+        string fullName,
+        string passwordHash,
+        CancellationToken cancellationToken
+    )
+    {
+        await using var command = dataSource.CreateCommand("SELECT public.create_user($1, $2, $3)");
+        command.Parameters.AddWithValue(email);
+        command.Parameters.AddWithValue(fullName);
+        command.Parameters.AddWithValue(passwordHash);
+
+        object? result = await command.ExecuteScalarAsync(cancellationToken);
+
+        return result is null or DBNull ? null : (int)result;
+    }
+
     public async Task<User?> FindByEmailAsync(string email, CancellationToken ct)
     {
         await using var command = dataSource.CreateCommand(

@@ -6,6 +6,13 @@ namespace DevMate.Services;
 
 public interface IAuthService
 {
+    Task<int?> RegisterAsync(
+        string email,
+        string password,
+        string fullName,
+        CancellationToken cancellationToken
+    );
+
     Task<User?> GetCurrentUserAsync(Session? session, CancellationToken cancellationToken);
 
     Task<SignInResult?> AuthenticateAsync(
@@ -32,6 +39,23 @@ public sealed class AuthService(
     private static readonly TimeSpan MaximumSessionLifetime = TimeSpan.FromDays(7);
     private const int TokenSizeInBytes = 32;
     private const int TokenLength = TokenSizeInBytes * 2;
+
+    public async Task<int?> RegisterAsync(
+        string email,
+        string password,
+        string fullName,
+        CancellationToken cancellationToken
+    )
+    {
+        string passwordHash = PasswordHasher.Hash(password);
+
+        return await userRepository.CreateAsync(
+            email.Trim(),
+            fullName.Trim(),
+            passwordHash,
+            cancellationToken
+        );
+    }
 
     public async Task<User?> GetCurrentUserAsync(
         Session? session,

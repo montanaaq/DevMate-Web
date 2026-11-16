@@ -41,6 +41,17 @@ public sealed class UserController(IAuthService authService)
         }
 
         await _signUpValidator.ValidateAndThrowAsync(request, context.CancellationToken);
+
+        int userId =
+            await authService.RegisterAsync(
+                request.Email!,
+                request.Password!,
+                request.FullName!,
+                context.CancellationToken
+            ) ?? throw new HttpException(ApiError.Conflict, ErrorMessages.EmailAlreadyExists);
+
+        context.Response.Headers["Cache-Control"] = "no-store";
+        await context.WriteJsonAsync(new { userId }, HttpStatusCode.Created);
     }
 
     public async Task SignInAsync(RequestContext context)
