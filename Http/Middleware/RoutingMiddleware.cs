@@ -1,5 +1,6 @@
 using DevMate.Http.Errors;
 using DevMate.Http.Routing;
+using DevMate.Models.Users;
 
 namespace DevMate.Http.Middleware;
 
@@ -18,6 +19,13 @@ public sealed class RoutingMiddleware(Router router)
         {
             context.Response.Headers["Allow"] = string.Join(", ", match.AllowedMethods);
             throw new HttpException(ApiError.MethodNotAllowed);
+        }
+
+        if (!match.AllowedRoles.Contains(context.Role))
+        {
+            throw new HttpException(
+                context.Role == UserRole.Guest ? ApiError.Unauthorized : ApiError.Forbidden
+            );
         }
 
         context.RouteValues = match.Values;

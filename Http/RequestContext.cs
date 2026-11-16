@@ -12,6 +12,8 @@ public sealed class RequestContext(HttpListenerContext context, CancellationToke
     public HttpListenerResponse Response => context.Response;
     public CancellationToken CancellationToken { get; } = cancellationToken;
     public Session? Session { get; internal set; }
+    public User? User { get; internal set; }
+    public UserRole Role => User?.Role ?? UserRole.Guest;
     public string Path => Request.Url?.AbsolutePath ?? "/";
     public bool HasStarted { get; private set; }
     public IReadOnlyDictionary<string, string> RouteValues { get; internal set; } =

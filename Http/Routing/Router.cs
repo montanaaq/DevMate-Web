@@ -1,4 +1,5 @@
 using DevMate.Http.Errors;
+using DevMate.Models.Users;
 
 namespace DevMate.Http.Routing;
 
@@ -6,11 +7,17 @@ public sealed class Router
 {
     private readonly List<Entry> _entries = [];
 
-    public void Map(string method, string template, RequestDelegate handler)
+    public void Map(
+        string method,
+        string template,
+        RequestDelegate handler,
+        params UserRole[] allowedRoles
+    )
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(method);
         ArgumentException.ThrowIfNullOrWhiteSpace(template);
         ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(allowedRoles);
 
         if (!template.StartsWith('/') || template.Contains('?') || template.Contains('#'))
         {
@@ -29,7 +36,10 @@ public sealed class Router
             throw new InvalidOperationException(ErrorMessages.DuplicateRoute);
         }
 
-        _entries.Add(new Entry(method, segments, pattern, handler));
+        var roles =
+            allowedRoles.Length == 0 ? [UserRole.User, UserRole.Admin] : allowedRoles.ToArray();
+
+        _entries.Add(new Entry(method, segments, pattern, handler, roles));
         _entries.Sort(
             (left, right) =>
                 left.Segments.Count(IsParameter).CompareTo(right.Segments.Count(IsParameter))
@@ -74,13 +84,13 @@ public sealed class Router
             allowed.Add(entry.Method);
             if (entry.Method == method)
             {
-                return new RouteMatch(entry.Handler, values, []);
+                return new RouteMatch(entry.Handler, values, [], entry.AllowedRoles);
             }
 
             if (entry.Method == "GET")
             {
                 allowed.Add("HEAD");
-                headFallback ??= new RouteMatch(entry.Handler, values, []);
+                headFallback ??= new RouteMatch(entry.Handler, values, [], entry.AllowedRoles);
             }
         }
 
@@ -91,7 +101,7 @@ public sealed class Router
 
         return allowed.Count == 0
             ? null
-            : new RouteMatch(null, new Dictionary<string, string>(), allowed.ToArray());
+            : new RouteMatch(null, new Dictionary<string, string>(), allowed.ToArray(), []);
     }
 
     private static string[] Split(string path) =>

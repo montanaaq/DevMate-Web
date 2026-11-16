@@ -10,15 +10,19 @@ public sealed class AuthenticationMiddleware(IAuthService authService)
 
         if (!string.IsNullOrEmpty(token))
         {
-            var (Session, Renewed) = await authService.FindSessionAsync(
+            var (session, renewed) = await authService.FindSessionAsync(
                 token,
                 context.CancellationToken
             );
-            context.Session = Session;
+            context.User = await authService.GetCurrentUserAsync(
+                session,
+                context.CancellationToken
+            );
+            context.Session = context.User is null ? null : session;
 
-            if (Renewed && Session is not null)
+            if (renewed && context.Session is not null)
             {
-                SessionCookie.Set(context, token, Session.ExpiresAt);
+                SessionCookie.Set(context, token, context.Session.ExpiresAt);
             }
         }
 

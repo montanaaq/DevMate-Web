@@ -99,6 +99,7 @@ public sealed class UserController(IAuthService authService)
         await authService.SignOutAsync(token, context.CancellationToken);
 
         context.Session = null;
+        context.User = null;
         SessionCookie.Delete(context);
         context.Response.StatusCode = (int)HttpStatusCode.NoContent;
     }
@@ -107,9 +108,7 @@ public sealed class UserController(IAuthService authService)
     {
         context.Response.Headers["Cache-Control"] = "no-store";
 
-        var user =
-            await authService.GetCurrentUserAsync(context.Session, context.CancellationToken)
-            ?? throw new HttpException(ApiError.Unauthorized);
+        var user = context.User ?? throw new HttpException(ApiError.Unauthorized);
 
         await context.WriteJsonAsync(
             new

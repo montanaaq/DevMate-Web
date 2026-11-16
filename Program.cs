@@ -5,6 +5,7 @@ using DevMate.Http;
 using DevMate.Http.Errors;
 using DevMate.Http.Middleware;
 using DevMate.Http.Routing;
+using DevMate.Models.Users;
 using DevMate.Repositories;
 using DevMate.Services;
 using FluentValidation;
@@ -37,10 +38,11 @@ internal static class Program
         var pages = new PagesController(Path.Combine(AppContext.BaseDirectory, "Views"));
 
         var router = new Router();
-        router.Map("GET", "/", pages.HomeAsync);
-        router.Map("POST", "/api/user/signin", users.SignInAsync);
-        router.Map("POST", "/api/user/signup", users.SignUpAsync);
-        router.Map("POST", "/api/user/signout", users.SignOutAsync);
+        UserRole[] publicRoles = [UserRole.Guest, UserRole.User, UserRole.Admin];
+        router.Map("GET", "/", pages.HomeAsync, publicRoles);
+        router.Map("POST", "/api/user/signin", users.SignInAsync, publicRoles);
+        router.Map("POST", "/api/user/signup", users.SignUpAsync, publicRoles);
+        router.Map("POST", "/api/user/signout", users.SignOutAsync, publicRoles);
         router.Map("GET", "/api/user/me", users.MeAsync);
 
         var staticFilesMiddleware = new StaticFilesMiddleware(
