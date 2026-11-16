@@ -13,4 +13,5 @@ public static class ErrorMessages
     public const string InvalidRouteTemplate =
         "Шаблон маршрута должен начинаться с / и не содержать ? или #.";
     public const string DuplicateRoute = "Маршрут уже зарегистрирован.";
+    public const string InvalidCredentials = "Неверный email или пароль.";
 }

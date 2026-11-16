@@ -5,6 +5,8 @@ using DevMate.Http;
 using DevMate.Http.Errors;
 using DevMate.Http.Middleware;
 using DevMate.Http.Routing;
+using DevMate.Repositories;
+using DevMate.Services;
 using FluentValidation;
 
 namespace DevMate;
@@ -26,6 +28,10 @@ internal static class Program
         await using var dataSource = DatabaseSettings.CreateDataSource(
             settings.DatabaseConnectionString
         );
+
+        var userRepository = new UserRepository(dataSource);
+        var authService = new AuthService(userRepository);
+        var users = new UserController(authService);
 
         var pages = new PagesController(Path.Combine(AppContext.BaseDirectory, "Views"));
 
