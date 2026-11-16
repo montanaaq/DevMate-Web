@@ -6,6 +6,8 @@ namespace DevMate.Services;
 
 public interface IAuthService
 {
+    Task<User?> GetCurrentUserAsync(Session? session, CancellationToken cancellationToken);
+
     Task<SignInResult?> AuthenticateAsync(
         string email,
         string password,
@@ -30,6 +32,19 @@ public sealed class AuthService(
     private static readonly TimeSpan MaximumSessionLifetime = TimeSpan.FromDays(7);
     private const int TokenSizeInBytes = 32;
     private const int TokenLength = TokenSizeInBytes * 2;
+
+    public async Task<User?> GetCurrentUserAsync(
+        Session? session,
+        CancellationToken cancellationToken
+    )
+    {
+        if (session is null)
+        {
+            return null;
+        }
+
+        return await userRepository.FindByIdAsync(session.UserId, cancellationToken);
+    }
 
     public async Task<SignInResult?> AuthenticateAsync(
         string email,

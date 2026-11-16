@@ -96,8 +96,18 @@ public sealed class UserController(IAuthService authService)
     {
         context.Response.Headers["Cache-Control"] = "no-store";
 
-        var session = context.Session ?? throw new HttpException(ApiError.Unauthorized);
+        var user =
+            await authService.GetCurrentUserAsync(context.Session, context.CancellationToken)
+            ?? throw new HttpException(ApiError.Unauthorized);
 
-        await context.WriteJsonAsync(new { userId = session.UserId });
+        await context.WriteJsonAsync(
+            new
+            {
+                userId = user.Id,
+                email = user.Email,
+                fullName = user.FullName,
+                role = user.Role.ToString().ToLowerInvariant(),
+            }
+        );
     }
 }

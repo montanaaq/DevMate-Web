@@ -6,6 +6,8 @@ namespace DevMate.Repositories;
 public interface IUserRepository
 {
     Task<User?> FindByEmailAsync(string email, CancellationToken ct);
+
+    Task<User?> FindByIdAsync(int userId, CancellationToken cancellationToken);
 }
 
 public sealed class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
@@ -19,7 +21,27 @@ public sealed class UserRepository(NpgsqlDataSource dataSource) : IUserRepositor
 
         await using var reader = await command.ExecuteReaderAsync(ct);
 
-        if (!await reader.ReadAsync(ct))
+        return await ReadUserAsync(reader, ct);
+    }
+
+    public async Task<User?> FindByIdAsync(int userId, CancellationToken cancellationToken)
+    {
+        await using var command = dataSource.CreateCommand(
+            "SELECT * FROM public.find_user_by_id($1)"
+        );
+        command.Parameters.AddWithValue(userId);
+
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+        return await ReadUserAsync(reader, cancellationToken);
+    }
+
+    private static async Task<User?> ReadUserAsync(
+        NpgsqlDataReader reader,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!await reader.ReadAsync(cancellationToken))
         {
             return null;
         }
