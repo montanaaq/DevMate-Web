@@ -6,7 +6,7 @@ public sealed class PagesController(string viewsDirectory)
 {
     public async Task HomeAsync(RequestContext context)
     {
-        var html = await File.ReadAllTextAsync(
+        string html = await File.ReadAllTextAsync(
             Path.Combine(viewsDirectory, "Home.html"),
             context.CancellationToken
         );

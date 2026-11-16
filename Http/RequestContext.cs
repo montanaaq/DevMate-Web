@@ -56,7 +56,7 @@ public sealed class RequestContext(HttpListenerContext context, CancellationToke
             return WriteJsonAsync(new { error = message }, statusCode);
         }
 
-        var html = $$"""
+        string html = $$"""
             <!DOCTYPE html>
             <html lang="ru">
             <head>

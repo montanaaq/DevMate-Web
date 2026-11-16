@@ -14,4 +14,9 @@ public static class ErrorMessages
     public const string InvalidRouteTemplate =
         "Шаблон маршрута должен начинаться с / и не содержать ? или #.";
     public const string DuplicateRoute = "Маршрут уже зарегистрирован.";
+    public const string InvalidEnvironmentFile = "Некорректная запись в .env, строка {0}.";
+    public const string MissingEnvironmentVariable = "Не задана переменная окружения {0}.";
+    public const string InvalidDatabasePort = "POSTGRES_PORT должен быть числом от 1 до 65535.";
+    public const string DatabaseConnectionFailed =
+        "Не удалось подключиться к PostgreSQL. Проверьте настройки .env и доступность сервера.";
 }

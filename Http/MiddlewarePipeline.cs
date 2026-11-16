@@ -14,7 +14,7 @@ public sealed class MiddlewarePipeline
     {
         var pipeline = endpoint;
 
-        for (var index = _middlewares.Count - 1; index >= 0; index--)
+        for (int index = _middlewares.Count - 1; index >= 0; index--)
         {
             var middleware = _middlewares[index];
             var next = pipeline;

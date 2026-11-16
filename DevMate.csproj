@@ -13,4 +13,9 @@
       CopyToPublishDirectory="PreserveNewest"
     />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="3.2.0" />
+    <PackageReference Include="Npgsql" Version="10.0.3" />
+  </ItemGroup>
 </Project>
