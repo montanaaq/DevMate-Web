@@ -19,6 +19,8 @@ public interface ISessionRepository
         DateTime expiresAt,
         CancellationToken cancellationToken
     );
+
+    Task RevokeAsync(byte[] tokenHash, CancellationToken cancellationToken);
 }
 
 public sealed class SessionRepository(NpgsqlDataSource dataSource) : ISessionRepository
@@ -73,6 +75,14 @@ public sealed class SessionRepository(NpgsqlDataSource dataSource) : ISessionRep
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 
         return await ReadSessionAsync(reader, cancellationToken);
+    }
+
+    public async Task RevokeAsync(byte[] tokenHash, CancellationToken cancellationToken)
+    {
+        await using var command = dataSource.CreateCommand("SELECT public.revoke_session($1)");
+        command.Parameters.AddWithValue(tokenHash);
+
+        await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
     private static async Task<Session?> ReadSessionAsync(

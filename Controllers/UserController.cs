@@ -82,6 +82,16 @@ public sealed class UserController(IAuthService authService)
         context.Response.StatusCode = (int)HttpStatusCode.NoContent;
     }
 
+    public async Task SignOutAsync(RequestContext context)
+    {
+        string? token = context.Request.Cookies[SessionCookie.Name]?.Value;
+        await authService.SignOutAsync(token, context.CancellationToken);
+
+        context.Session = null;
+        SessionCookie.Delete(context);
+        context.Response.StatusCode = (int)HttpStatusCode.NoContent;
+    }
+
     public async Task MeAsync(RequestContext context)
     {
         context.Response.Headers["Cache-Control"] = "no-store";

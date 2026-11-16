@@ -50,3 +50,14 @@ AS $$
       AND s.revoked_at IS NULL
     RETURNING s.*;
 $$;
+
+CREATE OR REPLACE FUNCTION public.revoke_session(session_token_hash BYTEA)
+RETURNS VOID
+LANGUAGE sql
+VOLATILE
+AS $$
+    UPDATE public.sessions AS s
+    SET revoked_at = clock_timestamp()
+    WHERE s.token_hash = session_token_hash
+      AND s.revoked_at IS NULL;
+$$;

@@ -4,6 +4,11 @@ public static class SessionCookie
 {
     public const string Name = "auth_session";
 
+    public static void Delete(RequestContext context)
+    {
+        Set(context, string.Empty, DateTime.UnixEpoch);
+    }
+
     public static void Set(RequestContext context, string token, DateTime expiresAt)
     {
         context.Response.Headers["Set-Cookie"] =

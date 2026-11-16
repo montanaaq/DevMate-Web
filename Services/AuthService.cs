@@ -16,6 +16,8 @@ public interface IAuthService
         string token,
         CancellationToken cancellationToken
     );
+
+    Task SignOutAsync(string? token, CancellationToken cancellationToken);
 }
 
 public sealed class AuthService(
@@ -64,23 +66,12 @@ public sealed class AuthService(
     {
         bool renewed = false;
 
-        if (token.Length != TokenLength)
+        byte[]? tokenHash = HashToken(token);
+
+        if (tokenHash is null)
         {
             return (null, renewed);
         }
-
-        byte[] tokenBytes;
-
-        try
-        {
-            tokenBytes = Convert.FromHexString(token);
-        }
-        catch (FormatException)
-        {
-            return (null, renewed);
-        }
-
-        byte[] tokenHash = SHA256.HashData(tokenBytes);
 
         var session = await sessionRepository.FindByTokenHashAsync(tokenHash, cancellationToken);
         var now = DateTime.UtcNow;
@@ -117,5 +108,36 @@ public sealed class AuthService(
         renewed = renewedSession is not null;
 
         return (renewedSession, renewed);
+    }
+
+    public async Task SignOutAsync(string? token, CancellationToken cancellationToken)
+    {
+        byte[]? tokenHash = HashToken(token);
+
+        if (tokenHash is not null)
+        {
+            await sessionRepository.RevokeAsync(tokenHash, cancellationToken);
+        }
+    }
+
+    private static byte[]? HashToken(string? token)
+    {
+        if (token is null || token.Length != TokenLength)
+        {
+            return null;
+        }
+
+        byte[] tokenBytes;
+
+        try
+        {
+            tokenBytes = Convert.FromHexString(token);
+        }
+        catch (FormatException)
+        {
+            return null;
+        }
+
+        return SHA256.HashData(tokenBytes);
     }
 }
