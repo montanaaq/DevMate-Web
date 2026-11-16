@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using DevMate.Http.Errors;
+using DevMate.Models.Users;
 
 namespace DevMate.Http;
 
@@ -10,6 +11,7 @@ public sealed class RequestContext(HttpListenerContext context, CancellationToke
     public HttpListenerRequest Request => context.Request;
     public HttpListenerResponse Response => context.Response;
     public CancellationToken CancellationToken { get; } = cancellationToken;
+    public Session? Session { get; internal set; }
     public string Path => Request.Url?.AbsolutePath ?? "/";
     public bool HasStarted { get; private set; }
     public IReadOnlyDictionary<string, string> RouteValues { get; internal set; } =

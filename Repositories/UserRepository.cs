@@ -3,7 +3,12 @@ using Npgsql;
 
 namespace DevMate.Repositories;
 
-public sealed class UserRepository(NpgsqlDataSource dataSource)
+public interface IUserRepository
+{
+    Task<User?> FindByEmailAsync(string email, CancellationToken ct);
+}
+
+public sealed class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
 {
     public async Task<User?> FindByEmailAsync(string email, CancellationToken ct)
     {

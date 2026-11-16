@@ -30,23 +30,28 @@ internal static class Program
         );
 
         var userRepository = new UserRepository(dataSource);
-        var authService = new AuthService(userRepository);
+        var sessionRepository = new SessionRepository(dataSource);
+        var authService = new AuthService(userRepository, sessionRepository);
         var users = new UserController(authService);
 
         var pages = new PagesController(Path.Combine(AppContext.BaseDirectory, "Views"));
 
         var router = new Router();
         router.Map("GET", "/", pages.HomeAsync);
+        router.Map("POST", "/api/user/signin", users.SignInAsync);
+        router.Map("GET", "/api/user/me", users.MeAsync);
 
         var staticFiles = new StaticFilesMiddleware(
             Path.Combine(AppContext.BaseDirectory, "static")
         );
 
         var routing = new RoutingMiddleware(router);
+        var authentication = new AuthenticationMiddleware(authService);
 
         var pipeline = new MiddlewarePipeline()
             .Use(ErrorMiddleware.InvokeAsync)
             .Use(staticFiles.InvokeAsync)
+            .Use(authentication.InvokeAsync)
             .Use(routing.InvokeAsync)
             .Build(_ => throw new HttpException(ApiError.NotFound, ErrorMessages.PageNotFound));
 

@@ -1,11 +1,35 @@
+using System.Security.Cryptography;
 using DevMate.Models.Users;
 using DevMate.Repositories;
 
 namespace DevMate.Services;
 
-public sealed class AuthService(UserRepository userRepository) : IAuthService
+public interface IAuthService
 {
-    public async Task<User?> AuthenticateAsync(
+    Task<SignInResult?> AuthenticateAsync(
+        string email,
+        string password,
+        CancellationToken cancellationToken
+    );
+
+    Task<(Session? Session, bool Renewed)> FindSessionAsync(
+        string token,
+        CancellationToken cancellationToken
+    );
+}
+
+public sealed class AuthService(
+    IUserRepository userRepository,
+    ISessionRepository sessionRepository
+) : IAuthService
+{
+    private static readonly TimeSpan SessionLifetime = TimeSpan.FromHours(24);
+    private static readonly TimeSpan SessionRenewalThreshold = TimeSpan.FromHours(12);
+    private static readonly TimeSpan MaximumSessionLifetime = TimeSpan.FromDays(7);
+    private const int TokenSizeInBytes = 32;
+    private const int TokenLength = TokenSizeInBytes * 2;
+
+    public async Task<SignInResult?> AuthenticateAsync(
         string email,
         string password,
         CancellationToken cancellationToken
@@ -23,6 +47,75 @@ public sealed class AuthService(UserRepository userRepository) : IAuthService
             return null;
         }
 
-        return user;
+        byte[] tokenBytes = RandomNumberGenerator.GetBytes(TokenSizeInBytes);
+        string token = Convert.ToHexStringLower(tokenBytes);
+        byte[] tokenHash = SHA256.HashData(tokenBytes);
+        var expiresAt = DateTime.UtcNow.Add(SessionLifetime);
+
+        await sessionRepository.CreateAsync(user.Id, tokenHash, expiresAt, cancellationToken);
+
+        return new SignInResult(user, token, expiresAt);
+    }
+
+    public async Task<(Session? Session, bool Renewed)> FindSessionAsync(
+        string token,
+        CancellationToken cancellationToken
+    )
+    {
+        bool renewed = false;
+
+        if (token.Length != TokenLength)
+        {
+            return (null, renewed);
+        }
+
+        byte[] tokenBytes;
+
+        try
+        {
+            tokenBytes = Convert.FromHexString(token);
+        }
+        catch (FormatException)
+        {
+            return (null, renewed);
+        }
+
+        byte[] tokenHash = SHA256.HashData(tokenBytes);
+
+        var session = await sessionRepository.FindByTokenHashAsync(tokenHash, cancellationToken);
+        var now = DateTime.UtcNow;
+
+        if (
+            session is null
+            || session.RevokedAt is not null
+            || session.ExpiresAt <= now
+            || session.CreatedAt.Add(MaximumSessionLifetime) <= now
+        )
+        {
+            return (null, renewed);
+        }
+
+        var maximumExpiresAt = session.CreatedAt.Add(MaximumSessionLifetime);
+        var expiresAt = now.Add(SessionLifetime);
+
+        if (expiresAt > maximumExpiresAt)
+        {
+            expiresAt = maximumExpiresAt;
+        }
+
+        if (session.ExpiresAt - now > SessionRenewalThreshold || expiresAt <= session.ExpiresAt)
+        {
+            return (session, renewed);
+        }
+
+        var renewedSession = await sessionRepository.RenewAsync(
+            session.Id,
+            expiresAt,
+            cancellationToken
+        );
+
+        renewed = renewedSession is not null;
+
+        return (renewedSession, renewed);
     }
 }

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json;
 using DevMate.Http;
 using DevMate.Http.Errors;
@@ -70,11 +71,23 @@ public sealed class UserController(IAuthService authService)
 
         await _signInValidator.ValidateAndThrowAsync(request, context.CancellationToken);
 
-        var user =
+        var result =
             await authService.AuthenticateAsync(
                 request.Email!,
                 request.Password!,
                 context.CancellationToken
             ) ?? throw new HttpException(ApiError.Unauthorized, ErrorMessages.InvalidCredentials);
+
+        SessionCookie.Set(context, result.Token, result.ExpiresAt);
+        context.Response.StatusCode = (int)HttpStatusCode.NoContent;
+    }
+
+    public async Task MeAsync(RequestContext context)
+    {
+        context.Response.Headers["Cache-Control"] = "no-store";
+
+        var session = context.Session ?? throw new HttpException(ApiError.Unauthorized);
+
+        await context.WriteJsonAsync(new { userId = session.UserId });
     }
 }
