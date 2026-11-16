@@ -49,11 +49,14 @@ public sealed class RequestContext(HttpListenerContext context, CancellationToke
         }
     }
 
-    public Task WriteErrorAsync(HttpStatusCode statusCode, string message)
+    public Task WriteErrorAsync(ApiError error, string? message = null)
     {
+        HttpStatusCode statusCode = error.StatusCode;
+        message ??= error.Message;
+
         if (Path.StartsWith("/api/", StringComparison.Ordinal))
         {
-            return WriteJsonAsync(new { error = message }, statusCode);
+            return WriteJsonAsync(new { code = error.Code, message }, statusCode);
         }
 
         string html = $$"""

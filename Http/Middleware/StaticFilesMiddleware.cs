@@ -1,4 +1,3 @@
-using System.Net;
 using DevMate.Shared.Constants;
 
 namespace DevMate.Http.Middleware;
@@ -32,11 +31,7 @@ public sealed class StaticFilesMiddleware(string root)
         if (context.Request.HttpMethod is not ("GET" or "HEAD"))
         {
             context.Response.Headers["Allow"] = "GET, HEAD";
-            await context.WriteErrorAsync(
-                HttpStatusCode.MethodNotAllowed,
-                ErrorMessages.MethodNotAllowed
-            );
-            return;
+            throw new HttpException(ApiError.MethodNotAllowed);
         }
 
         try
@@ -48,8 +43,7 @@ public sealed class StaticFilesMiddleware(string root)
                 || !ContentTypes.TryGetValue(Path.GetExtension(path), out var contentType)
             )
             {
-                await context.WriteErrorAsync(HttpStatusCode.NotFound, ErrorMessages.FileNotFound);
-                return;
+                throw new HttpException(ApiError.NotFound, ErrorMessages.FileNotFound);
             }
 
             await context.WriteFileAsync(path, contentType);
@@ -57,7 +51,7 @@ public sealed class StaticFilesMiddleware(string root)
         catch (Exception exception)
             when (exception is FileNotFoundException or DirectoryNotFoundException)
         {
-            await context.WriteErrorAsync(HttpStatusCode.NotFound, ErrorMessages.FileNotFound);
+            throw new HttpException(ApiError.NotFound, ErrorMessages.FileNotFound, exception);
         }
     }
 
@@ -74,7 +68,6 @@ public sealed class StaticFilesMiddleware(string root)
 
         string path = Path.GetFullPath(root);
 
-        // Include the static root itself in the symbolic-link check.
         foreach (string segment in segments.Prepend(string.Empty))
         {
             path = Path.Combine(path, segment);

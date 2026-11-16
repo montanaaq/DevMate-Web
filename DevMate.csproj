@@ -7,15 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None
-      Update="Views/**/*;static/**/*"
-      CopyToOutputDirectory="PreserveNewest"
-      CopyToPublishDirectory="PreserveNewest"
-    />
+    <None Update="Views/**/*;static/**/*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.2.0" />
+    <PackageReference Include="FluentValidation" Version="12.2.0" />
     <PackageReference Include="Npgsql" Version="10.0.3" />
   </ItemGroup>
 </Project>

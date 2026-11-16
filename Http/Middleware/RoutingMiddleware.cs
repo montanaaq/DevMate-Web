@@ -1,6 +1,3 @@
-using System.Net;
-using DevMate.Shared.Constants;
-
 namespace DevMate.Http.Middleware;
 
 public sealed class RoutingMiddleware(Router router)
@@ -17,11 +14,7 @@ public sealed class RoutingMiddleware(Router router)
         if (match.Handler is null)
         {
             context.Response.Headers["Allow"] = string.Join(", ", match.AllowedMethods);
-            await context.WriteErrorAsync(
-                HttpStatusCode.MethodNotAllowed,
-                ErrorMessages.MethodNotAllowed
-            );
-            return;
+            throw new HttpException(ApiError.MethodNotAllowed);
         }
 
         context.RouteValues = match.Values;

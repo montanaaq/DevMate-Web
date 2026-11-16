@@ -1,0 +1,35 @@
+using DevMate.Models.Requests;
+using FluentValidation;
+
+namespace DevMate.Validators;
+
+public sealed class SignUpRequestValidator : AbstractValidator<SignUpRequest>
+{
+    public SignUpRequestValidator()
+    {
+        RuleLevelCascadeMode = CascadeMode.Stop;
+
+        RuleFor(request => request.Email)
+            .NotEmpty()
+            .WithErrorCode("required")
+            .MaximumLength(254)
+            .WithErrorCode("too_long")
+            .EmailAddress()
+            .WithErrorCode("invalid_email")
+            .WithName("Email");
+
+        RuleFor(request => request.Password)
+            .NotEmpty()
+            .WithErrorCode("required")
+            .Length(15, 128)
+            .WithErrorCode("invalid_length")
+            .WithName("Пароль");
+
+        RuleFor(request => request.FullName)
+            .NotEmpty()
+            .WithErrorCode("required")
+            .MaximumLength(200)
+            .WithErrorCode("too_long")
+            .WithName("Имя");
+    }
+}

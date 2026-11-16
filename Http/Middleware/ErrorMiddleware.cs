@@ -1,5 +1,7 @@
 using System.Net;
+using System.Text.Json;
 using DevMate.Shared.Constants;
+using FluentValidation;
 
 namespace DevMate.Http.Middleware;
 
@@ -14,6 +16,33 @@ public static class ErrorMiddleware
         catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
         {
             throw;
+        }
+        catch (HttpException exception) when (!context.HasStarted)
+        {
+            await context.WriteErrorAsync(exception.Error);
+        }
+        catch (ValidationException exception) when (!context.HasStarted)
+        {
+            if (!context.Path.StartsWith("/api/", StringComparison.Ordinal))
+            {
+                await context.WriteErrorAsync(ApiError.BadRequest, ErrorMessages.ValidationFailed);
+                return;
+            }
+
+            await context.WriteJsonAsync(
+                new
+                {
+                    code = ApiError.BadRequest.Code,
+                    message = ErrorMessages.ValidationFailed,
+                    errors = exception.Errors.Select(error => new
+                    {
+                        field = JsonNamingPolicy.CamelCase.ConvertName(error.PropertyName),
+                        code = error.ErrorCode,
+                        message = error.ErrorMessage,
+                    }),
+                },
+                ApiError.BadRequest.StatusCode
+            );
         }
         catch (ObjectDisposedException exception)
             when (exception.ObjectName == typeof(HttpListenerResponse).FullName)
@@ -30,10 +59,7 @@ public static class ErrorMiddleware
                 return;
             }
 
-            await context.WriteErrorAsync(
-                HttpStatusCode.InternalServerError,
-                ErrorMessages.RequestFailed
-            );
+            await context.WriteErrorAsync(ApiError.InternalServerError);
         }
     }
 }

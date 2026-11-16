@@ -1,10 +1,10 @@
-using System.Net;
+using System.Globalization;
 using DevMate.Configuration;
 using DevMate.Controllers;
 using DevMate.Http;
 using DevMate.Http.Middleware;
 using DevMate.Shared.Constants;
-using Superpower;
+using FluentValidation;
 
 namespace DevMate;
 
@@ -12,6 +12,8 @@ internal static class Program
 {
     private static async Task Main()
     {
+        ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("ru");
+
         using var cancellation = new CancellationTokenSource();
         Console.CancelKeyPress += (_, args) =>
         {
@@ -39,9 +41,7 @@ internal static class Program
             .Use(ErrorMiddleware.InvokeAsync)
             .Use(staticFiles.InvokeAsync)
             .Use(routing.InvokeAsync)
-            .Build(context =>
-                context.WriteErrorAsync(HttpStatusCode.NotFound, ErrorMessages.PageNotFound)
-            );
+            .Build(_ => throw new HttpException(ApiError.NotFound, ErrorMessages.PageNotFound));
 
         var server = new HttpServer(settings.Url, pipeline);
         await server.RunAsync(cancellation.Token);
