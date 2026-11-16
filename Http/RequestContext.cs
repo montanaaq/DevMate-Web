@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using DevMate.Http.Errors;
 
 namespace DevMate.Http;
 

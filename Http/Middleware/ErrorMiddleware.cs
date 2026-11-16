@@ -1,6 +1,6 @@
 using System.Net;
 using System.Text.Json;
-using DevMate.Shared.Constants;
+using DevMate.Http.Errors;
 using FluentValidation;
 
 namespace DevMate.Http.Middleware;

@@ -1,4 +1,7 @@
-using DevMate.Models.Enums;
+using DevMate.Models.Applications;
+using DevMate.Models.Invitations;
+using DevMate.Models.Teams;
+using DevMate.Models.Users;
 using Npgsql;
 
 namespace DevMate.Configuration;

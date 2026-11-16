@@ -2,8 +2,9 @@ using System.Globalization;
 using DevMate.Configuration;
 using DevMate.Controllers;
 using DevMate.Http;
+using DevMate.Http.Errors;
 using DevMate.Http.Middleware;
-using DevMate.Shared.Constants;
+using DevMate.Http.Routing;
 using FluentValidation;
 
 namespace DevMate;

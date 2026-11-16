@@ -1,10 +1,13 @@
-using DevMate.Shared.Constants;
 using Npgsql;
 
 namespace DevMate.Configuration;
 
 public sealed class AppSettings(string url, string databaseConnectionString)
 {
+    private const string InvalidUrl = "Неверный url";
+    private const string InvalidDatabasePort = "POSTGRES_PORT должен быть числом от 1 до 65535.";
+    private const string MissingEnvironmentVariable = "Не задана переменная окружения {0}.";
+
     public string Url { get; } = url;
     public string DatabaseConnectionString { get; } = databaseConnectionString;
 
@@ -21,7 +24,7 @@ public sealed class AppSettings(string url, string databaseConnectionString)
             || url.Fragment.Length != 0
         )
         {
-            throw new ArgumentException(ErrorMessages.InvalidUrl);
+            throw new ArgumentException(InvalidUrl);
         }
 
         if (
@@ -29,7 +32,7 @@ public sealed class AppSettings(string url, string databaseConnectionString)
             || port is < 1 or > 65535
         )
         {
-            throw new ArgumentException(ErrorMessages.InvalidDatabasePort);
+            throw new ArgumentException(InvalidDatabasePort);
         }
 
         var connectionString = new NpgsqlConnectionStringBuilder
@@ -49,9 +52,7 @@ public sealed class AppSettings(string url, string databaseConnectionString)
         string? value = Environment.GetEnvironmentVariable(name);
         if (string.IsNullOrWhiteSpace(value))
         {
-            throw new InvalidOperationException(
-                string.Format(ErrorMessages.MissingEnvironmentVariable, name)
-            );
+            throw new InvalidOperationException(string.Format(MissingEnvironmentVariable, name));
         }
 
         return value;

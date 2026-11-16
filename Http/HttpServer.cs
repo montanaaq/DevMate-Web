@@ -1,5 +1,5 @@
 using System.Net;
-using DevMate.Shared.Constants;
+using DevMate.Http.Errors;
 
 namespace DevMate.Http;
 

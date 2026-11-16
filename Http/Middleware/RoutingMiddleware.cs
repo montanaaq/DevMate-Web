@@ -1,3 +1,6 @@
+using DevMate.Http.Errors;
+using DevMate.Http.Routing;
+
 namespace DevMate.Http.Middleware;
 
 public sealed class RoutingMiddleware(Router router)
