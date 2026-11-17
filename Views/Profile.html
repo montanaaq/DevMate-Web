@@ -1,17 +1,22 @@
 <!doctype html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Profile — skill_issue</title>
         <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
         <link
-            rel="stylesheet"
-            href="/static/vendor/bootstrap/bootstrap.min.css"
+            rel="preload"
+            href="/static/fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular-Web.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
         />
         <link rel="stylesheet" href="/static/css/fonts.css" />
         <link rel="stylesheet" href="/static/css/variables.css" />
         <link rel="stylesheet" href="/static/css/base.css" />
+        <link rel="stylesheet" href="/static/css/ui.css" />
+        <script type="module" src="/static/js/shared/dither-background.js"></script>
         <script type="module" src="/static/js/pages/profile/index.js"></script>
     </head>
     <body>
@@ -38,40 +43,36 @@
                 <a class="back-link" href="/">← Home</a>
             </div>
         </header>
-        <main class="container py-5">
-            <div class="row">
-                <div class="col-lg-6 mx-auto">
-                    <h1 id="content" tabindex="-1">Profile</h1>
-                    <noscript
-                        ><p class="alert alert-warning">
-                            Enable JavaScript to view your profile.
-                        </p></noscript
-                    >
-                    <p
-                        class="alert alert-danger"
-                        id="account-error"
-                        tabindex="-1"
-                        role="alert"
-                        hidden
-                    ></p>
-                    <dl class="my-4" data-profile hidden>
-                        <dt>Full name</dt>
-                        <dd class="mb-4" data-profile-name></dd>
-                        <dt>Email</dt>
-                        <dd class="mb-4" data-profile-email></dd>
-                        <dt>Role</dt>
-                        <dd class="text-capitalize" data-profile-role></dd>
-                    </dl>
-                    <button
-                        class="btn btn-outline-danger"
-                        type="button"
-                        data-signout
-                        disabled
-                    >
-                        Sign out
-                    </button>
-                </div>
-            </div>
+        <main class="page-main profile-main">
+            <h1 id="content" tabindex="-1">Profile</h1>
+            <noscript
+                ><p class="alert alert-warning">
+                    Enable JavaScript to view your profile.
+                </p></noscript
+            >
+            <p
+                class="alert alert-danger"
+                id="account-error"
+                tabindex="-1"
+                role="alert"
+                hidden
+            ></p>
+            <dl class="my-4" data-profile hidden>
+                <dt>Full name</dt>
+                <dd class="mb-4" data-profile-name></dd>
+                <dt>Email</dt>
+                <dd class="mb-4" data-profile-email></dd>
+                <dt>Role</dt>
+                <dd class="text-capitalize" data-profile-role></dd>
+            </dl>
+            <button
+                class="btn btn-outline-danger"
+                type="button"
+                data-signout
+                disabled
+            >
+                Sign out
+            </button>
         </main>
     </body>
 </html>

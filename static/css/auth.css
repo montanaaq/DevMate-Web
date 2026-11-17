@@ -25,35 +25,7 @@
     font-size: 1.125em;
 }
 
-.form-control {
-    padding: 0.75rem 1rem;
-    border-color: var(--dm-input-border);
-    color: var(--dm-text);
-    background-color: var(--dm-surface);
-    font-size: max(1rem, 1em);
-}
-
-.form-control::placeholder {
-    color: var(--dm-text-muted);
-    opacity: 1;
-}
-
-.form-control:focus {
-    border-color: var(--dm-accent);
-    color: var(--dm-text);
-    background-color: var(--dm-surface);
-    box-shadow: none;
-}
-
-.form-control.is-invalid {
-    background-image: none;
-}
-
 .password-toggle {
     margin-block-start: 0.5rem;
     padding-inline: 0;
-}
-
-.form-control.is-invalid:focus {
-    box-shadow: none;
 }

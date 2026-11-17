@@ -1,17 +1,33 @@
-# Источник шрифтов
+# Font source
 
-Семейство: JetBrainsMono Nerd Font Mono. JetBrains Mono 2.304, Nerd Fonts 3.5.1.
+Family: JetBrainsMono Nerd Font Mono. JetBrains Mono 2.304, Nerd Fonts 3.5.1.
 
-Официальный архив:
+Official archive:
 https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz
 
-SHA-256 скачанного архива: `04d5e8f903693f9dd13e16f867e994834e681eb3c72c0d337a770dcda09010cf`.
+Archive SHA-256: `04d5e8f903693f9dd13e16f867e994834e681eb3c72c0d337a770dcda09010cf`.
 
-Из архива выбраны Mono Regular (400), Medium (500), SemiBold (600).
-Исходные TTF преобразованы в WOFF2 через fontTools 4.65.0 / Brotli 1.2.1
-без изменения имён, контуров, набора символов и метрик. Полный набор кириллицы
-и символов Nerd Fonts сохранён. Отношение x-height к em: 0.55.
+Mono Regular (400), Medium (500), and SemiBold (600) are subsetted into the
+`*-Web.woff2` files with fontTools 4.65.0 / Brotli 1.2.1. All non-private-use
+characters are preserved, including Latin, Cyrillic, Greek, and mathematical
+symbols. The only retained private-use icons are U+F00D (close/remove) and
+U+F09B (GitHub). Add any new private-use icons to the subset before using them.
 
-Лицензия шрифта: OFL.txt. Информация upstream и источники/лицензии
-включённых наборов иконок: UPSTREAM.md. Хранить эти документы вместе со шрифтами.
-Временные инструменты конвертации не являются зависимостями приложения.
+Names, retained outlines, metrics, hinting, and OpenType layout features are
+preserved. The x-height to em ratio remains 0.55. FontForge editor metadata
+(`PfEd`) is dropped; it is not needed for rendering.
+
+To reproduce from each original Mono TTF in the archive:
+
+```sh
+pyftsubset JetBrainsMonoNerdFontMono-Regular.ttf \
+    --unicodes=U+0000-DFFF,U+F900-EFFFF,U+F00D,U+F09B \
+    --layout-features='*' --drop-tables+=PfEd --flavor=woff2 \
+    --output-file=JetBrainsMonoNerdFontMono-Regular-Web.woff2
+```
+
+Repeat for Medium and SemiBold. These temporary conversion tools are not
+application dependencies. Regular is preloaded; other weights load on demand.
+
+Font license: OFL.txt. Upstream information and icon sources/licenses:
+UPSTREAM.md. Keep these documents with the fonts.
