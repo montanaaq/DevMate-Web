@@ -1,6 +1,6 @@
 using NpgsqlTypes;
 
-namespace DevMate.Models.Users;
+namespace SkillIssue.Models.Users;
 
 public enum SocialNetwork
 {

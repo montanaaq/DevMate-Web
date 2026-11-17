@@ -1,4 +1,4 @@
-namespace DevMate.Http;
+namespace SkillIssue.Http;
 
 public static class SessionCookie
 {

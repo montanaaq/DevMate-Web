@@ -1,10 +1,10 @@
-using DevMate.Models.Applications;
-using DevMate.Models.Invitations;
-using DevMate.Models.Teams;
-using DevMate.Models.Users;
+using SkillIssue.Models.Applications;
+using SkillIssue.Models.Invitations;
+using SkillIssue.Models.Teams;
+using SkillIssue.Models.Users;
 using Npgsql;
 
-namespace DevMate.Configuration;
+namespace SkillIssue.Configuration;
 
 public static class DatabaseSettings
 {

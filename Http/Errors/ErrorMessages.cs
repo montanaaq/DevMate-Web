@@ -1,4 +1,4 @@
-namespace DevMate.Http.Errors;
+namespace SkillIssue.Http.Errors;
 
 public static class ErrorMessages
 {

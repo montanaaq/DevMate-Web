@@ -1,7 +1,7 @@
-using DevMate.Models.Users;
+using SkillIssue.Models.Users;
 using Npgsql;
 
-namespace DevMate.Repositories;
+namespace SkillIssue.Repositories;
 
 public interface IUserRepository
 {

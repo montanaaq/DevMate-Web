@@ -1,6 +1,6 @@
-using DevMate.Http.Errors;
+using SkillIssue.Http.Errors;
 
-namespace DevMate.Http.Middleware;
+namespace SkillIssue.Http.Middleware;
 
 public sealed class CsrfMiddleware(Uri applicationUrl)
 {

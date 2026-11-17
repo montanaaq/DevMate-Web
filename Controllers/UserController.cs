@@ -1,13 +1,13 @@
 using System.Net;
 using System.Text.Json;
-using DevMate.Http;
-using DevMate.Http.Errors;
-using DevMate.Models.Requests;
-using DevMate.Services;
-using DevMate.Validators;
+using SkillIssue.Http;
+using SkillIssue.Http.Errors;
+using SkillIssue.Models.Requests;
+using SkillIssue.Services;
+using SkillIssue.Validators;
 using FluentValidation;
 
-namespace DevMate.Controllers;
+namespace SkillIssue.Controllers;
 
 public sealed class UserController(IAuthService authService)
 {

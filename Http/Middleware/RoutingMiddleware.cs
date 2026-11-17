@@ -1,8 +1,8 @@
-using DevMate.Http.Errors;
-using DevMate.Http.Routing;
-using DevMate.Models.Users;
+using SkillIssue.Http.Errors;
+using SkillIssue.Http.Routing;
+using SkillIssue.Models.Users;
 
-namespace DevMate.Http.Middleware;
+namespace SkillIssue.Http.Middleware;
 
 public sealed class RoutingMiddleware(Router router)
 {

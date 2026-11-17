@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DevMate.Models.Users;
+namespace SkillIssue.Models.Users;
 
 public sealed class Session
 {

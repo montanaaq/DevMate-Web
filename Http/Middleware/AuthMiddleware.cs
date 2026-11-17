@@ -1,6 +1,6 @@
-using DevMate.Services;
+using SkillIssue.Services;
 
-namespace DevMate.Http.Middleware;
+namespace SkillIssue.Http.Middleware;
 
 public sealed class AuthenticationMiddleware(IAuthService authService)
 {

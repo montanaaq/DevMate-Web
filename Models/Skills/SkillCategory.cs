@@ -1,4 +1,4 @@
-namespace DevMate.Models.Skills;
+namespace SkillIssue.Models.Skills;
 
 public sealed class SkillCategory
 {

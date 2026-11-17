@@ -23,6 +23,11 @@
 }
 
 .home-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem 1.5rem;
     padding: 1.5rem 1rem;
     border-block-start: 1px solid var(--dm-border);
     color: var(--dm-text-muted);
@@ -32,4 +37,17 @@
 
 .home-footer p {
     margin: 0;
+}
+
+.footer-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-block-size: 3rem;
+    color: var(--dm-text-muted);
+}
+
+.github-icon {
+    font-size: 1.25em;
+    line-height: 1;
 }

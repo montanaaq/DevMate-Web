@@ -1,4 +1,4 @@
-namespace DevMate.Models.Applications;
+namespace SkillIssue.Models.Applications;
 
 public enum ApplicationStatus
 {

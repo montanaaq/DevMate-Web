@@ -1,6 +1,6 @@
 using Npgsql;
 
-namespace DevMate.Configuration;
+namespace SkillIssue.Configuration;
 
 public sealed class AppSettings(string url, string databaseConnectionString)
 {

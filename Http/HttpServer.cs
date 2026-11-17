@@ -1,7 +1,7 @@
 using System.Net;
-using DevMate.Http.Errors;
+using SkillIssue.Http.Errors;
 
-namespace DevMate.Http;
+namespace SkillIssue.Http;
 
 public sealed class HttpServer(string url, RequestDelegate pipeline)
 {

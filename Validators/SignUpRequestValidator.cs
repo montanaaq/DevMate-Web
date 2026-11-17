@@ -1,7 +1,7 @@
-using DevMate.Models.Requests;
+using SkillIssue.Models.Requests;
 using FluentValidation;
 
-namespace DevMate.Validators;
+namespace SkillIssue.Validators;
 
 public sealed class SignUpRequestValidator : AbstractValidator<SignUpRequest>
 {

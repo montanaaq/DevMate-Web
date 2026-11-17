@@ -1,4 +1,4 @@
-namespace DevMate.Models.Requests;
+namespace SkillIssue.Models.Requests;
 
 public sealed class SignInRequest
 {

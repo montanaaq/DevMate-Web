@@ -1,4 +1,4 @@
-namespace DevMate.Models.Positions;
+namespace SkillIssue.Models.Positions;
 
 public sealed class PositionCategory
 {

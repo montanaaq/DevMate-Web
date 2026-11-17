@@ -1,7 +1,7 @@
-using DevMate.Http.Errors;
-using DevMate.Models.Users;
+using SkillIssue.Http.Errors;
+using SkillIssue.Models.Users;
 
-namespace DevMate.Http.Routing;
+namespace SkillIssue.Http.Routing;
 
 public sealed class Router
 {

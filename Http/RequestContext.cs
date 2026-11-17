@@ -1,10 +1,10 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using DevMate.Http.Errors;
-using DevMate.Models.Users;
+using SkillIssue.Http.Errors;
+using SkillIssue.Models.Users;
 
-namespace DevMate.Http;
+namespace SkillIssue.Http;
 
 public sealed class RequestContext(HttpListenerContext context, CancellationToken cancellationToken)
 {

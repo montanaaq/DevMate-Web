@@ -1,16 +1,16 @@
 using System.Globalization;
-using DevMate.Configuration;
-using DevMate.Controllers;
-using DevMate.Http;
-using DevMate.Http.Errors;
-using DevMate.Http.Middleware;
-using DevMate.Http.Routing;
-using DevMate.Models.Users;
-using DevMate.Repositories;
-using DevMate.Services;
+using SkillIssue.Configuration;
+using SkillIssue.Controllers;
+using SkillIssue.Http;
+using SkillIssue.Http.Errors;
+using SkillIssue.Http.Middleware;
+using SkillIssue.Http.Routing;
+using SkillIssue.Models.Users;
+using SkillIssue.Repositories;
+using SkillIssue.Services;
 using FluentValidation;
 
-namespace DevMate;
+namespace SkillIssue;
 
 internal static class Program
 {

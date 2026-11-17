@@ -1,6 +1,6 @@
-using DevMate.Models.Users;
+using SkillIssue.Models.Users;
 
-namespace DevMate.Http.Routing;
+namespace SkillIssue.Http.Routing;
 
 public sealed record RouteMatch(
     RequestDelegate? Handler,

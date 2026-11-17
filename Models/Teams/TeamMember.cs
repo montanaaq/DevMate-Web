@@ -1,4 +1,4 @@
-namespace DevMate.Models.Teams;
+namespace SkillIssue.Models.Teams;
 
 public sealed class TeamMember
 {

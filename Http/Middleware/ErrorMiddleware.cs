@@ -1,9 +1,9 @@
 using System.Net;
 using System.Text.Json;
-using DevMate.Http.Errors;
+using SkillIssue.Http.Errors;
 using FluentValidation;
 
-namespace DevMate.Http.Middleware;
+namespace SkillIssue.Http.Middleware;
 
 public static class ErrorMiddleware
 {

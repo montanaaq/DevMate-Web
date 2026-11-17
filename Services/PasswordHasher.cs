@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace DevMate.Services;
+namespace SkillIssue.Services;
 
 public static class PasswordHasher
 {

@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace DevMate.Http.Errors;
+namespace SkillIssue.Http.Errors;
 
 public sealed record ApiError(HttpStatusCode StatusCode, string Code, string Message)
 {

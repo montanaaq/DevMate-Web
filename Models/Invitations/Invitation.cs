@@ -1,4 +1,4 @@
-namespace DevMate.Models.Invitations;
+namespace SkillIssue.Models.Invitations;
 
 public sealed class Invitation
 {

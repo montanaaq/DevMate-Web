@@ -1,8 +1,8 @@
 using System.Security.Cryptography;
-using DevMate.Models.Users;
-using DevMate.Repositories;
+using SkillIssue.Models.Users;
+using SkillIssue.Repositories;
 
-namespace DevMate.Services;
+namespace SkillIssue.Services;
 
 public interface IAuthService
 {

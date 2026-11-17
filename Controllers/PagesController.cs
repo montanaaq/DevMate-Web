@@ -1,6 +1,6 @@
-using DevMate.Http;
+using SkillIssue.Http;
 
-namespace DevMate.Controllers;
+namespace SkillIssue.Controllers;
 
 public sealed class PagesController(string viewsDirectory)
 {
