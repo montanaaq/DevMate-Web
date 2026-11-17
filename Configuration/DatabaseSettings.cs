@@ -1,8 +1,7 @@
+using Npgsql;
 using SkillIssue.Models.Applications;
 using SkillIssue.Models.Invitations;
 using SkillIssue.Models.Teams;
-using SkillIssue.Models.Users;
-using Npgsql;
 
 namespace SkillIssue.Configuration;
 
@@ -12,7 +11,6 @@ public static class DatabaseSettings
     {
         var builder = new NpgsqlDataSourceBuilder(connectionString);
 
-        builder.MapEnum<SocialNetwork>("social_network");
         builder.MapEnum<ClosureKind>("closure_kind");
         builder.MapEnum<ApplicationStatus>("application_status");
         builder.MapEnum<InvitationStatus>("invitation_status");

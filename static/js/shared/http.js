@@ -1,4 +1,4 @@
-import { errorMessages } from "./error-messages.js";
+import { errorMessages } from "./constants/error-messages.js";
 
 export class HttpError extends Error {
     constructor(status, body) {

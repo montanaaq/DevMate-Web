@@ -13,15 +13,3 @@
     --dm-admin-width: 74rem;
     --dm-form-width: 30rem;
 }
-
-:root[data-accent="green"] {
-    --dm-accent: #56d38b;
-}
-
-:root[data-accent="purple"] {
-    --dm-accent: #bc9cff;
-}
-
-:root[data-accent="amber"] {
-    --dm-accent: #f2b450;
-}

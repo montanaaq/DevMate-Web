@@ -1,27 +1,24 @@
+import { plural, textElement } from "../../../shared/dom.js";
+
 export function renderTeams(container, teams) {
     for (const team of teams) {
         const row = document.createElement("article");
         row.className = "team-row";
-
-        const heading = document.createElement("h3");
-        heading.textContent = team.name;
-
-        const description = document.createElement("p");
-        description.className = "team-description";
-        description.textContent = team.description;
-
-        const positions = document.createElement("p");
-        positions.textContent = `Looking for: ${team.positions.join(", ")}`;
-
-        const skills = document.createElement("p");
-        skills.className = "team-skills";
-        skills.textContent = `Required skills: ${team.requiredSkills.join(", ") || "Not specified"}`;
-
-        const members = document.createElement("p");
-        members.className = "team-meta";
-        members.textContent = `${team.memberCount} ${team.memberCount === 1 ? "member" : "members"} · ${team.positions.length} ${team.positions.length === 1 ? "open position" : "open positions"}`;
-
-        row.append(heading, description, positions, skills, members);
+        row.append(
+            textElement("h3", team.name),
+            textElement("p", team.description, "team-description"),
+            textElement("p", `Looking for: ${team.positions.join(", ")}`),
+            textElement(
+                "p",
+                `Required skills: ${team.requiredSkills.join(", ") || "Not specified"}`,
+                "team-skills",
+            ),
+            textElement(
+                "p",
+                `${plural(team.memberCount, "member", "members")} · ${plural(team.positions.length, "open position", "open positions")}`,
+                "team-meta",
+            ),
+        );
         container.append(row);
     }
 }

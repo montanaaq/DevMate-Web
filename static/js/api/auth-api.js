@@ -1,5 +1,5 @@
 import { HttpError } from "../shared/http.js";
-import { errorMessages } from "../shared/error-messages.js";
+import { errorMessages } from "../shared/constants/error-messages.js";
 import { api } from "./client.js";
 
 export function signUp(data) {
@@ -27,4 +27,13 @@ export async function getCurrentUser() {
         }
         throw error;
     }
+}
+
+export async function getProfile() {
+    const { data } = await api.get("/user/profile");
+    return data;
+}
+
+export function saveSocialLinks(links) {
+    return api.post("/user/social-links", links);
 }

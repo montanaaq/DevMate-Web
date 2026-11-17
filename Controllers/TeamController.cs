@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using FluentValidation;
 using SkillIssue.Http;
 using SkillIssue.Http.Errors;
@@ -72,24 +71,7 @@ public sealed class TeamController(ITeamRepository repository)
     public async Task CreateAsync(RequestContext context)
     {
         var user = context.User ?? throw new HttpException(ApiError.Unauthorized);
-        CreateTeamRequest? request;
-        try
-        {
-            request = await JsonSerializer.DeserializeAsync<CreateTeamRequest>(
-                context.Request.InputStream,
-                JsonSerializerOptions.Web,
-                context.CancellationToken
-            );
-        }
-        catch (JsonException exception)
-        {
-            throw new HttpException(ApiError.BadRequest, innerException: exception);
-        }
-
-        if (request is null)
-        {
-            throw new HttpException(ApiError.BadRequest);
-        }
+        var request = await context.ReadJsonAsync<CreateTeamRequest>();
 
         await _validator.ValidateAndThrowAsync(request, context.CancellationToken);
         int teamId =

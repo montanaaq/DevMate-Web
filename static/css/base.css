@@ -78,7 +78,7 @@ label {
 }
 
 .profile-main {
-    max-inline-size: 40rem;
+    max-inline-size: var(--dm-content-width);
 }
 
 .dither-background {
@@ -211,6 +211,33 @@ h1 {
     color: var(--dm-accent);
 }
 
+.team-nav {
+    gap: 0.5rem;
+    margin-inline-start: auto;
+}
+
+.team-nav button {
+    min-block-size: 3rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--dm-text);
+}
+
+.team-nav button:hover {
+    color: var(--dm-accent);
+}
+
+.nav-slash {
+    color: var(--dm-accent);
+    font-size: 1.5rem;
+}
+
+.site-nav a[aria-current="page"] {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+
 .account-nav {
     min-inline-size: 0;
 }
@@ -243,4 +270,36 @@ h1 {
 
 [hidden] {
     display: none !important;
+}
+
+@supports (color: contrast-color(red)) {
+    .skip-link {
+        color: contrast-color(var(--dm-accent));
+    }
+}
+
+@media (max-width: 48rem) {
+    .site-header-inner:has(.team-nav) {
+        display: grid;
+        grid-template-columns: max-content minmax(0, 1fr);
+        gap: 0.5rem 1rem;
+    }
+
+    .team-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-column: 1 / -1;
+        order: 1;
+        gap: 1rem;
+        margin-inline-start: 0;
+    }
+
+    .nav-slash {
+        display: none;
+    }
+
+    .site-header-inner > .site-nav:not(.team-nav) {
+        justify-self: end;
+        max-inline-size: 100%;
+    }
 }

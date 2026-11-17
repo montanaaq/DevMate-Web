@@ -70,6 +70,7 @@ fieldset:disabled .btn {
 }
 
 .btn-primary {
+    border-color: var(--dm-accent);
     background-color: var(--dm-accent);
     color: var(--dm-on-accent);
 }
@@ -158,4 +159,22 @@ fieldset:disabled .btn {
 
 .text-capitalize {
     text-transform: capitalize;
+}
+
+.ui-icon {
+    font-family: "JetBrainsMono Nerd Font Mono", monospace;
+    font-weight: 400;
+}
+
+@supports (color: contrast-color(red)) {
+    .btn-primary {
+        color: contrast-color(var(--dm-accent));
+    }
+}
+
+.link-icon {
+    display: inline-block;
+    inline-size: 1em;
+    block-size: 1em;
+    vertical-align: -0.125em;
 }

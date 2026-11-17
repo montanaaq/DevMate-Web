@@ -19,6 +19,23 @@ public sealed class RequestContext(HttpListenerContext context, CancellationToke
     public IReadOnlyDictionary<string, string> RouteValues { get; internal set; } =
         new Dictionary<string, string>();
 
+    public async Task<T> ReadJsonAsync<T>()
+        where T : class
+    {
+        try
+        {
+            return await JsonSerializer.DeserializeAsync<T>(
+                    Request.InputStream,
+                    JsonSerializerOptions.Web,
+                    CancellationToken
+                ) ?? throw new HttpException(ApiError.BadRequest);
+        }
+        catch (JsonException exception)
+        {
+            throw new HttpException(ApiError.BadRequest, innerException: exception);
+        }
+    }
+
     public Task WriteJsonAsync<T>(T value, HttpStatusCode statusCode = HttpStatusCode.OK)
     {
         return WriteTextAsync(
@@ -74,6 +91,7 @@ public sealed class RequestContext(HttpListenerContext context, CancellationToke
                 <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
                 <link rel="preload" href="/static/fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular-Web.woff2" as="font" type="font/woff2" crossorigin>
                 <link rel="stylesheet" href="/static/css/fonts.css">
+                <script type="module" src="/static/js/shared/accent.js"></script>
                 <link rel="stylesheet" href="/static/css/variables.css">
                 <link rel="stylesheet" href="/static/css/base.css">
                 <link rel="stylesheet" href="/static/css/ui.css">

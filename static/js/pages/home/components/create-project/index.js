@@ -1,5 +1,5 @@
 import { createTeam } from "../../../../api/teams-api.js";
-import { errorMessages } from "../../../../shared/error-messages.js";
+import { errorMessages } from "../../../../shared/constants/error-messages.js";
 import { clearError, showError } from "../../../../shared/ui.js";
 import { createStepper } from "../stepper.js";
 import { createDraft } from "./draft.js";
@@ -170,4 +170,10 @@ export function initCreateProject({
             setBusy(false);
         }
     });
+
+    if (window.location.hash === "#create-project") {
+        document.querySelector("[data-create-team]").focus();
+        openDialog();
+    }
+
 }

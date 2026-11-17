@@ -1,4 +1,4 @@
-const MAX_SKILLS = 20;
+import { MAX_SKILLS } from "../../../shared/constants/limits.js";
 
 export function createSkillPicker(root, skills, onChange, initialIds = []) {
     const input = root.querySelector("input");

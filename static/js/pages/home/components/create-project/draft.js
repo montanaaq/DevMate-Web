@@ -1,4 +1,4 @@
-export const MAX_PEOPLE = 20;
+import { plural } from "../../../../shared/dom.js";
 
 export const createDraft = () => ({ name: "", description: "", positions: [] });
 export const createPosition = () => ({
@@ -12,8 +12,7 @@ export const totalPlaces = (draft) =>
     draft.positions.reduce((sum, position) => sum + position.count, 0);
 export const hasCaptain = (draft) =>
     draft.positions.some((position) => position.includeCaptain);
-export const formatPlaces = (count) =>
-    `${count} ${count === 1 ? "place" : "places"}`;
+export const formatPlaces = (count) => plural(count, "place", "places");
 
 export function toggleCaptain(draft, index) {
     const include = !draft.positions[index].includeCaptain;

@@ -1,29 +1,68 @@
-import { getCurrentUser, signOut } from "../../api/auth-api.js";
-import { errorMessages } from "../../shared/error-messages.js";
+import { getCurrentUser, getProfile, signOut } from "../../api/auth-api.js";
+import { errorMessages } from "../../shared/constants/error-messages.js";
 import { clearError, showError } from "../../shared/ui.js";
+import { initAccent } from "./accent.js";
+import { $ } from "../../shared/dom.js";
+import { renderApplications, renderProjects } from "./render.js";
+import { initSocialLinks, renderLinks } from "./social-links.js";
 
 const errorSummary = document.getElementById("account-error");
-const logout = document.querySelector("[data-signout]");
+const logout = $("signout");
+const retry = $("retry");
+const loading = $("loading");
+
+function selectSection() {
+    const selected =
+        window.location.hash === "#settings" ? "settings" : "overview";
+    for (const section of document.querySelectorAll("[data-section]")) {
+        section.hidden = section.dataset.section !== selected;
+    }
+    for (const link of document.querySelectorAll("[data-section-link]")) {
+        if (link.dataset.sectionLink === selected) {
+            link.setAttribute("aria-current", "page");
+        } else {
+            link.removeAttribute("aria-current");
+        }
+    }
+}
+
+function renderProfile(user, profile) {
+    $("profile-name").textContent = user.fullName;
+    $("profile-email").textContent = user.email;
+
+    const skills = $("profile-skills");
+    skills.textContent = profile.skills.join(" · ");
+    skills.hidden = profile.skills.length === 0;
+
+    renderLinks(profile.links);
+    renderProjects(profile.teams);
+    renderApplications(profile.applications);
+    $("profile").hidden = false;
+}
 
 async function loadProfile() {
+    retry.hidden = true;
+    loading.hidden = false;
+    clearError(errorSummary);
     try {
         const user = await getCurrentUser();
         if (user === null) {
             window.location.replace("/signin");
             return;
         }
-
-        document.querySelector("[data-profile-name]").textContent =
-            user.fullName;
-        document.querySelector("[data-profile-email]").textContent = user.email;
-        document.querySelector("[data-profile-role]").textContent = user.role;
-        document.querySelector("[data-profile]").hidden = false;
+        logout.disabled = false;
+        $("user-name").textContent = user.fullName;
+        $("profile-role").textContent = user.role;
+        renderProfile(user, await getProfile());
     } catch {
         showError(errorSummary, errorMessages.requestFailed);
+        retry.hidden = false;
+    } finally {
+        loading.hidden = true;
     }
 }
 
-logout.addEventListener("click", async () => {
+async function handleLogout() {
     logout.disabled = true;
     clearError(errorSummary);
     try {
@@ -32,10 +71,15 @@ logout.addEventListener("click", async () => {
     } catch {
         showError(errorSummary, errorMessages.requestFailed);
         errorSummary.focus();
-    } finally {
         logout.disabled = false;
     }
-});
+}
 
-logout.disabled = false;
+logout.addEventListener("click", handleLogout);
+retry.addEventListener("click", loadProfile);
+window.addEventListener("hashchange", selectSection);
+
+initSocialLinks();
+initAccent();
+selectSection();
 loadProfile();

@@ -34,21 +34,26 @@ internal static class Program
         var userRepository = new UserRepository(dataSource);
         var sessionRepository = new SessionRepository(dataSource);
         var authService = new AuthService(userRepository, sessionRepository);
-        var users = new UserController(authService);
+        var users = new UserController(authService, userRepository);
         var teams = new TeamController(new TeamRepository(dataSource));
 
         var pages = new PagesController(Path.Combine(AppContext.BaseDirectory, "Views"));
 
         var router = new Router();
         UserRole[] publicRoles = [UserRole.Guest, UserRole.User, UserRole.Admin];
+
         router.Map("GET", "/", pages.HomeAsync, publicRoles);
         router.Map("GET", "/profile", pages.ProfileAsync, publicRoles);
         router.Map("GET", "/signin", pages.SignInAsync, publicRoles);
         router.Map("GET", "/signup", pages.SignUpAsync, publicRoles);
+
         router.Map("POST", "/api/user/signin", users.SignInAsync, publicRoles);
         router.Map("POST", "/api/user/signup", users.SignUpAsync, publicRoles);
         router.Map("POST", "/api/user/signout", users.SignOutAsync, publicRoles);
         router.Map("GET", "/api/user/me", users.MeAsync);
+        router.Map("GET", "/api/user/profile", users.ProfileAsync);
+        router.Map("POST", "/api/user/social-links", users.SaveSocialLinksAsync);
+
         router.Map("GET", "/api/teams/catalog", teams.CatalogAsync, publicRoles);
         router.Map("GET", "/api/teams", teams.SearchAsync, publicRoles);
         router.Map("POST", "/api/teams", teams.CreateAsync);

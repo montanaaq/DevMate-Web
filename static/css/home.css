@@ -22,28 +22,6 @@
     font-size: 1.25rem;
 }
 
-.team-nav {
-    gap: 0.5rem;
-    margin-inline-start: auto;
-}
-
-.team-nav button {
-    min-block-size: 3rem;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--dm-text);
-}
-
-.team-nav button:hover {
-    color: var(--dm-accent);
-}
-
-.nav-slash {
-    color: var(--dm-accent);
-    font-size: 1.5rem;
-}
-
 #team-search {
     max-inline-size: 44rem;
     margin: 2.5rem auto 4rem;
@@ -123,11 +101,6 @@
         inline-size: anchor-size(width);
         margin-block: 0.5rem;
     }
-}
-
-.ui-icon {
-    font-family: "JetBrainsMono Nerd Font Mono", monospace;
-    font-weight: 400;
 }
 
 #close-create-team {
@@ -341,10 +314,6 @@
 }
 
 @media (max-width: 48rem) {
-    .team-nav {
-        margin-inline-start: 0;
-    }
-
     .home-main {
         padding-block-start: 3rem;
     }

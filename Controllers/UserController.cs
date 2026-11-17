@@ -1,40 +1,44 @@
 using System.Net;
-using System.Text.Json;
+using FluentValidation;
 using SkillIssue.Http;
 using SkillIssue.Http.Errors;
 using SkillIssue.Models.Requests;
+using SkillIssue.Repositories;
 using SkillIssue.Services;
 using SkillIssue.Validators;
-using FluentValidation;
 
 namespace SkillIssue.Controllers;
 
-public sealed class UserController(IAuthService authService)
+public sealed class UserController(IAuthService authService, IUserRepository repository)
 {
     private readonly SignUpRequestValidator _signUpValidator = new();
     private readonly SignInRequestValidator _signInValidator = new();
+    private readonly UpdateSocialLinksRequestValidator _socialLinksValidator = new();
+
+    public async Task ProfileAsync(RequestContext context)
+    {
+        var user = context.User ?? throw new HttpException(ApiError.Unauthorized);
+        context.Response.Headers["Cache-Control"] = "no-store";
+        await context.WriteJsonAsync(
+            await repository.GetProfileAsync(user.Id, context.CancellationToken)
+        );
+    }
+
+    public async Task SaveSocialLinksAsync(RequestContext context)
+    {
+        var user = context.User ?? throw new HttpException(ApiError.Unauthorized);
+        var request = await context.ReadJsonAsync<UpdateSocialLinksRequest>();
+
+        await _socialLinksValidator.ValidateAndThrowAsync(request, context.CancellationToken);
+
+        await repository.SaveSocialLinksAsync(user.Id, request, context.CancellationToken);
+        context.Response.Headers["Cache-Control"] = "no-store";
+        context.Response.StatusCode = (int)HttpStatusCode.NoContent;
+    }
 
     public async Task SignUpAsync(RequestContext context)
     {
-        SignUpRequest? request;
-
-        try
-        {
-            request = await JsonSerializer.DeserializeAsync<SignUpRequest>(
-                context.Request.InputStream,
-                JsonSerializerOptions.Web,
-                context.CancellationToken
-            );
-        }
-        catch (JsonException exception)
-        {
-            throw new HttpException(ApiError.BadRequest, innerException: exception);
-        }
-
-        if (request is null)
-        {
-            throw new HttpException(ApiError.BadRequest);
-        }
+        var request = await context.ReadJsonAsync<SignUpRequest>();
 
         await _signUpValidator.ValidateAndThrowAsync(request, context.CancellationToken);
 
@@ -52,25 +56,7 @@ public sealed class UserController(IAuthService authService)
 
     public async Task SignInAsync(RequestContext context)
     {
-        SignInRequest? request;
-
-        try
-        {
-            request = await JsonSerializer.DeserializeAsync<SignInRequest>(
-                context.Request.InputStream,
-                JsonSerializerOptions.Web,
-                context.CancellationToken
-            );
-        }
-        catch (JsonException exception)
-        {
-            throw new HttpException(ApiError.BadRequest, innerException: exception);
-        }
-
-        if (request is null)
-        {
-            throw new HttpException(ApiError.BadRequest);
-        }
+        var request = await context.ReadJsonAsync<SignInRequest>();
 
         await _signInValidator.ValidateAndThrowAsync(request, context.CancellationToken);
 

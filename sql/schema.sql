@@ -1,5 +1,3 @@
-CREATE TYPE social_network AS ENUM ('telegram', 'github');
-
 CREATE TYPE closure_kind AS ENUM ('owner', 'moderation');
 
 CREATE TYPE application_status AS ENUM (
@@ -36,10 +34,11 @@ CREATE UNIQUE INDEX users_email_unique
 CREATE TABLE user_social_links (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
-    network social_network NOT NULL,
+    network VARCHAR(80) NOT NULL,
     url VARCHAR(500) NOT NULL,
 
     UNIQUE (user_id, network),
+    CHECK (length(trim(network)) > 0),
     CHECK (length(trim(url)) > 0)
 );
 

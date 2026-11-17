@@ -1,5 +1,5 @@
 import { HttpError } from "../../../shared/http.js";
-import { errorMessages } from "../../../shared/error-messages.js";
+import { errorMessages } from "../../../shared/constants/error-messages.js";
 import { clearError, showError } from "../../../shared/ui.js";
 
 export function clearFieldError(input) {

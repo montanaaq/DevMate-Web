@@ -1,6 +1,6 @@
+import { MAX_PEOPLE } from "../../../../shared/constants/limits.js";
 import { clearError, showError } from "../../../../shared/ui.js";
 import {
-    MAX_PEOPLE,
     createPosition,
     totalPlaces,
     hasCaptain,

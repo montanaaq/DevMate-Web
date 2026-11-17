@@ -1,5 +1,8 @@
-using SkillIssue.Models.Users;
+using System.Text.Json;
 using Npgsql;
+using NpgsqlTypes;
+using SkillIssue.Models.Requests;
+using SkillIssue.Models.Users;
 
 namespace SkillIssue.Repositories;
 
@@ -15,10 +18,48 @@ public interface IUserRepository
     Task<User?> FindByEmailAsync(string email, CancellationToken ct);
 
     Task<User?> FindByIdAsync(int userId, CancellationToken cancellationToken);
+
+    Task<JsonElement> GetProfileAsync(int userId, CancellationToken cancellationToken);
+    Task SaveSocialLinksAsync(
+        int userId,
+        UpdateSocialLinksRequest request,
+        CancellationToken cancellationToken
+    );
 }
 
 public sealed class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
 {
+    public async Task<JsonElement> GetProfileAsync(int userId, CancellationToken cancellationToken)
+    {
+        await using var command = dataSource.CreateCommand("SELECT public.get_user_profile($1)");
+        command.Parameters.AddWithValue(userId);
+        string json = (string)(await command.ExecuteScalarAsync(cancellationToken))!;
+        return JsonSerializer.Deserialize<JsonElement>(json);
+    }
+
+    public async Task SaveSocialLinksAsync(
+        int userId,
+        UpdateSocialLinksRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        await using var command = dataSource.CreateCommand(
+            "SELECT public.save_user_social_links($1, $2)"
+        );
+        command.Parameters.AddWithValue(userId);
+        command.Parameters.AddWithValue(
+            NpgsqlDbType.Jsonb,
+            JsonSerializer.Serialize(
+                request.Links!.Select(link => new
+                {
+                    network = link.Network!.Trim(),
+                    url = link.Url!.Trim(),
+                })
+            )
+        );
+        await command.ExecuteNonQueryAsync(cancellationToken);
+    }
+
     public async Task<int?> CreateAsync(
         string email,
         string fullName,
