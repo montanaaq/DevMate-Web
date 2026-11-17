@@ -66,18 +66,22 @@ public sealed class RequestContext(HttpListenerContext context, CancellationToke
 
         string html = $$"""
             <!DOCTYPE html>
-            <html lang="ru">
+            <html lang="en" data-bs-theme="dark">
             <head>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>{{(int)statusCode}} — DevMate</title>
+                <title>{{(int)statusCode}} — skill_issue</title>
+                <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
                 <link rel="stylesheet" href="/static/vendor/bootstrap/bootstrap.min.css">
+                <link rel="stylesheet" href="/static/css/fonts.css">
+                <link rel="stylesheet" href="/static/css/design-tokens.css">
+                <link rel="stylesheet" href="/static/css/site.css">
             </head>
             <body>
                 <main class="container py-5">
                     <h1>{{(int)statusCode}}</h1>
                     <p>{{WebUtility.HtmlEncode(message)}}</p>
-                    <a href="/">На главную</a>
+                    <a href="/">Home</a>
                 </main>
             </body>
             </html>

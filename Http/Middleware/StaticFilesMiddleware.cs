@@ -43,7 +43,7 @@ public sealed class StaticFilesMiddleware(string root)
                 || !ContentTypes.TryGetValue(Path.GetExtension(path), out var contentType)
             )
             {
-                throw new HttpException(ApiError.NotFound, ErrorMessages.FileNotFound);
+                throw new HttpException(ApiError.NotFound);
             }
 
             await context.WriteFileAsync(path, contentType);
@@ -51,13 +51,13 @@ public sealed class StaticFilesMiddleware(string root)
         catch (Exception exception)
             when (exception is FileNotFoundException or DirectoryNotFoundException)
         {
-            throw new HttpException(ApiError.NotFound, ErrorMessages.FileNotFound, exception);
+            throw new HttpException(ApiError.NotFound, innerException: exception);
         }
     }
 
     private string? ResolveFilePath(string relativePath)
     {
-        var segments = relativePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        string[] segments = relativePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
         if (
             relativePath.IndexOfAny(['\\', '\0', ':']) >= 0
             || segments.Any(segment => segment.StartsWith('.'))

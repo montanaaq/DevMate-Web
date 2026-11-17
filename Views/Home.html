@@ -1,15 +1,87 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Поиск команды для IT-проектов — DevMate</title>
-    <link rel="stylesheet" href="/static/vendor/bootstrap/bootstrap.min.css">
-</head>
-<body>
-    <main class="container py-5">
-        <h1>DevMate</h1>
-        <p>Найди команду для своего IT-проекта.</p>
-    </main>
-</body>
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>skill_issue — Find your team</title>
+        <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+        <link
+            rel="stylesheet"
+            href="/static/vendor/bootstrap/bootstrap.min.css"
+        />
+        <link rel="stylesheet" href="/static/css/fonts.css" />
+        <link rel="stylesheet" href="/static/css/design-tokens.css" />
+        <link rel="stylesheet" href="/static/css/site.css" />
+        <link rel="stylesheet" href="/static/css/home.css" />
+        <script type="module" src="/static/js/pages/home/index.js"></script>
+    </head>
+    <body class="home-page">
+        <a class="skip-link" href="#content">Skip to content</a>
+        <header class="site-header">
+            <div class="site-header-inner">
+                <a
+                    class="site-brand"
+                    href="/"
+                    aria-current="page"
+                    aria-label="skill.issue — Home"
+                >
+                    <svg
+                        class="brand-mark brand-chevron"
+                        width="24"
+                        height="36"
+                        viewBox="0 0 24 36"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        focusable="false"
+                    >
+                        <path d="M0 0h9l15 18L9 36H0l15-18Z" />
+                    </svg>
+                    <span class="brand-name"
+                        >skill<span class="brand-mark">.</span
+                        ><wbr />issue</span
+                    >
+                </a>
+                <nav class="site-nav" aria-label="Account" data-guest-links>
+                    <a href="/signin">Sign in</a>
+                    <a href="/signup">Sign up</a>
+                </nav>
+                <div class="site-nav account-nav" data-account hidden>
+                    <span class="account-name" data-user-name></span>
+                    <button class="btn btn-link" type="button" data-signout>
+                        Sign out
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main class="home-main">
+            <h1
+                class="brand-logo"
+                id="content"
+                tabindex="-1"
+                aria-label="skill.issue"
+            >
+                <span class="brand-name"
+                    >skill<span class="brand-mark">.</span><wbr />issue</span
+                >
+            </h1>
+            <p class="home-subtitle">
+                Find your dream team without issues.
+            </p>
+            <noscript
+                ><p class="alert alert-warning">
+                    Enable JavaScript to use your account.
+                </p></noscript
+            >
+            <p
+                class="alert alert-danger"
+                id="account-error"
+                tabindex="-1"
+                role="alert"
+                hidden
+            ></p>
+        </main>
+        <footer class="home-footer">
+            <p>No team? Skill issue.</p>
+        </footer>
+    </body>
 </html>

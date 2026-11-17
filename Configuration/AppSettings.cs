@@ -4,16 +4,16 @@ namespace DevMate.Configuration;
 
 public sealed class AppSettings(string url, string databaseConnectionString)
 {
-    private const string InvalidUrl = "Неверный url";
-    private const string InvalidDatabasePort = "POSTGRES_PORT должен быть числом от 1 до 65535.";
-    private const string MissingEnvironmentVariable = "Не задана переменная окружения {0}.";
+    private const string InvalidUrl = "Invalid URL.";
+    private const string InvalidDatabasePort = "POSTGRES_PORT must be a number from 1 to 65535.";
+    private const string MissingEnvironmentVariable = "Missing environment variable: {0}.";
 
     public string Url { get; } = url;
     public string DatabaseConnectionString { get; } = databaseConnectionString;
 
     public static AppSettings FromEnvironment()
     {
-        string value = "http://localhost:8080/";
+        string value = "http://localhost:5173/";
 
         if (
             !Uri.TryCreate(value, UriKind.Absolute, out var url)

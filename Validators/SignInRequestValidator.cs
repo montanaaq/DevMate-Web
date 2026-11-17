@@ -23,6 +23,6 @@ public sealed class SignInRequestValidator : AbstractValidator<SignInRequest>
             .WithErrorCode("required")
             .MaximumLength(128)
             .WithErrorCode("too_long")
-            .WithName("Пароль");
+            .WithName("Password");
     }
 }

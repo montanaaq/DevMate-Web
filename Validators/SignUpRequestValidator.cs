@@ -23,13 +23,15 @@ public sealed class SignUpRequestValidator : AbstractValidator<SignUpRequest>
             .WithErrorCode("required")
             .Length(15, 128)
             .WithErrorCode("invalid_length")
-            .WithName("Пароль");
+            .Must(password => password is not null && !password.Any(char.IsWhiteSpace))
+            .WithErrorCode("invalid")
+            .WithName("Password");
 
         RuleFor(request => request.FullName)
             .NotEmpty()
             .WithErrorCode("required")
             .MaximumLength(200)
             .WithErrorCode("too_long")
-            .WithName("Имя");
+            .WithName("Full name");
     }
 }

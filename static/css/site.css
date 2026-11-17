@@ -1,0 +1,218 @@
+:root {
+    color-scheme: dark;
+    --bs-body-bg: var(--dm-background);
+    --bs-body-color: var(--dm-text);
+    --bs-secondary-color: var(--dm-text-muted);
+    --bs-border-color: var(--dm-border);
+    --bs-link-color: var(--dm-accent);
+    --bs-link-hover-color: var(--dm-accent);
+}
+
+body {
+    min-inline-size: 0;
+    font-size-adjust: 0.55;
+    overflow-wrap: anywhere;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+a {
+    color: var(--dm-accent);
+}
+
+:is(a[href], button, .btn) {
+    text-decoration: none;
+    text-underline-offset: 0.2em;
+    transition: none;
+}
+
+a:hover {
+    color: var(--dm-accent);
+}
+
+:is(a[href], button):not(:disabled, [aria-disabled="true"], .disabled):is(:hover, :focus-visible),
+.site-brand:is(:hover, :focus-visible) .brand-name {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+}
+
+h1 {
+    margin-block-end: 0.75rem;
+    font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+    font-weight: 600;
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+.site-header {
+    border-block-end: 1px solid var(--dm-border);
+}
+
+.site-header-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    max-inline-size: 90rem;
+    margin-inline: auto;
+    padding: 0.75rem clamp(1rem, 4vw, 4rem);
+}
+
+.site-brand,
+.brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-inline-size: 100%;
+    color: var(--dm-text);
+    font-weight: 600;
+}
+
+.site-brand {
+    min-block-size: 3rem;
+    font-size: 1.25rem;
+    text-decoration: none;
+}
+
+.site-brand:hover {
+    color: var(--dm-text);
+}
+
+.brand-mark {
+    color: var(--dm-accent);
+}
+
+.brand-chevron {
+    flex-shrink: 0;
+    inline-size: 0.45em;
+    block-size: auto;
+    aspect-ratio: 2 / 3;
+}
+
+.brand-name {
+    min-inline-size: 0;
+}
+
+.site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 2rem;
+}
+
+.site-nav a,
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 3rem;
+}
+
+.site-nav a {
+    color: var(--dm-text);
+    text-decoration: none;
+}
+
+.site-nav a:hover {
+    color: var(--dm-accent);
+}
+
+.account-nav {
+    min-inline-size: 0;
+}
+
+.account-name {
+    min-inline-size: 0;
+}
+
+.form-control,
+.btn {
+    min-block-size: 3rem;
+    border-radius: var(--bs-border-radius);
+}
+
+.btn {
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.btn-primary {
+    --bs-btn-color: var(--dm-on-accent);
+    --bs-btn-bg: var(--dm-accent);
+    --bs-btn-border-color: var(--dm-accent);
+    --bs-btn-hover-color: var(--dm-on-accent);
+    --bs-btn-hover-bg: var(--dm-accent);
+    --bs-btn-hover-border-color: var(--dm-accent);
+    --bs-btn-active-color: var(--dm-on-accent);
+    --bs-btn-active-bg: var(--dm-accent);
+    --bs-btn-active-border-color: var(--dm-accent);
+    --bs-btn-disabled-color: var(--dm-on-accent);
+    --bs-btn-disabled-bg: var(--dm-accent);
+    --bs-btn-disabled-border-color: var(--dm-accent);
+    --bs-btn-focus-box-shadow: none;
+}
+
+.btn-link {
+    --bs-btn-color: var(--dm-accent);
+    --bs-btn-hover-color: var(--dm-accent);
+    --bs-btn-active-color: var(--dm-accent);
+    --bs-btn-focus-box-shadow: none;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: var(--bs-border-radius);
+    background-color: var(--dm-surface);
+    text-align: start;
+}
+
+.alert-danger,
+.invalid-feedback {
+    color: #ffb4ab;
+}
+
+.alert-danger {
+    border-color: #ffb4ab;
+}
+
+.alert-success {
+    border-color: var(--dm-accent);
+    color: var(--dm-text);
+}
+
+.alert-warning {
+    color: var(--dm-text);
+    border-color: var(--dm-input-border);
+}
+
+:where(a, button, input):focus-visible {
+    outline: 3px solid var(--dm-accent);
+    outline-offset: 3px;
+}
+
+.skip-link {
+    position: fixed;
+    inset-block-start: 0.5rem;
+    inset-inline-start: 0.5rem;
+    z-index: 1;
+    padding: 0.75rem;
+    color: var(--dm-on-accent);
+    background-color: var(--dm-accent);
+}
+
+.skip-link:not(:focus) {
+    clip-path: inset(50%);
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+}
+
+[hidden] {
+    display: none !important;
+}

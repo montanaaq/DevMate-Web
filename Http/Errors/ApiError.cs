@@ -7,42 +7,42 @@ public sealed record ApiError(HttpStatusCode StatusCode, string Code, string Mes
     public static readonly ApiError BadRequest = new(
         HttpStatusCode.BadRequest,
         "bad_request",
-        "Некорректный запрос."
+        "Invalid request."
     );
 
     public static readonly ApiError Unauthorized = new(
         HttpStatusCode.Unauthorized,
         "unauthorized",
-        "Необходимо войти в аккаунт."
+        "Please sign in to continue."
     );
 
     public static readonly ApiError Forbidden = new(
         HttpStatusCode.Forbidden,
         "forbidden",
-        "Недостаточно прав для выполнения действия."
+        "Access denied."
     );
 
     public static readonly ApiError NotFound = new(
         HttpStatusCode.NotFound,
         "not_found",
-        "Ресурс не найден."
+        "Not found."
     );
 
     public static readonly ApiError MethodNotAllowed = new(
         HttpStatusCode.MethodNotAllowed,
         "method_not_allowed",
-        "Метод запроса не поддерживается."
+        "Method not allowed."
     );
 
     public static readonly ApiError Conflict = new(
         HttpStatusCode.Conflict,
         "conflict",
-        "Запрос конфликтует с текущим состоянием ресурса."
+        "Request conflict. Please try again."
     );
 
     public static readonly ApiError InternalServerError = new(
         HttpStatusCode.InternalServerError,
         "internal_server_error",
-        "Не удалось обработать запрос. Попробуйте позже."
+        "Something went wrong. Try again."
     );
 }

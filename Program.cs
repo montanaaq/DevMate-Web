@@ -16,7 +16,7 @@ internal static class Program
 {
     private static async Task Main()
     {
-        ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("ru");
+        ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en");
 
         using var cancellation = new CancellationTokenSource();
         Console.CancelKeyPress += (_, args) =>
@@ -25,6 +25,7 @@ internal static class Program
             cancellation.Cancel();
         };
 
+        DotNetEnv.Env.NoClobber().TraversePath().Load();
         var settings = AppSettings.FromEnvironment();
         await using var dataSource = DatabaseSettings.CreateDataSource(
             settings.DatabaseConnectionString
@@ -40,6 +41,8 @@ internal static class Program
         var router = new Router();
         UserRole[] publicRoles = [UserRole.Guest, UserRole.User, UserRole.Admin];
         router.Map("GET", "/", pages.HomeAsync, publicRoles);
+        router.Map("GET", "/signin", pages.SignInAsync, publicRoles);
+        router.Map("GET", "/signup", pages.SignUpAsync, publicRoles);
         router.Map("POST", "/api/user/signin", users.SignInAsync, publicRoles);
         router.Map("POST", "/api/user/signup", users.SignUpAsync, publicRoles);
         router.Map("POST", "/api/user/signout", users.SignOutAsync, publicRoles);
@@ -59,7 +62,7 @@ internal static class Program
             .Use(csrfMiddleware.InvokeAsync)
             .Use(authenticationMiddleware.InvokeAsync)
             .Use(routingMiddleware.InvokeAsync)
-            .Build(_ => throw new HttpException(ApiError.NotFound, ErrorMessages.PageNotFound));
+            .Build(_ => throw new HttpException(ApiError.NotFound));
 
         var server = new HttpServer(settings.Url, pipeline);
         await server.RunAsync(cancellation.Token);

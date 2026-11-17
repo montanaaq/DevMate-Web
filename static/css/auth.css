@@ -1,0 +1,59 @@
+.auth-main {
+    inline-size: min(var(--dm-form-width), calc(100% - 2rem));
+    margin-inline: auto;
+    padding-block: clamp(2.5rem, 7vh, 5rem) 3rem;
+}
+
+.auth-main h1 {
+    font-size: clamp(1.75rem, 1.25rem + 2vw, 2.5rem);
+    text-align: center;
+}
+
+.auth-subtitle {
+    margin-block-end: 2rem;
+    color: var(--dm-text-muted);
+    text-align: center;
+}
+
+.auth-switch {
+    margin-block: 2rem 0;
+    color: var(--dm-text-muted);
+    text-align: center;
+}
+
+.auth-welcome-brand {
+    font-size: 1.125em;
+}
+
+.form-control {
+    padding: 0.75rem 1rem;
+    border-color: var(--dm-input-border);
+    color: var(--dm-text);
+    background-color: var(--dm-surface);
+    font-size: max(1rem, 1em);
+}
+
+.form-control::placeholder {
+    color: var(--dm-text-muted);
+    opacity: 1;
+}
+
+.form-control:focus {
+    border-color: var(--dm-accent);
+    color: var(--dm-text);
+    background-color: var(--dm-surface);
+    box-shadow: none;
+}
+
+.form-control.is-invalid {
+    background-image: none;
+}
+
+.password-toggle {
+    margin-block-start: 0.5rem;
+    padding-inline: 0;
+}
+
+.form-control.is-invalid:focus {
+    box-shadow: none;
+}

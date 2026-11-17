@@ -1,0 +1,23 @@
+@font-face {
+    font-family: "JetBrainsMono Nerd Font Mono";
+    src: url("../fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "JetBrainsMono Nerd Font Mono";
+    src: url("../fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Medium.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "JetBrainsMono Nerd Font Mono";
+    src: url("../fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-SemiBold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+}

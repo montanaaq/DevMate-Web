@@ -1,0 +1,26 @@
+:root {
+    --bs-body-font-family: "JetBrainsMono Nerd Font Mono", "Cascadia Mono", "Liberation Mono", monospace;
+    --dm-background: #101010;
+    --dm-surface: #191919;
+    --dm-border: #303030;
+    --dm-input-border: #767676;
+    --dm-text: #ededed;
+    --dm-text-muted: #aaaaaa;
+    --dm-accent: #58a6ff;
+    --dm-on-accent: #101010;
+    --dm-content-width: 65rem;
+    --dm-admin-width: 74rem;
+    --dm-form-width: 30rem;
+}
+
+:root[data-accent="green"] {
+    --dm-accent: #56d38b;
+}
+
+:root[data-accent="purple"] {
+    --dm-accent: #bc9cff;
+}
+
+:root[data-accent="amber"] {
+    --dm-accent: #f2b450;
+}

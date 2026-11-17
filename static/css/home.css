@@ -1,0 +1,35 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100dvh;
+}
+
+.home-main {
+    flex-grow: 1;
+    inline-size: 100%;
+    max-inline-size: var(--dm-content-width);
+    margin-inline: auto;
+    padding: clamp(4rem, 15vh, 9rem) 1rem 3rem;
+    text-align: center;
+}
+
+.home-main h1 {
+    font-size: clamp(1.5rem, 1rem + 3vw, 3.75rem);
+}
+
+.home-subtitle {
+    color: var(--dm-text-muted);
+    font-size: 1.25rem;
+}
+
+.home-footer {
+    padding: 1.5rem 1rem;
+    border-block-start: 1px solid var(--dm-border);
+    color: var(--dm-text-muted);
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.home-footer p {
+    margin: 0;
+}

@@ -14,7 +14,7 @@ public sealed class HttpServer(string url, RequestDelegate pipeline)
         listener.Prefixes.Add(url);
         listener.Start();
         using var registration = cancellationToken.Register(listener.Stop);
-        Console.WriteLine($"DevMate запущен: {url}");
+        Console.WriteLine($"skill_issue is running: {url}");
 
         try
         {
@@ -48,7 +48,7 @@ public sealed class HttpServer(string url, RequestDelegate pipeline)
         {
             listener.Stop();
             await Task.WhenAll(requests);
-            Console.WriteLine("DevMate остановлен.");
+            Console.WriteLine("skill_issue stopped.");
         }
     }
 

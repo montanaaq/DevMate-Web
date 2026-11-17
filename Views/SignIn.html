@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sign in — skill_issue</title>
+        <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+        <link
+            rel="stylesheet"
+            href="/static/vendor/bootstrap/bootstrap.min.css"
+        />
+        <link rel="stylesheet" href="/static/css/fonts.css" />
+        <link rel="stylesheet" href="/static/css/design-tokens.css" />
+        <link rel="stylesheet" href="/static/css/site.css" />
+        <link rel="stylesheet" href="/static/css/auth.css" />
+        <script type="module" src="/static/js/pages/auth/index.js"></script>
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="site-header-inner">
+                <a class="site-brand" href="/" aria-label="skill.issue — Home">
+                    <svg
+                        class="brand-mark brand-chevron"
+                        width="24"
+                        height="36"
+                        viewBox="0 0 24 36"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        focusable="false"
+                    >
+                        <path d="M0 0h9l15 18L9 36H0l15-18Z" />
+                    </svg>
+                    <span class="brand-name"
+                        >skill<span class="brand-mark">.</span
+                        ><wbr />issue</span
+                    >
+                </a>
+                <a class="back-link" href="/">← Home</a>
+            </div>
+        </header>
+        <main class="auth-main">
+            <h1 id="form-title">Sign in</h1>
+            <p class="auth-subtitle">
+                Good to see you at
+                <span class="brand-logo auth-welcome-brand">
+                    <span class="brand-name"
+                        >skill<span class="brand-mark">.</span
+                        ><wbr />issue</span
+                    >
+                </span>
+            </p>
+            <p
+                class="alert alert-success"
+                id="registration-notice"
+                role="status"
+                hidden
+            >
+                Account created. Sign in to get started.
+            </p>
+            <noscript
+                ><p class="alert alert-warning">
+                    Enable JavaScript to sign in.
+                </p></noscript
+            >
+            <form
+                action="/api/user/signin"
+                method="post"
+                data-auth-form="signin"
+                aria-labelledby="form-title"
+            >
+                <div
+                    class="alert alert-danger"
+                    id="form-error"
+                    tabindex="-1"
+                    role="alert"
+                    hidden
+                ></div>
+                <div class="mb-4">
+                    <label class="form-label" for="email">Email</label>
+                    <input
+                        class="form-control"
+                        type="email"
+                        id="email"
+                        name="email"
+                        autocomplete="username"
+                        spellcheck="false"
+                        autocapitalize="none"
+                        autocorrect="off"
+                        placeholder="you@example.com"
+                        maxlength="254"
+                        aria-describedby="email-error"
+                        required
+                    />
+                    <div class="invalid-feedback" id="email-error"></div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label" for="password">Password</label>
+                    <input
+                        class="form-control"
+                        type="password"
+                        id="password"
+                        name="password"
+                        autocomplete="current-password"
+                        maxlength="128"
+                        aria-describedby="password-error"
+                        required
+                    />
+                    <div class="invalid-feedback" id="password-error"></div>
+                    <button
+                        class="btn btn-link password-toggle"
+                        type="button"
+                        data-password-toggle
+                        aria-controls="password"
+                        aria-pressed="false"
+                        hidden
+                    >
+                        Show password
+                    </button>
+                </div>
+                <button class="btn btn-primary w-100" type="submit" disabled>
+                    Sign in
+                </button>
+            </form>
+            <p class="auth-switch">
+                No account yet? <a href="/signup">Sign up</a>
+            </p>
+        </main>
+    </body>
+</html>

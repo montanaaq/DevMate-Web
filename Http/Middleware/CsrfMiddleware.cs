@@ -20,7 +20,7 @@ public sealed class CsrfMiddleware(Uri applicationUrl)
 
         if (!string.Equals(origin, _allowedOrigin, StringComparison.OrdinalIgnoreCase))
         {
-            throw new HttpException(ApiError.Forbidden, ErrorMessages.CsrfValidationFailed);
+            throw new HttpException(ApiError.Forbidden);
         }
 
         await next(context);

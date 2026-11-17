@@ -28,16 +28,12 @@ public sealed class UserController(IAuthService authService)
         }
         catch (JsonException exception)
         {
-            throw new HttpException(
-                ApiError.BadRequest,
-                ErrorMessages.InvalidRequestBody,
-                exception
-            );
+            throw new HttpException(ApiError.BadRequest, innerException: exception);
         }
 
         if (request is null)
         {
-            throw new HttpException(ApiError.BadRequest, ErrorMessages.InvalidRequestBody);
+            throw new HttpException(ApiError.BadRequest);
         }
 
         await _signUpValidator.ValidateAndThrowAsync(request, context.CancellationToken);
@@ -68,16 +64,12 @@ public sealed class UserController(IAuthService authService)
         }
         catch (JsonException exception)
         {
-            throw new HttpException(
-                ApiError.BadRequest,
-                ErrorMessages.InvalidRequestBody,
-                exception
-            );
+            throw new HttpException(ApiError.BadRequest, innerException: exception);
         }
 
         if (request is null)
         {
-            throw new HttpException(ApiError.BadRequest, ErrorMessages.InvalidRequestBody);
+            throw new HttpException(ApiError.BadRequest);
         }
 
         await _signInValidator.ValidateAndThrowAsync(request, context.CancellationToken);

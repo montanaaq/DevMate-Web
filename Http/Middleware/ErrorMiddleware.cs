@@ -38,7 +38,9 @@ public static class ErrorMiddleware
                     {
                         field = JsonNamingPolicy.CamelCase.ConvertName(error.PropertyName),
                         code = error.ErrorCode,
-                        message = error.ErrorMessage,
+                        message = error.ErrorCode == "required"
+                            ? ErrorMessages.RequiredField
+                            : ErrorMessages.InvalidField,
                     }),
                 },
                 ApiError.BadRequest.StatusCode
