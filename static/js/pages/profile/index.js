@@ -13,7 +13,8 @@ async function loadProfile() {
             return;
         }
 
-        document.querySelector("[data-profile-name]").textContent = user.fullName;
+        document.querySelector("[data-profile-name]").textContent =
+            user.fullName;
         document.querySelector("[data-profile-email]").textContent = user.email;
         document.querySelector("[data-profile-role]").textContent = user.role;
         document.querySelector("[data-profile]").hidden = false;

@@ -1,4 +1,5 @@
 using System.Globalization;
+using FluentValidation;
 using SkillIssue.Configuration;
 using SkillIssue.Controllers;
 using SkillIssue.Http;
@@ -8,7 +9,6 @@ using SkillIssue.Http.Routing;
 using SkillIssue.Models.Users;
 using SkillIssue.Repositories;
 using SkillIssue.Services;
-using FluentValidation;
 
 namespace SkillIssue;
 
@@ -35,6 +35,7 @@ internal static class Program
         var sessionRepository = new SessionRepository(dataSource);
         var authService = new AuthService(userRepository, sessionRepository);
         var users = new UserController(authService);
+        var teams = new TeamController(new TeamRepository(dataSource));
 
         var pages = new PagesController(Path.Combine(AppContext.BaseDirectory, "Views"));
 
@@ -48,6 +49,9 @@ internal static class Program
         router.Map("POST", "/api/user/signup", users.SignUpAsync, publicRoles);
         router.Map("POST", "/api/user/signout", users.SignOutAsync, publicRoles);
         router.Map("GET", "/api/user/me", users.MeAsync);
+        router.Map("GET", "/api/teams/catalog", teams.CatalogAsync, publicRoles);
+        router.Map("GET", "/api/teams", teams.SearchAsync, publicRoles);
+        router.Map("POST", "/api/teams", teams.CreateAsync);
 
         var staticFilesMiddleware = new StaticFilesMiddleware(
             Path.Combine(AppContext.BaseDirectory, "static")
