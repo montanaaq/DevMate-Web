@@ -48,6 +48,16 @@
 }
 
 .github-icon {
-    font-size: 1.25em;
+    font-size: 2em;
     line-height: 1;
+}
+
+.home-footer a.footer-github:is(:hover, :focus-visible) {
+    text-decoration: none;
+}
+
+.footer-github:is(:hover, :focus-visible) .github-label {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
 }

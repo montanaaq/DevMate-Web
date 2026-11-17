@@ -41,6 +41,7 @@ internal static class Program
         var router = new Router();
         UserRole[] publicRoles = [UserRole.Guest, UserRole.User, UserRole.Admin];
         router.Map("GET", "/", pages.HomeAsync, publicRoles);
+        router.Map("GET", "/profile", pages.ProfileAsync, publicRoles);
         router.Map("GET", "/signin", pages.SignInAsync, publicRoles);
         router.Map("GET", "/signup", pages.SignUpAsync, publicRoles);
         router.Map("POST", "/api/user/signin", users.SignInAsync, publicRoles);

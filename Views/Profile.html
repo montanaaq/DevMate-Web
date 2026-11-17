@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Profile — skill_issue</title>
+        <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+        <link
+            rel="stylesheet"
+            href="/static/vendor/bootstrap/bootstrap.min.css"
+        />
+        <link rel="stylesheet" href="/static/css/fonts.css" />
+        <link rel="stylesheet" href="/static/css/variables.css" />
+        <link rel="stylesheet" href="/static/css/base.css" />
+        <script type="module" src="/static/js/pages/profile/index.js"></script>
+    </head>
+    <body>
+        <a class="skip-link" href="#content">Skip to content</a>
+        <header class="site-header">
+            <div class="site-header-inner">
+                <a class="site-brand" href="/" aria-label="skill.issue — Home">
+                    <svg
+                        class="brand-mark brand-chevron"
+                        width="24"
+                        height="36"
+                        viewBox="0 0 24 36"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        focusable="false"
+                    >
+                        <path d="M0 0h9l15 18L9 36H0l15-18Z" />
+                    </svg>
+                    <span class="brand-name"
+                        >skill<span class="brand-mark">.</span
+                        ><wbr />issue</span
+                    >
+                </a>
+                <a class="back-link" href="/">← Home</a>
+            </div>
+        </header>
+        <main class="container py-5">
+            <div class="row">
+                <div class="col-lg-6 mx-auto">
+                    <h1 id="content" tabindex="-1">Profile</h1>
+                    <noscript
+                        ><p class="alert alert-warning">
+                            Enable JavaScript to view your profile.
+                        </p></noscript
+                    >
+                    <p
+                        class="alert alert-danger"
+                        id="account-error"
+                        tabindex="-1"
+                        role="alert"
+                        hidden
+                    ></p>
+                    <dl class="my-4" data-profile hidden>
+                        <dt>Full name</dt>
+                        <dd class="mb-4" data-profile-name></dd>
+                        <dt>Email</dt>
+                        <dd class="mb-4" data-profile-email></dd>
+                        <dt>Role</dt>
+                        <dd class="text-capitalize" data-profile-role></dd>
+                    </dl>
+                    <button
+                        class="btn btn-outline-danger"
+                        type="button"
+                        data-signout
+                        disabled
+                    >
+                        Sign out
+                    </button>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

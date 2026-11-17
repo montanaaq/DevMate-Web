@@ -14,6 +14,11 @@ public sealed class PagesController(string viewsDirectory)
         return WritePageAsync(context, "SignIn.html");
     }
 
+    public Task ProfileAsync(RequestContext context)
+    {
+        return WritePageAsync(context, "Profile.html");
+    }
+
     public Task SignUpAsync(RequestContext context)
     {
         return WritePageAsync(context, "SignUp.html");

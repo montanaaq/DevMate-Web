@@ -10,8 +10,8 @@
             href="/static/vendor/bootstrap/bootstrap.min.css"
         />
         <link rel="stylesheet" href="/static/css/fonts.css" />
-        <link rel="stylesheet" href="/static/css/design-tokens.css" />
-        <link rel="stylesheet" href="/static/css/site.css" />
+        <link rel="stylesheet" href="/static/css/variables.css" />
+        <link rel="stylesheet" href="/static/css/base.css" />
         <link rel="stylesheet" href="/static/css/home.css" />
         <script type="module" src="/static/js/pages/home/index.js"></script>
     </head>
@@ -43,14 +43,15 @@
                 </a>
                 <nav class="site-nav" aria-label="Account" data-guest-links>
                     <a href="/signin">Sign in</a>
-                    <a href="/signup">Sign up</a>
                 </nav>
-                <div class="site-nav account-nav" data-account hidden>
-                    <span class="account-name" data-user-name></span>
-                    <button class="btn btn-link" type="button" data-signout>
-                        Sign out
-                    </button>
-                </div>
+                <nav
+                    class="site-nav account-nav"
+                    aria-label="Account"
+                    data-account
+                    hidden
+                >
+                    <a class="account-name" href="/profile" data-user-name></a>
+                </nav>
             </div>
         </header>
         <main class="home-main">
@@ -64,9 +65,7 @@
                     >skill<span class="brand-mark">.</span><wbr />issue</span
                 >
             </h1>
-            <p class="home-subtitle">
-                Find your dream team without issues.
-            </p>
+            <p class="home-subtitle">Find your dream team without issues.</p>
             <noscript
                 ><p class="alert alert-warning">
                     Enable JavaScript to use your account.
@@ -87,7 +86,7 @@
                 href="https://github.com/montanaaq/Skill-Issue-Web"
             >
                 <span class="github-icon" aria-hidden="true">&#xf09b;</span>
-                Github
+                <span class="github-label">Github</span>
             </a>
         </footer>
     </body>
