@@ -47,6 +47,7 @@ public sealed class TeamController(ITeamRepository repository)
         var teams = await repository.SearchAsync(
             skillIds.Distinct().ToArray(),
             beforeId,
+            context.User?.Id,
             context.CancellationToken
         );
         bool hasMore = teams.Count > 12;
@@ -64,8 +65,11 @@ public sealed class TeamController(ITeamRepository repository)
                         positions = team.Positions,
                         requiredSkills = team.RequiredSkills,
                         positionIds = team.PositionIds,
+                        isMember = team.IsMember,
+                        applicationPositions = team.ApplicationPositions,
                     }),
                 hasMore,
+                isAuthenticated = context.User is not null,
             }
         );
     }

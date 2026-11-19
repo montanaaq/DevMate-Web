@@ -12,6 +12,7 @@ public interface ITeamRepository
     Task<List<TeamSearchResult>> SearchAsync(
         int[] skillIds,
         int beforeId,
+        int? viewerId,
         CancellationToken cancellationToken
     );
     Task<int?> CreateAsync(
@@ -58,14 +59,16 @@ public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepositor
     public async Task<List<TeamSearchResult>> SearchAsync(
         int[] skillIds,
         int beforeId,
+        int? viewerId,
         CancellationToken cancellationToken
     )
     {
         await using var command = dataSource.CreateCommand(
-            "SELECT * FROM public.search_teams($1, $2)"
+            "SELECT * FROM public.search_teams($1, $2, $3)"
         );
         command.Parameters.AddWithValue(skillIds);
         command.Parameters.AddWithValue(beforeId);
+        command.Parameters.AddWithValue(NpgsqlDbType.Integer, (object?)viewerId ?? DBNull.Value);
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         var teams = new List<TeamSearchResult>();
 
@@ -79,7 +82,9 @@ public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepositor
                     reader.GetInt32(3),
                     reader.GetFieldValue<string[]>(4),
                     reader.GetFieldValue<string[]>(5),
-                    reader.GetFieldValue<int[]>(6)
+                    reader.GetFieldValue<int[]>(6),
+                    reader.GetBoolean(7),
+                    JsonSerializer.Deserialize<JsonElement>(reader.GetString(8))
                 )
             );
         }

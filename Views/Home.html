@@ -155,7 +155,7 @@
             ></p>
             <section class="team-results" aria-labelledby="teams-heading">
                 <div class="results-heading">
-                    <h2 id="teams-heading">Projects looking for people</h2>
+                    <h2 id="teams-heading" tabindex="-1">Projects looking for people</h2>
                     <span class="field-hint">Build something together.</span>
                 </div>
                 <p id="teams-status" role="status">Loading projects…</p>
@@ -176,7 +176,27 @@
                 </button>
             </section>
         </main>
-        <dialog id="create-team-dialog" aria-labelledby="create-team-heading">
+        <dialog class="team-dialog" id="application-dialog" aria-labelledby="application-heading">
+            <div class="dialog-heading">
+                <h2 id="application-heading" tabindex="-1" autofocus></h2>
+                <button class="btn btn-link" type="button" id="close-application" aria-label="Close application">
+                    <span class="ui-icon" aria-hidden="true">&#xf00d;</span>
+                </button>
+            </div>
+            <form id="application-form" method="post">
+                <fieldset id="application-positions">
+                    <legend>Choose a position</legend>
+                </fieldset>
+                <label class="form-label" for="application-letter">Cover letter (optional)</label>
+                <textarea id="application-letter" class="form-control" name="coverLetter"
+                    rows="3" maxlength="2000" aria-describedby="application-letter-hint"></textarea>
+                <p id="application-letter-hint" class="field-hint">Up to 2,000 characters.</p>
+                <button type="submit" class="btn btn-primary">Send application</button>
+            </form>
+            <p id="application-error" class="alert alert-danger" role="alert" tabindex="-1" hidden></p>
+            <p id="application-status" role="status" tabindex="-1"></p>
+        </dialog>
+        <dialog class="team-dialog" id="create-team-dialog" aria-labelledby="create-team-heading">
             <div class="dialog-heading">
                 <h2 id="create-team-heading">Create a project</h2>
                 <button

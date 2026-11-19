@@ -56,13 +56,56 @@ LANGUAGE sql STABLE AS $$
     ORDER BY t.id DESC LIMIT 13;
 $$;
 
-CREATE OR REPLACE FUNCTION public.apply_to_team_position(
-    target_team_id INTEGER, target_position_id INTEGER, applicant_user_id INTEGER, letter TEXT
+CREATE OR REPLACE FUNCTION public.search_teams(
+    selected_skills INTEGER[], before_id INTEGER, viewer_id INTEGER
 )
-RETURNS INTEGER
-LANGUAGE sql VOLATILE AS $$
+RETURNS TABLE (
+    id INTEGER, name TEXT, description TEXT, member_count INTEGER,
+    positions TEXT[], required_skills TEXT[], position_ids INTEGER[],
+    is_member BOOLEAN, application_positions JSONB
+)
+LANGUAGE sql STABLE AS $$
+    SELECT found.id, found.name, found.description, found.member_count,
+        found.positions, found.required_skills, found.position_ids,
+        COALESCE(t.captain_id = viewer_id, FALSE) OR EXISTS (
+            SELECT 1 FROM public.team_members m
+            WHERE m.team_id = found.id AND m.user_id = viewer_id AND m.left_at IS NULL
+        ),
+        (SELECT jsonb_agg(jsonb_build_object(
+            'id', p.id,
+            'title', p.title,
+            'category', c.name,
+            'skills', ARRAY(
+                SELECT s.name FROM public.position_required_skills r
+                JOIN public.skills s ON s.id = r.skill_id
+                JOIN public.skill_categories sc ON sc.id = s.category_id
+                WHERE r.position_id = p.id AND s.is_active AND sc.is_active
+                ORDER BY s.name
+            ),
+            'hasPendingApplication', EXISTS (
+                SELECT 1 FROM public.applications a
+                WHERE a.position_id = p.id AND a.applicant_id = viewer_id
+                    AND a.status = 'pending'
+            )
+        ) ORDER BY p.id)
+        FROM public.team_positions p
+        JOIN public.position_categories c ON c.id = p.category_id
+        WHERE p.id = ANY(found.position_ids))
+    FROM public.search_teams(selected_skills, before_id) found
+    JOIN public.teams t ON t.id = found.id
+    ORDER BY found.id DESC;
+$$;
+
+DROP ROUTINE IF EXISTS public.apply_to_team_position(INTEGER, INTEGER, INTEGER, TEXT);
+
+CREATE PROCEDURE public.apply_to_team_position(
+    IN target_team_id INTEGER, IN target_position_id INTEGER, IN applicant_user_id INTEGER,
+    IN letter TEXT, OUT application_id INTEGER
+)
+LANGUAGE plpgsql AS $$
+BEGIN
     INSERT INTO public.applications (position_id, applicant_id, cover_letter)
-    SELECT p.id, applicant_user_id, letter
+    SELECT p.id, applicant_user_id, NULLIF(letter, '')
     FROM public.teams t
     JOIN public.team_positions p ON p.team_id = t.id
     WHERE t.id = target_team_id AND t.closed_at IS NULL AND t.deleted_at IS NULL
@@ -74,7 +117,8 @@ LANGUAGE sql VOLATILE AS $$
         )
     FOR SHARE OF t, p
     ON CONFLICT (position_id, applicant_id) WHERE status = 'pending' DO NOTHING
-    RETURNING id;
+    RETURNING id INTO application_id;
+END;
 $$;
 
 COMMIT;

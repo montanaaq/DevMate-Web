@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace SkillIssue.Models.Responses;
 
 public sealed record TeamSearchResult(
@@ -7,5 +9,7 @@ public sealed record TeamSearchResult(
     int MemberCount,
     string[] Positions,
     string[] RequiredSkills,
-    int[] PositionIds
+    int[] PositionIds,
+    bool IsMember,
+    JsonElement ApplicationPositions
 );
