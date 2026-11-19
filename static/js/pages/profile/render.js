@@ -21,14 +21,19 @@ function renderList({ container, counter, items, empty, toRow }) {
     container.replaceChildren(...(items.length ? items.map(toRow) : [empty]));
 }
 
-export function renderProjects(teams) {
+export function renderProjects(teams, renderIncoming, openProjectIds) {
     renderList({
         container: $("profile-teams"),
         counter: $("team-count"),
         items: teams,
         empty: textElement("p", "No projects yet.", "profile-empty"),
-        toRow: (team) =>
-            createRow({
+        toRow: (team) => {
+            const body = [textElement("p", team.description, "project-body")];
+            if (team.incomingApplications) {
+                body.push(renderIncoming(team));
+            }
+
+            const row = createRow({
                 name: team.name,
                 meta: [
                     team.role,
@@ -37,12 +42,16 @@ export function renderProjects(teams) {
                 ].join(" · "),
                 status: team.status,
                 className: "project-row",
-                body: [textElement("p", team.description, "project-body")],
-            }),
+                body,
+            });
+            row.id = `project-${team.id}`;
+            row.open = openProjectIds.has(row.id);
+            return row;
+        },
     });
 }
 
-function formatDate(value) {
+export function formatDate(value) {
     return new Date(value).toLocaleDateString("en", {
         day: "numeric",
         month: "short",
@@ -66,6 +75,11 @@ export function renderApplications(applications) {
             const body = [
                 textElement("p", application.description, "project-body"),
             ];
+            if (application.resolutionReason) {
+                body.push(
+                    textElement("p", application.resolutionReason, "project-body"),
+                );
+            }
             if (application.coverLetter) {
                 body.push(
                     textElement("h3", "Your message", "profile-meta"),

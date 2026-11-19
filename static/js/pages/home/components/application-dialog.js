@@ -23,7 +23,6 @@ function positionChoice(position, selected) {
     radio.type = "radio";
     radio.name = "positionId";
     radio.value = position.id;
-    radio.disabled = position.hasPendingApplication;
     radio.required = true;
     radio.checked = selected;
 
@@ -37,9 +36,6 @@ function positionChoice(position, selected) {
             position.skills.join(", ") || "No required skills",
         ),
     );
-    if (position.hasPendingApplication) {
-        label.append(textElement("small", "Application pending"));
-    }
     return label;
 }
 
@@ -52,9 +48,7 @@ function setSending(sending) {
 }
 
 export function openApplicationDialog(team, trigger, refreshTeams) {
-    const available = team.applicationPositions.filter(
-        (position) => !position.hasPendingApplication,
-    );
+    const available = team.applicationPositions;
     const legend = positions.querySelector("legend");
     positions.replaceChildren(
         legend,
@@ -96,19 +90,17 @@ export function openApplicationDialog(team, trigger, refreshTeams) {
                 positionId: id,
                 coverLetter: letter.value,
             });
-            position.hasPendingApplication = true;
+            team.hasPendingApplication = true;
             form.hidden = true;
             const profile = createLink("View in profile", "/profile");
             status.append(`Application sent for ${position.title}. `, profile);
             profile.focus();
 
-            if (available.length === 1) {
-                dialog.addEventListener("close", () => {
-                    const link = createLink("Application pending", "/profile");
-                    trigger.replaceWith(link);
-                    link.focus();
-                }, { once: true });
-            }
+            dialog.addEventListener("close", () => {
+                const link = createLink("Application pending", "/profile");
+                trigger.replaceWith(link);
+                link.focus();
+            }, { once: true });
         } catch (cause) {
             showError(error, cause.message);
             if (cause.status === 409 || cause.status === 401) {

@@ -11,5 +11,6 @@ public sealed record TeamSearchResult(
     string[] RequiredSkills,
     int[] PositionIds,
     bool IsMember,
-    JsonElement ApplicationPositions
+    JsonElement ApplicationPositions,
+    bool HasPendingApplication
 );

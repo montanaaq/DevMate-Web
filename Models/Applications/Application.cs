@@ -9,4 +9,5 @@ public sealed class Application
     public ApplicationStatus Status { get; init; } = ApplicationStatus.Pending;
     public DateTime CreatedAt { get; init; }
     public DateTime? ResolvedAt { get; init; }
+    public string? ResolutionReason { get; init; }
 }

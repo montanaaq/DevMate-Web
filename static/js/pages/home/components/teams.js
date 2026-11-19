@@ -26,11 +26,7 @@ export function renderTeams(container, teams, isAuthenticated, refreshTeams) {
             row.append(createLink("Sign in to apply", "/signin"));
         } else if (team.isMember) {
             row.append(textElement("p", "Your team", "team-meta"));
-        } else if (
-            team.applicationPositions.some(
-                (position) => !position.hasPendingApplication,
-            )
-        ) {
+        } else if (!team.hasPendingApplication) {
             const button = textElement(
                 "button",
                 "Apply to join",

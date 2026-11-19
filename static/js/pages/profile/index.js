@@ -3,7 +3,7 @@ import { errorMessages } from "../../shared/constants/error-messages.js";
 import { clearError, showError } from "../../shared/ui.js";
 import { initAccent } from "./accent.js";
 import { $ } from "../../shared/dom.js";
-import { renderApplications, renderProjects } from "./render.js";
+import { renderApplications } from "./render.js";
 import { initSocialLinks, renderLinks } from "./social-links.js";
 
 const errorSummary = document.getElementById("account-error");
@@ -35,7 +35,6 @@ function renderProfile(user, profile) {
     skills.hidden = profile.skills.length === 0;
 
     renderLinks(profile.links);
-    renderProjects(profile.teams);
     renderApplications(profile.applications);
     $("profile").hidden = false;
 }

@@ -72,9 +72,7 @@ public sealed class UserRepository(NpgsqlDataSource dataSource) : IUserRepositor
         command.Parameters.AddWithValue(fullName);
         command.Parameters.AddWithValue(passwordHash);
 
-        object? result = await command.ExecuteScalarAsync(cancellationToken);
-
-        return result is null or DBNull ? null : (int)result;
+        return await command.ExecuteNullableScalarAsync<int>(cancellationToken);
     }
 
     public async Task<User?> FindByEmailAsync(string email, CancellationToken ct)

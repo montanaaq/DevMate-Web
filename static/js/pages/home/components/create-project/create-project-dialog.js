@@ -4,10 +4,10 @@ import { clearError, showError } from "../../../../shared/ui.js";
 import { createStepper } from "../stepper.js";
 import { createDraft } from "./draft.js";
 import { updateCharacterCount } from "./form-fields.js";
-import { createDetailsStep } from "./step-details.js";
-import { createPositionsStep } from "./step-positions.js";
-import { createSkillsStep } from "./step-skills.js";
-import { createReviewStep } from "./step-review.js";
+import { createDetailsStep } from "./step-details-dialog.js";
+import { createPositionsStep } from "./step-positions-dialog.js";
+import { createSkillsStep } from "./step-skills-dialog.js";
+import { createReviewStep } from "./step-review-dialog.js";
 
 export function initCreateProject({
     accountRequest,

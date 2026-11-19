@@ -2,7 +2,7 @@ import { getCurrentUser } from "../../api/auth-api.js";
 import { getTeamCatalog, getTeams } from "../../api/teams-api.js";
 import { errorMessages } from "../../shared/constants/error-messages.js";
 import { showError } from "../../shared/ui.js";
-import { initCreateProject } from "./components/create-project/index.js";
+import { initCreateProject } from "./components/create-project/create-project-dialog.js";
 import { renderAccount } from "./components/header.js";
 import { createSkillPicker } from "./components/skill-picker.js";
 import { renderTeams } from "./components/teams.js";

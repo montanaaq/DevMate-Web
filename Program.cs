@@ -44,6 +44,7 @@ internal static class Program
 
         router.Map("GET", "/", pages.HomeAsync, publicRoles);
         router.Map("GET", "/profile", pages.ProfileAsync, publicRoles);
+        router.Map("GET", "/my-projects", pages.MyProjectsAsync, publicRoles);
         router.Map("GET", "/signin", pages.SignInAsync, publicRoles);
         router.Map("GET", "/signup", pages.SignUpAsync, publicRoles);
 
@@ -58,6 +59,11 @@ internal static class Program
         router.Map("GET", "/api/teams", teams.SearchAsync, publicRoles);
         router.Map("POST", "/api/teams", teams.CreateAsync);
         router.Map("POST", "/api/teams/{teamId}/applications", teams.ApplyAsync);
+        router.Map(
+            "POST",
+            "/api/teams/{teamId}/applications/{applicationId}",
+            teams.ResolveApplicationAsync
+        );
 
         var staticFilesMiddleware = new StaticFilesMiddleware(
             Path.Combine(AppContext.BaseDirectory, "static")

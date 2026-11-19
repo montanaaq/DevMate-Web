@@ -20,22 +20,7 @@ public sealed class TeamController(ITeamRepository repository)
 
     public async Task SearchAsync(RequestContext context)
     {
-        string? rawSkills = context.Request.QueryString["skills"];
-        string[] values = string.IsNullOrEmpty(rawSkills) ? [] : rawSkills.Split(',');
-        if (values.Length > 20)
-        {
-            throw new HttpException(ApiError.BadRequest);
-        }
-
-        var skillIds = new List<int>();
-        foreach (string value in values)
-        {
-            if (!int.TryParse(value, out int id) || id <= 0)
-            {
-                throw new HttpException(ApiError.BadRequest);
-            }
-            skillIds.Add(id);
-        }
+        int[] skillIds = ParseSkillIds(context.Request.QueryString["skills"]);
 
         int beforeId = int.MaxValue;
         string? rawBefore = context.Request.QueryString["before"];
@@ -45,7 +30,7 @@ public sealed class TeamController(ITeamRepository repository)
         }
 
         var teams = await repository.SearchAsync(
-            skillIds.Distinct().ToArray(),
+            skillIds,
             beforeId,
             context.User?.Id,
             context.CancellationToken
@@ -67,6 +52,7 @@ public sealed class TeamController(ITeamRepository repository)
                         positionIds = team.PositionIds,
                         isMember = team.IsMember,
                         applicationPositions = team.ApplicationPositions,
+                        hasPendingApplication = team.HasPendingApplication,
                     }),
                 hasMore,
                 isAuthenticated = context.User is not null,
@@ -106,5 +92,63 @@ public sealed class TeamController(ITeamRepository repository)
             ) ?? throw new HttpException(ApiError.Conflict, ErrorMessages.ApplicationUnavailable);
 
         await context.WriteJsonAsync(new { applicationId }, HttpStatusCode.Created);
+    }
+
+    public async Task ResolveApplicationAsync(RequestContext context)
+    {
+        var user = context.User ?? throw new HttpException(ApiError.Unauthorized);
+        if (
+            !int.TryParse(context.RouteValues["teamId"], out int teamId)
+            || teamId <= 0
+            || !int.TryParse(context.RouteValues["applicationId"], out int applicationId)
+            || applicationId <= 0
+        )
+        {
+            throw new HttpException(ApiError.BadRequest);
+        }
+
+        var request = await context.ReadJsonAsync<ResolveApplicationRequest>();
+        bool accept = request.Decision switch
+        {
+            "accept" => true,
+            "reject" => false,
+            _ => throw new HttpException(ApiError.BadRequest),
+        };
+        bool resolved =
+            await repository.ResolveApplicationAsync(
+                teamId,
+                applicationId,
+                user.Id,
+                accept,
+                context.CancellationToken
+            ) ?? throw new HttpException(ApiError.NotFound);
+        if (!resolved)
+        {
+            throw new HttpException(ApiError.Conflict, ErrorMessages.ApplicationAlreadyResolved);
+        }
+
+        await context.WriteJsonAsync(new { applicationId });
+    }
+
+    private static int[] ParseSkillIds(string? rawSkills)
+    {
+        string[] values = string.IsNullOrEmpty(rawSkills) ? [] : rawSkills.Split(',');
+        if (values.Length > 20)
+        {
+            throw new HttpException(ApiError.BadRequest);
+        }
+
+        var skillIds = new HashSet<int>();
+        foreach (string value in values)
+        {
+            if (!int.TryParse(value, out int id) || id <= 0)
+            {
+                throw new HttpException(ApiError.BadRequest);
+            }
+
+            skillIds.Add(id);
+        }
+
+        return skillIds.ToArray();
     }
 }

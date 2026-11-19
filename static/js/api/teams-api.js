@@ -23,3 +23,7 @@ export function createTeam(data) {
 export function applyToTeam(teamId, data) {
     return api.post(`/teams/${teamId}/applications`, data);
 }
+
+export function resolveTeamApplication(teamId, applicationId, decision) {
+    return api.post(`/teams/${teamId}/applications/${applicationId}`, { decision });
+}

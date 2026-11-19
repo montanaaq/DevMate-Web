@@ -144,6 +144,29 @@
     white-space: pre-wrap;
 }
 
+.project-incoming {
+    margin-block-start: 2rem;
+}
+
+.project-incoming ul {
+    display: grid;
+    gap: 1rem;
+    padding: 0;
+    list-style: none;
+}
+
+.project-incoming li {
+    padding-block-start: 1rem;
+    border-block-start: 1px solid var(--dm-border);
+}
+
+.project-application-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 1rem;
+}
+
 .profile-empty {
     margin: 0;
     padding-block: 2rem;

@@ -27,6 +27,13 @@ public interface ITeamRepository
         string? coverLetter,
         CancellationToken cancellationToken
     );
+    Task<bool?> ResolveApplicationAsync(
+        int teamId,
+        int applicationId,
+        int captainId,
+        bool accept,
+        CancellationToken cancellationToken
+    );
 }
 
 public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepository
@@ -84,7 +91,8 @@ public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepositor
                     reader.GetFieldValue<string[]>(5),
                     reader.GetFieldValue<int[]>(6),
                     reader.GetBoolean(7),
-                    JsonSerializer.Deserialize<JsonElement>(reader.GetString(8))
+                    JsonSerializer.Deserialize<JsonElement>(reader.GetString(8)),
+                    reader.GetBoolean(9)
                 )
             );
         }
@@ -109,8 +117,7 @@ public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepositor
             JsonSerializer.Serialize(request.Positions!, JsonSerializerOptions.Web)
         );
 
-        object? result = await command.ExecuteScalarAsync(cancellationToken);
-        return result is null or DBNull ? null : (int)result;
+        return await command.ExecuteNullableScalarAsync<int>(cancellationToken);
     }
 
     public async Task<int?> ApplyAsync(
@@ -129,7 +136,25 @@ public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepositor
         command.Parameters.AddWithValue(applicantId);
         command.Parameters.AddWithValue(NpgsqlDbType.Text, (object?)coverLetter ?? DBNull.Value);
 
-        object? result = await command.ExecuteScalarAsync(cancellationToken);
-        return result is null or DBNull ? null : (int)result;
+        return await command.ExecuteNullableScalarAsync<int>(cancellationToken);
+    }
+
+    public async Task<bool?> ResolveApplicationAsync(
+        int teamId,
+        int applicationId,
+        int captainId,
+        bool accept,
+        CancellationToken cancellationToken
+    )
+    {
+        await using var command = dataSource.CreateCommand(
+            "CALL public.resolve_team_application($1, $2, $3, $4, NULL)"
+        );
+        command.Parameters.AddWithValue(teamId);
+        command.Parameters.AddWithValue(applicationId);
+        command.Parameters.AddWithValue(captainId);
+        command.Parameters.AddWithValue(accept);
+
+        return await command.ExecuteNullableScalarAsync<bool>(cancellationToken);
     }
 }
