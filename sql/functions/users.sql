@@ -102,6 +102,8 @@ WITH projects AS (
                                 a.id,
                                 'applicantName',
                                 applicant.full_name,
+                                'applicantEmail',
+                                applicant.email,
                                 'position',
                                 p.title,
                                 'coverLetter',

@@ -3,7 +3,6 @@ import { getTeamCatalog, getTeams } from "../../api/teams-api.js";
 import { errorMessages } from "../../shared/constants/error-messages.js";
 import { showError } from "../../shared/ui.js";
 import { initCreateProject } from "./components/create-project/create-project-dialog.js";
-import { renderAccount } from "./components/header.js";
 import { createSkillPicker } from "./components/skill-picker.js";
 import { renderTeams } from "./components/teams.js";
 
@@ -11,9 +10,7 @@ const errorSummary = document.getElementById("account-error");
 
 async function loadAccount() {
     try {
-        const user = await getCurrentUser();
-        renderAccount(user);
-        return user;
+        return await getCurrentUser();
     } catch {
         showError(errorSummary, errorMessages.requestFailed);
     }
@@ -117,10 +114,6 @@ document
     .getElementById("retry-teams")
     .addEventListener("click", () => loadTeams());
 more.addEventListener("click", () => loadTeams(true));
-document
-    .querySelector(".team-nav a")
-    .addEventListener("click", () => searchInput.focus());
-
 initCreateProject({
     accountRequest,
     ensureCatalog,

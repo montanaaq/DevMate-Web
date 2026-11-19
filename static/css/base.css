@@ -195,8 +195,7 @@ h1 {
     gap: 0.5rem 2rem;
 }
 
-.site-nav a,
-.back-link {
+.site-nav a {
     display: inline-flex;
     align-items: center;
     min-block-size: 3rem;
@@ -211,39 +210,36 @@ h1 {
     color: var(--dm-accent);
 }
 
-.team-nav {
-    gap: 0.5rem;
-    margin-inline-start: auto;
-}
-
-.team-nav button {
-    min-block-size: 3rem;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--dm-text);
-}
-
-.team-nav button:hover {
-    color: var(--dm-accent);
-}
-
-.nav-slash {
-    color: var(--dm-accent);
-    font-size: 1.5rem;
-}
-
 .site-nav a[aria-current="page"] {
     text-decoration: underline;
     text-decoration-thickness: 2px;
 }
 
-.account-nav {
-    min-inline-size: 0;
+.site-nav .projects-link {
+    padding-inline: 0.75rem;
+    border: 1px solid var(--dm-accent);
+    border-radius: var(--dm-radius);
+    font-weight: 600;
 }
 
-.account-name {
+.site-nav .projects-link:is(:hover, :focus-visible) {
+    background-color: var(--dm-surface);
+}
+
+.account-nav {
     min-inline-size: 0;
+    margin-inline-start: auto;
+    gap: 0.5rem 1rem;
+}
+
+.site-nav .account-name {
+    display: block;
+    min-inline-size: 0;
+    max-inline-size: 16ch;
+    overflow: hidden;
+    line-height: 3rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 :where(a, button, input, textarea, select):focus-visible {
@@ -278,28 +274,3 @@ h1 {
     }
 }
 
-@media (max-width: 48rem) {
-    .site-header-inner:has(.team-nav) {
-        display: grid;
-        grid-template-columns: max-content minmax(0, 1fr);
-        gap: 0.5rem 1rem;
-    }
-
-    .team-nav {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-column: 1 / -1;
-        order: 1;
-        gap: 1rem;
-        margin-inline-start: 0;
-    }
-
-    .nav-slash {
-        display: none;
-    }
-
-    .site-header-inner > .site-nav:not(.team-nav) {
-        justify-self: end;
-        max-inline-size: 100%;
-    }
-}

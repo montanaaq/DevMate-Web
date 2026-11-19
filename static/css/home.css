@@ -133,6 +133,16 @@
     margin-block-start: 1rem;
 }
 
+.search-actions [data-create-team] {
+    margin-inline-start: auto;
+    border-color: var(--dm-input-border);
+}
+
+.search-actions [data-create-team]:is(:hover, :focus-visible) {
+    border-color: var(--dm-accent);
+    color: var(--dm-accent);
+}
+
 .team-results {
     text-align: start;
 }

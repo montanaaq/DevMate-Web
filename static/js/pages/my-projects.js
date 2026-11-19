@@ -26,8 +26,13 @@ function renderIncoming(team) {
         const item = document.createElement("li");
         const heading = textElement("h3", application.applicantName);
         heading.id = `applicant-${application.id}`;
+        item.append(heading);
+        if (application.applicantEmail) {
+            item.append(
+                textElement("p", application.applicantEmail, "applicant-email"),
+            );
+        }
         item.append(
-            heading,
             textElement(
                 "p",
                 `${application.position} · ${formatDate(application.createdAt)}`,

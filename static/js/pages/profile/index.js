@@ -50,7 +50,6 @@ async function loadProfile() {
             return;
         }
         logout.disabled = false;
-        $("user-name").textContent = user.fullName;
         $("profile-role").textContent = user.role;
         renderProfile(user, await getProfile());
     } catch {
