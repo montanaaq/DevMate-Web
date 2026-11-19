@@ -19,7 +19,6 @@ export function createSkillPicker(root, skills, onChange, initialIds = []) {
         list.setAttribute("popover", "manual");
     }
 
-    status.setAttribute("role", "status");
     let selected = [...new Set(initialIds)]
         .filter((id) => byId.has(id))
         .slice(0, MAX_SKILLS);

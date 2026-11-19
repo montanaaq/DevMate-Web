@@ -41,7 +41,6 @@ CREATE OR REPLACE FUNCTION public.renew_session(
 )
 RETURNS SETOF public.sessions
 LANGUAGE sql
-VOLATILE
 AS $$
     UPDATE public.sessions AS s
     SET expires_at = GREATEST(s.expires_at, session_expires_at)
@@ -54,7 +53,6 @@ $$;
 CREATE OR REPLACE FUNCTION public.revoke_session(session_token_hash BYTEA)
 RETURNS VOID
 LANGUAGE sql
-VOLATILE
 AS $$
     UPDATE public.sessions AS s
     SET revoked_at = clock_timestamp()

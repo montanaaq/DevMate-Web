@@ -57,7 +57,6 @@ async function loadTeams(append = false) {
     const version = ++requestVersion;
     error.hidden = true;
     more.hidden = true;
-    list.setAttribute("aria-busy", "true");
 
     if (!append) {
         before = undefined;
@@ -94,10 +93,6 @@ async function loadTeams(append = false) {
         document.getElementById("teams-error-message").textContent =
             cause.message || errorMessages.requestFailed;
         error.hidden = false;
-    } finally {
-        if (version === requestVersion) {
-            list.setAttribute("aria-busy", "false");
-        }
     }
 }
 

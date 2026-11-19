@@ -10,7 +10,6 @@ export function reportFirstInvalid(section) {
     if (!invalid) {
         return true;
     }
-    invalid.setAttribute("aria-invalid", "true");
     if (!section.hidden) {
         invalid.reportValidity();
     }

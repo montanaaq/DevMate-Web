@@ -149,13 +149,12 @@
             <p
                 class="alert alert-danger"
                 id="account-error"
-                tabindex="-1"
                 role="alert"
                 hidden
             ></p>
             <section class="team-results" aria-labelledby="teams-heading">
                 <div class="results-heading">
-                    <h2 id="teams-heading" tabindex="-1">Projects looking for people</h2>
+                    <h2 id="teams-heading">Projects looking for people</h2>
                     <span class="field-hint">Build something together.</span>
                 </div>
                 <p id="teams-status" role="status">Loading projects…</p>
@@ -165,7 +164,7 @@
                         Try again
                     </button>
                 </div>
-                <div id="team-list" aria-busy="true"></div>
+                <div id="team-list"></div>
                 <button
                     class="btn btn-link"
                     type="button"
@@ -193,8 +192,8 @@
                 <p id="application-letter-hint" class="field-hint">Up to 2,000 characters.</p>
                 <button type="submit" class="btn btn-primary">Send application</button>
             </form>
-            <p id="application-error" class="alert alert-danger" role="alert" tabindex="-1" hidden></p>
-            <p id="application-status" role="status" tabindex="-1"></p>
+            <p id="application-error" class="alert alert-danger" role="alert" hidden></p>
+            <p id="application-status" role="status"></p>
         </dialog>
         <dialog class="team-dialog" id="create-team-dialog" aria-labelledby="create-team-heading">
             <div class="dialog-heading">
@@ -296,7 +295,6 @@
                             class="alert alert-danger"
                             id="project-people-error"
                             role="alert"
-                            tabindex="-1"
                             hidden
                         ></p>
                     </section>
@@ -330,7 +328,6 @@
                     class="alert alert-danger mt-3"
                     id="create-team-error"
                     role="alert"
-                    tabindex="-1"
                     hidden
                 ></p>
             </form>

@@ -5,7 +5,6 @@ CREATE OR REPLACE FUNCTION public.create_user(
 )
 RETURNS INTEGER
 LANGUAGE sql
-VOLATILE
 AS $$
     INSERT INTO public.users (email, full_name, password_hash)
     VALUES (user_email, user_full_name, user_password_hash)
@@ -114,7 +113,7 @@ $$;
 
 CREATE OR REPLACE FUNCTION public.save_user_social_links(profile_user_id INTEGER, links JSONB)
 RETURNS VOID
-LANGUAGE plpgsql VOLATILE AS $$
+LANGUAGE plpgsql AS $$
 BEGIN
     -- Serialize edits from multiple tabs before replacing this user's links.
     PERFORM 1 FROM public.users WHERE id = profile_user_id FOR UPDATE;

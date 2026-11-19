@@ -59,9 +59,6 @@ export function initCreateProject({
 
         if (isBusy) {
             next.textContent = "Publishing…";
-            form.setAttribute("aria-busy", "true");
-        } else {
-            form.removeAttribute("aria-busy");
         }
     }
 
@@ -74,7 +71,6 @@ export function initCreateProject({
         }
 
         if (user === undefined) {
-            accountError.focus();
             return;
         }
 
@@ -99,7 +95,6 @@ export function initCreateProject({
                 accountError,
                 cause.message || errorMessages.requestFailed,
             );
-            accountError.focus();
         }
     }
 
@@ -109,7 +104,6 @@ export function initCreateProject({
         }
         if (event.target.setCustomValidity) {
             event.target.setCustomValidity("");
-            event.target.removeAttribute("aria-invalid");
         }
     });
 
@@ -165,7 +159,6 @@ export function initCreateProject({
             await onCreated();
         } catch (cause) {
             showError(error, cause.message || errorMessages.requestFailed);
-            error.focus();
         } finally {
             setBusy(false);
         }

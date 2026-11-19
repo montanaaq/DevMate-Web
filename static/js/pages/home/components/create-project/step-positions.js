@@ -149,7 +149,6 @@ export function createPositionsStep(section, draft, catalog) {
                     `Use up to ${MAX_PEOPLE} places in total.`,
                 );
                 if (!section.hidden) {
-                    peopleError.focus();
                 }
                 return false;
             }

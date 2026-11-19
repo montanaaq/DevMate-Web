@@ -25,7 +25,6 @@ export function createDetailsStep(section, draft) {
         reset() {
             for (const field of fields) {
                 field.setCustomValidity("");
-                field.removeAttribute("aria-invalid");
             }
             updateCounters();
         },

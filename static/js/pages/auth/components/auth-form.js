@@ -45,16 +45,10 @@ export function showFormError(form, summary, error) {
         summary,
         error instanceof Error ? error.message : errorMessages.requestFailed,
     );
-    summary.focus();
 }
 
 export function setFormPending(form, pending, label) {
     const submit = form.querySelector('[type="submit"]');
     submit.disabled = pending;
     submit.textContent = label;
-    if (pending) {
-        form.setAttribute("aria-busy", "true");
-    } else {
-        form.removeAttribute("aria-busy");
-    }
 }

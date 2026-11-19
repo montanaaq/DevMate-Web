@@ -7,12 +7,16 @@ const form = document.getElementById("application-form");
 const positions = document.getElementById("application-positions");
 const letter = document.getElementById("application-letter");
 const submit = form.querySelector("button[type=submit]");
+const close = document.getElementById("close-application");
 const error = document.getElementById("application-error");
 const status = document.getElementById("application-status");
 
-document
-    .getElementById("close-application")
-    .addEventListener("click", () => dialog.close());
+close.addEventListener("click", () => dialog.close());
+dialog.addEventListener("cancel", (event) => {
+    if (submit.disabled) {
+        event.preventDefault();
+    }
+});
 
 function positionChoice(position, selected) {
     const radio = document.createElement("input");
@@ -43,14 +47,11 @@ function setSending(sending) {
     positions.disabled = sending;
     letter.readOnly = sending;
     submit.disabled = sending;
+    close.disabled = sending;
     submit.textContent = sending ? "Sending…" : "Send application";
 }
 
 export function openApplicationDialog(team, trigger, refreshTeams) {
-    if (trigger.getAttribute("aria-disabled") === "true") {
-        return;
-    }
-
     const available = team.applicationPositions.filter(
         (position) => !position.hasPendingApplication,
     );
@@ -88,76 +89,34 @@ export function openApplicationDialog(team, trigger, refreshTeams) {
         }
 
         clearError(error);
-        trigger.setAttribute("aria-disabled", "true");
-        trigger.textContent = "Sending…";
         setSending(true);
 
-        const stillOpen = () =>
-            dialog.open && form.onsubmit === submitApplication;
         try {
             await applyToTeam(team.id, {
                 positionId: id,
                 coverLetter: letter.value,
             });
             position.hasPendingApplication = true;
-            if (stillOpen()) {
-                form.hidden = true;
-                status.append(
-                    `Application sent for ${position.title}. `,
-                    createLink("View in profile", "/profile"),
-                );
-                status.focus();
-            }
+            form.hidden = true;
+            const profile = createLink("View in profile", "/profile");
+            status.append(`Application sent for ${position.title}. `, profile);
+            profile.focus();
 
-            if (
-                team.applicationPositions.every(
-                    (item) => item.hasPendingApplication,
-                )
-            ) {
-                const replaceButton = () => {
-                    const focused = document.activeElement === trigger;
+            if (available.length === 1) {
+                dialog.addEventListener("close", () => {
                     const link = createLink("Application pending", "/profile");
                     trigger.replaceWith(link);
-                    if (focused) {
-                        link.focus();
-                    }
-                };
-                if (stillOpen()) {
-                    dialog.addEventListener("close", replaceButton, {
-                        once: true,
-                    });
-                } else {
-                    replaceButton();
-                }
+                    link.focus();
+                }, { once: true });
             }
         } catch (cause) {
-            if (stillOpen()) {
-                showError(error, cause.message);
-                error.focus();
-            }
+            showError(error, cause.message);
             if (cause.status === 409 || cause.status === 401) {
-                if (stillOpen()) {
-                    form.hidden = true;
-                }
-                if (dialog.open) {
-                    dialog.addEventListener(
-                        "close",
-                        () => {
-                            document.getElementById("teams-heading").focus();
-                            refreshTeams();
-                        },
-                        { once: true },
-                    );
-                } else {
-                    refreshTeams();
-                }
+                form.hidden = true;
+                dialog.addEventListener("close", refreshTeams, { once: true });
             }
         } finally {
-            trigger.removeAttribute("aria-disabled");
-            trigger.textContent = "Apply to join";
-            if (stillOpen()) {
-                setSending(false);
-            }
+            setSending(false);
         }
     }
 }

@@ -43,7 +43,6 @@ export function createSkillsStep(section, draft, catalog) {
                     (ids) => {
                         position.skillIds = ids;
                         input.setCustomValidity("");
-                        input.removeAttribute("aria-invalid");
                     },
                     position.skillIds,
                 ),

@@ -70,7 +70,6 @@ async function handleLogout() {
         window.location.replace("/");
     } catch {
         showError(errorSummary, errorMessages.requestFailed);
-        errorSummary.focus();
         logout.disabled = false;
     }
 }
