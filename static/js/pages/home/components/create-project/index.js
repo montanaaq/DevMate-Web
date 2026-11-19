@@ -175,5 +175,4 @@ export function initCreateProject({
         document.querySelector("[data-create-team]").focus();
         openDialog();
     }
-
 }

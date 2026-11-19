@@ -57,6 +57,7 @@ internal static class Program
         router.Map("GET", "/api/teams/catalog", teams.CatalogAsync, publicRoles);
         router.Map("GET", "/api/teams", teams.SearchAsync, publicRoles);
         router.Map("POST", "/api/teams", teams.CreateAsync);
+        router.Map("POST", "/api/teams/{teamId}/applications", teams.ApplyAsync);
 
         var staticFilesMiddleware = new StaticFilesMiddleware(
             Path.Combine(AppContext.BaseDirectory, "static")

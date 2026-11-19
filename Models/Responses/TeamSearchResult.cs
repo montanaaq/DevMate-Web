@@ -6,5 +6,6 @@ public sealed record TeamSearchResult(
     string Description,
     int MemberCount,
     string[] Positions,
-    string[] RequiredSkills
+    string[] RequiredSkills,
+    int[] PositionIds
 );

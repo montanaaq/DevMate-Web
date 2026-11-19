@@ -18,7 +18,6 @@ public sealed class UserController(IAuthService authService, IUserRepository rep
     public async Task ProfileAsync(RequestContext context)
     {
         var user = context.User ?? throw new HttpException(ApiError.Unauthorized);
-        context.Response.Headers["Cache-Control"] = "no-store";
         await context.WriteJsonAsync(
             await repository.GetProfileAsync(user.Id, context.CancellationToken)
         );
@@ -32,7 +31,6 @@ public sealed class UserController(IAuthService authService, IUserRepository rep
         await _socialLinksValidator.ValidateAndThrowAsync(request, context.CancellationToken);
 
         await repository.SaveSocialLinksAsync(user.Id, request, context.CancellationToken);
-        context.Response.Headers["Cache-Control"] = "no-store";
         context.Response.StatusCode = (int)HttpStatusCode.NoContent;
     }
 
@@ -50,7 +48,6 @@ public sealed class UserController(IAuthService authService, IUserRepository rep
                 context.CancellationToken
             ) ?? throw new HttpException(ApiError.Conflict, ErrorMessages.EmailAlreadyExists);
 
-        context.Response.Headers["Cache-Control"] = "no-store";
         await context.WriteJsonAsync(new { userId }, HttpStatusCode.Created);
     }
 
@@ -84,8 +81,6 @@ public sealed class UserController(IAuthService authService, IUserRepository rep
 
     public async Task MeAsync(RequestContext context)
     {
-        context.Response.Headers["Cache-Control"] = "no-store";
-
         var user = context.User ?? throw new HttpException(ApiError.Unauthorized);
 
         await context.WriteJsonAsync(

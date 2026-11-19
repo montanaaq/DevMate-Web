@@ -11,6 +11,7 @@ namespace SkillIssue.Controllers;
 public sealed class TeamController(ITeamRepository repository)
 {
     private readonly CreateTeamRequestValidator _validator = new();
+    private readonly CreateApplicationRequestValidator _applicationValidator = new();
 
     public async Task CatalogAsync(RequestContext context)
     {
@@ -62,6 +63,7 @@ public sealed class TeamController(ITeamRepository repository)
                         memberCount = team.MemberCount,
                         positions = team.Positions,
                         requiredSkills = team.RequiredSkills,
+                        positionIds = team.PositionIds,
                     }),
                 hasMore,
             }
@@ -78,7 +80,27 @@ public sealed class TeamController(ITeamRepository repository)
             await repository.CreateAsync(user.Id, request, context.CancellationToken)
             ?? throw new HttpException(ApiError.BadRequest);
 
-        context.Response.Headers["Cache-Control"] = "no-store";
         await context.WriteJsonAsync(new { teamId }, HttpStatusCode.Created);
+    }
+
+    public async Task ApplyAsync(RequestContext context)
+    {
+        var user = context.User ?? throw new HttpException(ApiError.Unauthorized);
+        var request = await context.ReadJsonAsync<CreateApplicationRequest>();
+        _ = int.TryParse(context.RouteValues["teamId"], out int teamId);
+        request.TeamId = teamId;
+
+        await _applicationValidator.ValidateAndThrowAsync(request, context.CancellationToken);
+
+        int applicationId =
+            await repository.ApplyAsync(
+                request.TeamId,
+                request.PositionId,
+                user.Id,
+                request.CoverLetter?.Trim(),
+                context.CancellationToken
+            ) ?? throw new HttpException(ApiError.Conflict, ErrorMessages.ApplicationUnavailable);
+
+        await context.WriteJsonAsync(new { applicationId }, HttpStatusCode.Created);
     }
 }

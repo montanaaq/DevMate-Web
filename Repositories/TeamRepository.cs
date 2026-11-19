@@ -19,6 +19,13 @@ public interface ITeamRepository
         CreateTeamRequest request,
         CancellationToken cancellationToken
     );
+    Task<int?> ApplyAsync(
+        int teamId,
+        int positionId,
+        int applicantId,
+        string? coverLetter,
+        CancellationToken cancellationToken
+    );
 }
 
 public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepository
@@ -71,7 +78,8 @@ public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepositor
                     reader.GetString(2),
                     reader.GetInt32(3),
                     reader.GetFieldValue<string[]>(4),
-                    reader.GetFieldValue<string[]>(5)
+                    reader.GetFieldValue<string[]>(5),
+                    reader.GetFieldValue<int[]>(6)
                 )
             );
         }
@@ -95,6 +103,26 @@ public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepositor
             NpgsqlDbType.Jsonb,
             JsonSerializer.Serialize(request.Positions!, JsonSerializerOptions.Web)
         );
+
+        object? result = await command.ExecuteScalarAsync(cancellationToken);
+        return result is null or DBNull ? null : (int)result;
+    }
+
+    public async Task<int?> ApplyAsync(
+        int teamId,
+        int positionId,
+        int applicantId,
+        string? coverLetter,
+        CancellationToken cancellationToken
+    )
+    {
+        await using var command = dataSource.CreateCommand(
+            "CALL public.apply_to_team_position($1, $2, $3, $4, NULL)"
+        );
+        command.Parameters.AddWithValue(teamId);
+        command.Parameters.AddWithValue(positionId);
+        command.Parameters.AddWithValue(applicantId);
+        command.Parameters.AddWithValue(NpgsqlDbType.Text, (object?)coverLetter ?? DBNull.Value);
 
         object? result = await command.ExecuteScalarAsync(cancellationToken);
         return result is null or DBNull ? null : (int)result;

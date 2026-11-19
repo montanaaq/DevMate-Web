@@ -69,13 +69,16 @@ async function loadTeams(append = false) {
 
     try {
         await ensureCatalog();
-        const data = await getTeams(searchPicker.ids, before);
+        const [data, user] = await Promise.all([
+            getTeams(searchPicker.ids, before),
+            accountRequest,
+        ]);
 
         if (version !== requestVersion) {
             return;
         }
 
-        renderTeams(list, data.teams);
+        renderTeams(list, data.teams, user);
         resultCount += data.teams.length;
         before = data.teams.at(-1)?.id;
         more.hidden = !data.hasMore;

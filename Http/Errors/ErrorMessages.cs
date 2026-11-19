@@ -14,4 +14,5 @@ public static class ErrorMessages
     public const string DuplicateRoute = "The route is already registered.";
     public const string InvalidCredentials = "Incorrect email or password.";
     public const string EmailAlreadyExists = "This email is already registered.";
+    public const string ApplicationUnavailable = "You cannot apply for this position.";
 }

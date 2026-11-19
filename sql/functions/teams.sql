@@ -14,10 +14,14 @@ LANGUAGE sql STABLE AS $$
     ORDER BY 1, 3;
 $$;
 
-CREATE OR REPLACE FUNCTION public.search_teams(selected_skills INTEGER[], before_id INTEGER)
+BEGIN;
+
+DROP FUNCTION IF EXISTS public.search_teams(INTEGER[], INTEGER);
+
+CREATE FUNCTION public.search_teams(selected_skills INTEGER[], before_id INTEGER)
 RETURNS TABLE (
     id INTEGER, name TEXT, description TEXT, member_count INTEGER,
-    positions TEXT[], required_skills TEXT[]
+    positions TEXT[], required_skills TEXT[], position_ids INTEGER[]
 )
 LANGUAGE sql STABLE AS $$
     SELECT t.id, t.name::TEXT, t.description::TEXT,
@@ -31,7 +35,9 @@ LANGUAGE sql STABLE AS $$
             JOIN public.skills s ON s.id = r.skill_id
             JOIN public.skill_categories c ON c.id = s.category_id
             WHERE p.team_id = t.id AND p.is_open AND p.deleted_at IS NULL
-                AND s.is_active AND c.is_active ORDER BY s.name::TEXT)
+                AND s.is_active AND c.is_active ORDER BY s.name::TEXT),
+        ARRAY(SELECT p.id FROM public.team_positions p
+            WHERE p.team_id = t.id AND p.is_open AND p.deleted_at IS NULL ORDER BY p.id)
     FROM public.teams t
     WHERE t.closed_at IS NULL AND t.deleted_at IS NULL AND t.id < before_id
         AND EXISTS (SELECT 1 FROM public.team_positions p
@@ -49,6 +55,29 @@ LANGUAGE sql STABLE AS $$
         )
     ORDER BY t.id DESC LIMIT 13;
 $$;
+
+CREATE OR REPLACE FUNCTION public.apply_to_team_position(
+    target_team_id INTEGER, target_position_id INTEGER, applicant_user_id INTEGER, letter TEXT
+)
+RETURNS INTEGER
+LANGUAGE sql VOLATILE AS $$
+    INSERT INTO public.applications (position_id, applicant_id, cover_letter)
+    SELECT p.id, applicant_user_id, letter
+    FROM public.teams t
+    JOIN public.team_positions p ON p.team_id = t.id
+    WHERE t.id = target_team_id AND t.closed_at IS NULL AND t.deleted_at IS NULL
+        AND p.id = target_position_id AND p.is_open AND p.deleted_at IS NULL
+        AND t.captain_id <> applicant_user_id
+        AND NOT EXISTS (
+            SELECT 1 FROM public.team_members m
+            WHERE m.team_id = t.id AND m.user_id = applicant_user_id AND m.left_at IS NULL
+        )
+    FOR SHARE OF t, p
+    ON CONFLICT (position_id, applicant_id) WHERE status = 'pending' DO NOTHING
+    RETURNING id;
+$$;
+
+COMMIT;
 
 CREATE OR REPLACE FUNCTION public.create_team(
     captain INTEGER, team_name TEXT, team_description TEXT, positions JSONB

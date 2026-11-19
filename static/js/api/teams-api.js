@@ -19,3 +19,7 @@ export async function getTeams(skillIds, before) {
 export function createTeam(data) {
     return api.post("/teams", data);
 }
+
+export function applyToTeam(teamId, data) {
+    return api.post(`/teams/${teamId}/applications`, data);
+}

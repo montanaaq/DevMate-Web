@@ -63,6 +63,7 @@ public sealed class HttpServer(string url, RequestDelegate pipeline)
         try
         {
             context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+            context.Response.Headers["Cache-Control"] = "no-store";
             await pipeline(context);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
