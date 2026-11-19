@@ -31,9 +31,9 @@ public sealed class TemplateEngine
 
     private static async Task RenderFileAsync(string fileName, RenderState render)
     {
-        if (!TemplateSyntax.IsFileName(fileName))
+        if (!TemplateSyntax.IsTemplatePath(fileName))
         {
-            throw new InvalidOperationException($"Invalid template file name: {fileName}");
+            throw new InvalidOperationException($"Invalid template path: {fileName}");
         }
 
         if (!render.ActiveFiles.Add(fileName))

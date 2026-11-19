@@ -26,7 +26,7 @@
     </head>
     <body class="home-page">
         <a class="skip-link" href="#content">Skip to content</a>
-        {{#include SiteHeader.html}}
+        {{#include components/SiteHeader.html}}
         <main class="home-main">
             <h1
                 class="brand-logo"
@@ -138,8 +138,8 @@
                 </button>
             </section>
         </main>
-        {{#include ApplicationDialog.html}} {{#include
-        CreateProjectDialog.html}}
+        {{#include components/ApplicationDialog.html}}
+        {{#include components/CreateProjectDialog.html}}
         <footer class="home-footer">
             <p>No project? Skill issue.</p>
             <a

@@ -26,7 +26,7 @@ internal static partial class TemplateSyntax
 {
     private const string Identifier = "[A-Za-z_][A-Za-z0-9_]*";
 
-    public static bool IsFileName(string fileName) => FileNamePattern().IsMatch(fileName);
+    public static bool IsTemplatePath(string path) => TemplatePathPattern().IsMatch(path);
 
     public static List<TemplateTag> ReadTags(string template, CancellationToken cancellationToken)
     {
@@ -86,7 +86,7 @@ internal static partial class TemplateSyntax
                 }
                 break;
 
-            case "#include" when IsFileName(arguments):
+            case "#include" when IsTemplatePath(arguments):
                 return tag with { Kind = TemplateTagKind.Include, Name = arguments };
 
             case "else" when arguments.Length == 0:
@@ -112,8 +112,8 @@ internal static partial class TemplateSyntax
     [GeneratedRegex(@"\{\{(?:[^{}]*\}\})?")]
     private static partial Regex TagBoundaryPattern();
 
-    [GeneratedRegex(@"\A[A-Za-z0-9_][A-Za-z0-9_.-]*\.html\z")]
-    private static partial Regex FileNamePattern();
+    [GeneratedRegex(@"\A(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_][A-Za-z0-9_.-]*\.html\z")]
+    private static partial Regex TemplatePathPattern();
 
     [GeneratedRegex(@"\A" + Identifier + @"\z")]
     private static partial Regex IdentifierPattern();
