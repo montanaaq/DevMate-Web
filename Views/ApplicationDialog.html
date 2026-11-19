@@ -1,0 +1,44 @@
+<dialog
+    class="team-dialog"
+    id="application-dialog"
+    aria-labelledby="application-heading"
+>
+    <div class="dialog-heading">
+        <h2 id="application-heading" tabindex="-1" autofocus></h2>
+        <button
+            class="btn btn-link"
+            type="button"
+            id="close-application"
+            aria-label="Close application"
+        >
+            <span class="ui-icon" aria-hidden="true">&#xf00d;</span>
+        </button>
+    </div>
+    <form id="application-form" method="post">
+        <fieldset id="application-positions">
+            <legend>Choose a position</legend>
+        </fieldset>
+        <label class="form-label" for="application-letter"
+            >Cover letter (optional)</label
+        >
+        <textarea
+            id="application-letter"
+            class="form-control"
+            name="coverLetter"
+            rows="3"
+            maxlength="2000"
+            aria-describedby="application-letter-hint"
+        ></textarea>
+        <p id="application-letter-hint" class="field-hint">
+            Up to 2,000 characters.
+        </p>
+        <button type="submit" class="btn btn-primary">Send application</button>
+    </form>
+    <p
+        id="application-error"
+        class="alert alert-danger"
+        role="alert"
+        hidden
+    ></p>
+    <p id="application-status" role="status"></p>
+</dialog>
