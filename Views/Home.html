@@ -17,13 +17,16 @@
         <link rel="stylesheet" href="/static/css/variables.css" />
         <link rel="stylesheet" href="/static/css/base.css" />
         <link rel="stylesheet" href="/static/css/ui.css" />
-        <script type="module" src="/static/js/shared/dither-background.js"></script>
+        <script
+            type="module"
+            src="/static/js/shared/dither-background.js"
+        ></script>
         <link rel="stylesheet" href="/static/css/home.css" />
         <script type="module" src="/static/js/pages/home/index.js"></script>
     </head>
     <body class="home-page">
         <a class="skip-link" href="#content">Skip to content</a>
-        <!-- site-header -->
+        {{#include SiteHeader.html}}
         <main class="home-main">
             <h1
                 class="brand-logo"
@@ -135,10 +138,19 @@
                 </button>
             </section>
         </main>
-        <dialog class="team-dialog" id="application-dialog" aria-labelledby="application-heading">
+        <dialog
+            class="team-dialog"
+            id="application-dialog"
+            aria-labelledby="application-heading"
+        >
             <div class="dialog-heading">
                 <h2 id="application-heading" tabindex="-1" autofocus></h2>
-                <button class="btn btn-link" type="button" id="close-application" aria-label="Close application">
+                <button
+                    class="btn btn-link"
+                    type="button"
+                    id="close-application"
+                    aria-label="Close application"
+                >
                     <span class="ui-icon" aria-hidden="true">&#xf00d;</span>
                 </button>
             </div>
@@ -146,16 +158,37 @@
                 <fieldset id="application-positions">
                     <legend>Choose a position</legend>
                 </fieldset>
-                <label class="form-label" for="application-letter">Cover letter (optional)</label>
-                <textarea id="application-letter" class="form-control" name="coverLetter"
-                    rows="3" maxlength="2000" aria-describedby="application-letter-hint"></textarea>
-                <p id="application-letter-hint" class="field-hint">Up to 2,000 characters.</p>
-                <button type="submit" class="btn btn-primary">Send application</button>
+                <label class="form-label" for="application-letter"
+                    >Cover letter (optional)</label
+                >
+                <textarea
+                    id="application-letter"
+                    class="form-control"
+                    name="coverLetter"
+                    rows="3"
+                    maxlength="2000"
+                    aria-describedby="application-letter-hint"
+                ></textarea>
+                <p id="application-letter-hint" class="field-hint">
+                    Up to 2,000 characters.
+                </p>
+                <button type="submit" class="btn btn-primary">
+                    Send application
+                </button>
             </form>
-            <p id="application-error" class="alert alert-danger" role="alert" hidden></p>
+            <p
+                id="application-error"
+                class="alert alert-danger"
+                role="alert"
+                hidden
+            ></p>
             <p id="application-status" role="status"></p>
         </dialog>
-        <dialog class="team-dialog" id="create-team-dialog" aria-labelledby="create-team-heading">
+        <dialog
+            class="team-dialog"
+            id="create-team-dialog"
+            aria-labelledby="create-team-heading"
+        >
             <div class="dialog-heading">
                 <h2 id="create-team-heading">Create a project</h2>
                 <button

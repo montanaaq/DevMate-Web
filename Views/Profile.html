@@ -22,7 +22,7 @@
     </head>
     <body>
         <a class="skip-link" href="#content">Skip to content</a>
-        <!-- site-header -->
+        {{#include SiteHeader.html}}
         <main class="page-main profile-main">
             <noscript
                 ><p class="alert alert-warning">
@@ -54,7 +54,8 @@
                         <div class="profile-links" data-profile-links></div>
                     </div>
                     <a class="btn profile-edit" href="#settings"
-                        >Edit links &amp; appearance <svg
+                        >Edit links &amp; appearance
+                        <svg
                             class="link-icon"
                             viewBox="0 0 24 24"
                             fill="none"
@@ -62,8 +63,9 @@
                             stroke-width="2"
                             aria-hidden="true"
                             focusable="false"
-                        ><path d="M5 12h14m-6-6 6 6-6 6" /></svg></a
-                    >
+                        >
+                            <path d="M5 12h14m-6-6 6 6-6 6" /></svg
+                    ></a>
                 </section>
                 <nav class="profile-nav" aria-label="Profile sections">
                     <a
@@ -99,18 +101,43 @@
                         <form data-social-form>
                             <fieldset data-social-fields>
                                 <div data-social-rows></div>
-                                <button class="btn btn-link" type="button" data-add-social-link>Add link</button>
-                                <button class="btn btn-primary" type="submit">Save links</button>
+                                <button
+                                    class="btn btn-link"
+                                    type="button"
+                                    data-add-social-link
+                                >
+                                    Add link
+                                </button>
+                                <button class="btn btn-primary" type="submit">
+                                    Save links
+                                </button>
                             </fieldset>
                             <template data-social-row-template>
                                 <div class="social-link-row">
-                                    <label>Network
-                                        <input class="form-control" name="network" maxlength="80" required placeholder="Network name" />
+                                    <label
+                                        >Network
+                                        <input
+                                            class="form-control"
+                                            name="network"
+                                            maxlength="80"
+                                            required
+                                            placeholder="Network name"
+                                        />
                                     </label>
-                                    <label>URL
-                                        <input class="form-control" name="url" type="url" maxlength="500" required placeholder="https://example.com/username" />
+                                    <label
+                                        >URL
+                                        <input
+                                            class="form-control"
+                                            name="url"
+                                            type="url"
+                                            maxlength="500"
+                                            required
+                                            placeholder="https://example.com/username"
+                                        />
                                     </label>
-                                    <button class="btn btn-link" type="button">Remove</button>
+                                    <button class="btn btn-link" type="button">
+                                        Remove
+                                    </button>
                                 </div>
                             </template>
                             <p
@@ -133,12 +160,25 @@
                         <h2 id="appearance-heading">Appearance</h2>
                         <fieldset>
                             <legend>Accent color</legend>
-                            <div class="accent-picker" data-accent-presets></div>
-                            <label class="custom-accent">Custom color
-                                <input type="color" value="#58a6ff" data-custom-accent />
+                            <div
+                                class="accent-picker"
+                                data-accent-presets
+                            ></div>
+                            <label class="custom-accent"
+                                >Custom color
+                                <input
+                                    type="color"
+                                    value="#58a6ff"
+                                    data-custom-accent
+                                />
                             </label>
                         </fieldset>
-                        <p class="form-text mt-3" role="status" data-accent-warning hidden>
+                        <p
+                            class="form-text mt-3"
+                            role="status"
+                            data-accent-warning
+                            hidden
+                        >
                             This accent is too dark and may be hard to read.
                         </p>
                         <p

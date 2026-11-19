@@ -1,6 +1,6 @@
         <header class="site-header">
             <div class="site-header-inner">
-                <a class="site-brand" href="/" aria-label="skill.issue — Home"{{home-current}}>
+                <a class="site-brand" href="/" aria-label="skill.issue — Home"{{#if currentPath == "/"}} aria-current="page"{{/if}}>
                     <svg
                         class="brand-mark brand-chevron"
                         width="24"
@@ -15,9 +15,12 @@
                     <span class="brand-name">skill<span class="brand-mark">.</span><wbr />issue</span>
                 </a>
                 <nav class="site-nav account-nav" aria-label="Account">
-                    <a class="projects-link" href="/my-projects"{{projects-current}}{{signed-in-hidden}}>My projects</a>
-                    <a href="/signin"{{signin-current}}{{guest-hidden}}>Sign in</a>
-                    <a class="account-name" href="/profile"{{profile-current}}{{signed-in-hidden}}>{{account-name}}</a>
+                    {{#if isSignedIn}}
+                    <a class="projects-link" href="/my-projects"{{#if currentPath == "/my-projects"}} aria-current="page"{{/if}}>My projects</a>
+                    <a class="account-name" href="/profile"{{#if currentPath == "/profile"}} aria-current="page"{{/if}}>{{accountName}}</a>
+                    {{else}}
+                    <a href="/signin"{{#if currentPath == "/signin"}} aria-current="page"{{/if}}>Sign in</a>
+                    {{/if}}
                 </nav>
             </div>
         </header>

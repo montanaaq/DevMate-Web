@@ -48,7 +48,7 @@ public sealed class Router
 
     public RouteMatch? Match(string method, string path)
     {
-        string[] segments = Split(path).Select(Uri.UnescapeDataString).ToArray();
+        string[] segments = GetPathSegments(path);
         var allowed = new SortedSet<string>(StringComparer.Ordinal);
         RouteMatch? headFallback = null;
 
@@ -103,6 +103,9 @@ public sealed class Router
             ? null
             : new RouteMatch(null, new Dictionary<string, string>(), allowed.ToArray(), []);
     }
+
+    internal static string[] GetPathSegments(string path) =>
+        Split(path).Select(Uri.UnescapeDataString).ToArray();
 
     private static string[] Split(string path) =>
         path.Split('/', StringSplitOptions.RemoveEmptyEntries);
