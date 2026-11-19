@@ -34,14 +34,18 @@ public sealed class PagesController
     private static async Task WritePageAsync(RequestContext context, string fileName)
     {
         var user = context.User;
-        var model = new Dictionary<string, object?>
+        var templateData = new Dictionary<string, object?>
         {
             ["currentPath"] = "/" + string.Join('/', Router.GetPathSegments(context.Path)),
             ["isSignedIn"] = user is not null,
             ["accountName"] = user?.FullName ?? string.Empty,
         };
 
-        string html = await TemplateEngine.RenderAsync(fileName, model, context.CancellationToken);
+        string html = await TemplateEngine.RenderAsync(
+            fileName,
+            templateData,
+            context.CancellationToken
+        );
         await context.WriteTextAsync(html, "text/html; charset=utf-8");
     }
 }

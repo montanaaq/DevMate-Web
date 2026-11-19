@@ -5,7 +5,7 @@ using System.Text;
 namespace SkillIssue.Templates;
 
 using RenderState = (
-    IReadOnlyDictionary<string, object?> Model,
+    IReadOnlyDictionary<string, object?> TemplateData,
     StringBuilder Output,
     HashSet<string> ActiveFiles,
     Dictionary<string, object?> Locals,
@@ -16,7 +16,7 @@ public sealed class TemplateEngine
 {
     public static async Task<string> RenderAsync(
         string fileName,
-        IReadOnlyDictionary<string, object?> model,
+        IReadOnlyDictionary<string, object?> templateData,
         CancellationToken cancellationToken
     )
     {
@@ -24,7 +24,10 @@ public sealed class TemplateEngine
         var activeFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var locals = new Dictionary<string, object?>();
 
-        await RenderFileAsync(fileName, (model, output, activeFiles, locals, cancellationToken));
+        await RenderFileAsync(
+            fileName,
+            (templateData, output, activeFiles, locals, cancellationToken)
+        );
 
         return output.ToString();
     }
@@ -58,7 +61,7 @@ public sealed class TemplateEngine
         bool visible
     )
     {
-        var (model, output, _, locals, cancellationToken) = render;
+        var (templateData, output, _, locals, cancellationToken) = render;
 
         TemplateTag? openingTag = null;
         int offset = 0;
@@ -84,19 +87,35 @@ public sealed class TemplateEngine
             switch (tag.Kind)
             {
                 case TemplateTagKind.If:
-                    bool showIf = visible && ReadCondition(tag);
-                    int branchEnd = await RenderBodyAsync(index, showIf);
+                    bool? condition = !visible ? null : ReadCondition(tag);
+                    bool showIf = condition == true;
+                    bool showElse = condition == false;
+
+                    int branchEnd = await RenderBlockAsync(
+                        fileName,
+                        template,
+                        tags,
+                        render,
+                        index + 1,
+                        showIf
+                    );
                     if (tags[branchEnd].Kind == TemplateTagKind.Else)
                     {
-                        bool showElse = visible && !showIf;
-                        branchEnd = await RenderBodyAsync(branchEnd, showElse);
+                        branchEnd = await RenderBlockAsync(
+                            fileName,
+                            template,
+                            tags,
+                            render,
+                            branchEnd + 1,
+                            showElse
+                        );
                     }
 
                     index = branchEnd;
                     break;
 
                 case TemplateTagKind.ForEach when tag.Argument is string collectionName:
-                    int loopStart = index;
+                    int loopBodyStart = index + 1;
                     if (visible)
                     {
                         object? collection = ReadValue(collectionName, tag);
@@ -105,16 +124,26 @@ public sealed class TemplateEngine
                             throw InvalidTag(tag);
                         }
 
-                        bool hadLocal = locals.TryGetValue(tag.Name, out object? previous);
+                        bool hadPreviousValue = locals.TryGetValue(
+                            tag.Name,
+                            out object? previousValue
+                        );
                         foreach (object? item in items)
                         {
                             locals[tag.Name] = item;
-                            index = await RenderBodyAsync(loopStart, true);
+                            index = await RenderBlockAsync(
+                                fileName,
+                                template,
+                                tags,
+                                render,
+                                loopBodyStart,
+                                true
+                            );
                         }
 
-                        if (hadLocal)
+                        if (hadPreviousValue)
                         {
-                            locals[tag.Name] = previous;
+                            locals[tag.Name] = previousValue;
                         }
                         else
                         {
@@ -122,9 +151,16 @@ public sealed class TemplateEngine
                         }
                     }
 
-                    if (index == loopStart)
+                    if (index < loopBodyStart)
                     {
-                        index = await RenderBodyAsync(loopStart, false);
+                        index = await RenderBlockAsync(
+                            fileName,
+                            template,
+                            tags,
+                            render,
+                            loopBodyStart,
+                            false
+                        );
                     }
                     break;
 
@@ -164,32 +200,32 @@ public sealed class TemplateEngine
         output.Append(template, offset, template.Length - offset);
         return index;
 
-        Task<int> RenderBodyAsync(int openingTagIndex, bool showBody)
-        {
-            return RenderBlockAsync(
-                fileName,
-                template,
-                tags,
-                render,
-                openingTagIndex + 1,
-                showBody
-            );
-        }
-
         bool ReadCondition(TemplateTag tag)
         {
             object? value = ReadValue(tag.Name, tag);
             if (tag.Argument is string literal)
             {
-                return value is string text ? text == literal : throw InvalidTag(tag);
+                if (value is not string text)
+                {
+                    throw InvalidTag(tag);
+                }
+
+                return text == literal;
             }
 
-            return value is bool condition ? condition : throw InvalidTag(tag);
+            if (value is not bool condition)
+            {
+                throw InvalidTag(tag);
+            }
+
+            return condition;
         }
 
         object? ReadValue(string name, TemplateTag tag)
         {
-            return locals.TryGetValue(name, out object? value) || model.TryGetValue(name, out value)
+            return
+                locals.TryGetValue(name, out object? value)
+                || templateData.TryGetValue(name, out value)
                 ? value
                 : throw InvalidTag(tag);
         }
