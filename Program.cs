@@ -37,16 +37,15 @@ internal static class Program
         var users = new UserController(authService, userRepository);
         var teams = new TeamController(new TeamRepository(dataSource));
 
-        var pages = new PagesController(Path.Combine(AppContext.BaseDirectory, "Views"));
-
         var router = new Router();
         UserRole[] publicRoles = [UserRole.Guest, UserRole.User, UserRole.Admin];
 
-        router.Map("GET", "/", pages.HomeAsync, publicRoles);
-        router.Map("GET", "/profile", pages.ProfileAsync, publicRoles);
-        router.Map("GET", "/my-projects", pages.MyProjectsAsync, publicRoles);
-        router.Map("GET", "/signin", pages.SignInAsync, publicRoles);
-        router.Map("GET", "/signup", pages.SignUpAsync, publicRoles);
+        router.Map("GET", "/", PagesController.HomeAsync, publicRoles);
+        router.Map("GET", "/signin", PagesController.SignInAsync, publicRoles);
+        router.Map("GET", "/signup", PagesController.SignUpAsync, publicRoles);
+
+        router.Map("GET", "/profile", PagesController.ProfileAsync);
+        router.Map("GET", "/my-projects", PagesController.MyProjectsAsync);
 
         router.Map("POST", "/api/user/signin", users.SignInAsync, publicRoles);
         router.Map("POST", "/api/user/signup", users.SignUpAsync, publicRoles);

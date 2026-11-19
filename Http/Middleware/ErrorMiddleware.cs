@@ -23,7 +23,7 @@ public static class ErrorMiddleware
         }
         catch (ValidationException exception) when (!context.HasStarted)
         {
-            if (!context.Path.StartsWith("/api/", StringComparison.Ordinal))
+            if (!context.IsApiRequest)
             {
                 await context.WriteErrorAsync(ApiError.BadRequest, ErrorMessages.ValidationFailed);
                 return;

@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using SkillIssue.Http.Errors;
+using SkillIssue.Http.Routing;
 using SkillIssue.Models.Users;
 
 namespace SkillIssue.Http;
@@ -15,6 +16,9 @@ public sealed class RequestContext(HttpListenerContext context, CancellationToke
     public User? User { get; internal set; }
     public UserRole Role => User?.Role ?? UserRole.Guest;
     public string Path => Request.Url?.AbsolutePath ?? "/";
+    internal bool IsApiRequest =>
+        Path.StartsWith("/api/", StringComparison.Ordinal)
+        || Router.GetPathSegments(Path) is ["api", _, ..];
     public bool HasStarted { get; private set; }
     public IReadOnlyDictionary<string, string> RouteValues { get; internal set; } =
         new Dictionary<string, string>();
@@ -76,9 +80,16 @@ public sealed class RequestContext(HttpListenerContext context, CancellationToke
         HttpStatusCode statusCode = error.StatusCode;
         message ??= error.Message;
 
-        if (Path.StartsWith("/api/", StringComparison.Ordinal))
+        if (IsApiRequest)
         {
             return WriteJsonAsync(new { code = error.Code, message }, statusCode);
+        }
+
+        if (statusCode == HttpStatusCode.Unauthorized)
+        {
+            Response.RedirectLocation = "/signin";
+            StartResponse(HttpStatusCode.Found, "text/plain; charset=utf-8", 0);
+            return Task.CompletedTask;
         }
 
         string html = $$"""
