@@ -5,6 +5,7 @@ public static class ErrorMessages
     public const string ValidationFailed = "Check the highlighted fields.";
     public const string RequiredField = "This field is required.";
     public const string InvalidField = "Enter a valid value.";
+    public const string InvalidSkills = "Choose valid skills.";
     public const string ConnectionClosed = "The client disconnected before the response completed.";
     public const string RequestProcessingFailed = "HTTP request failed";
     public const string ResponseWriteFailed = "Failed to complete the HTTP response";

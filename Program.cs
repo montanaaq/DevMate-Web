@@ -52,6 +52,7 @@ internal static class Program
         router.Map("POST", "/api/user/signout", users.SignOutAsync, publicRoles);
         router.Map("GET", "/api/user/me", users.MeAsync);
         router.Map("GET", "/api/user/profile", users.ProfileAsync);
+        router.Map("POST", "/api/user/skills", users.SaveSkillsAsync);
         router.Map("POST", "/api/user/social-links", users.SaveSocialLinksAsync);
 
         router.Map("GET", "/api/teams/catalog", teams.CatalogAsync, publicRoles);

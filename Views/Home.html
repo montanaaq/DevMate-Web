@@ -45,42 +45,25 @@
                         <label for="skill-query" class="mb-2"
                             >What skills can you bring?</label
                         >
-                        <div class="skill-input-wrap">
-                            <input
-                                class="form-control"
-                                id="skill-query"
-                                name="query"
-                                type="text"
-                                placeholder="e.g. C#, React, Figma"
-                                role="combobox"
-                                aria-autocomplete="list"
-                                aria-expanded="false"
-                                aria-controls="skill-suggestions"
-                                aria-describedby="search-hint"
-                                autocomplete="off"
-                                autocapitalize="none"
-                                spellcheck="false"
-                                maxlength="80"
-                                disabled
-                            />
-                            <ul
-                                id="skill-suggestions"
-                                class="skill-suggestions"
-                                role="listbox"
-                                aria-label="Skills"
-                                hidden
-                            ></ul>
-                        </div>
+                        <input
+                            class="form-control"
+                            id="skill-query"
+                            name="query"
+                            type="search"
+                            placeholder="e.g. C#, React, Figma"
+                            autocomplete="off"
+                            autocapitalize="none"
+                            spellcheck="false"
+                            maxlength="80"
+                            disabled
+                        />
+                        <ul class="selected-skills" aria-label="Selected skills"></ul>
+                        <ul class="skill-suggestions" aria-label="Available skills"></ul>
                         <p
                             class="field-hint"
                             data-skill-status
                             role="status"
                         ></p>
-                        <ul
-                            class="selected-skills"
-                            aria-label="Selected skills"
-                            data-selected-skills
-                        ></ul>
                     </div>
                     <div class="search-actions">
                         <button

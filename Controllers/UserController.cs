@@ -14,6 +14,7 @@ public sealed class UserController(IAuthService authService, IUserRepository rep
     private readonly SignUpRequestValidator _signUpValidator = new();
     private readonly SignInRequestValidator _signInValidator = new();
     private readonly UpdateSocialLinksRequestValidator _socialLinksValidator = new();
+    private readonly UpdateSkillsRequestValidator _skillsValidator = new();
 
     public async Task ProfileAsync(RequestContext context)
     {
@@ -31,6 +32,23 @@ public sealed class UserController(IAuthService authService, IUserRepository rep
         await _socialLinksValidator.ValidateAndThrowAsync(request, context.CancellationToken);
 
         await repository.SaveSocialLinksAsync(user.Id, request, context.CancellationToken);
+        context.Response.StatusCode = (int)HttpStatusCode.NoContent;
+    }
+
+    public async Task SaveSkillsAsync(RequestContext context)
+    {
+        var user = context.User ?? throw new HttpException(ApiError.Unauthorized);
+        int[] skillIds = await context.ReadJsonAsync<int[]>();
+        var validation = await _skillsValidator.ValidateAsync(skillIds, context.CancellationToken);
+
+        if (
+            !validation.IsValid
+            || !await repository.SaveSkillsAsync(user.Id, skillIds, context.CancellationToken)
+        )
+        {
+            throw new HttpException(ApiError.BadRequest, ErrorMessages.InvalidSkills);
+        }
+
         context.Response.StatusCode = (int)HttpStatusCode.NoContent;
     }
 

@@ -40,11 +40,6 @@
     font-size: 0.875rem;
 }
 
-.skill-input-wrap {
-    position: relative;
-}
-
-.skill-input-wrap input,
 #create-team-dialog :is(input, textarea, select) {
     min-block-size: 3rem;
     border-color: var(--dm-input-border);
@@ -53,80 +48,15 @@
     font: inherit;
 }
 
-.skill-input-wrap input::placeholder {
-    color: var(--dm-text-muted);
-}
-
-.skill-suggestions {
-    position: absolute;
-    inset-block-start: calc(100% + 0.5rem);
-    inset-inline: 0;
-    z-index: 2;
-    max-block-size: min(18rem, 40dvh);
-    overflow-y: auto;
-    margin: 0;
-    padding: 0.25rem;
-    border: 1px solid var(--dm-input-border);
-    border-radius: var(--dm-radius);
-    background-color: var(--dm-surface);
-    list-style: none;
-}
-
-.skill-suggestions li {
-    min-block-size: 3rem;
-    padding: 0.75rem;
-    cursor: pointer;
-}
-
-.skill-suggestions li:is(:hover, [aria-selected="true"]) {
-    background-color: var(--dm-accent);
-    color: var(--dm-on-accent);
-}
-
-.skill-suggestions.skill-popover {
-    position: fixed;
-    inset: auto 1rem 1rem;
-    margin: 0;
-    inline-size: auto;
-    max-inline-size: calc(100vw - 2rem);
-    box-sizing: border-box;
-}
-
-@supports (position-area: block-end span-inline-end) and
-    (inline-size: anchor-size(width)) and (position-try-fallbacks: flip-block) {
-    .skill-suggestions.skill-popover {
-        inset: auto;
-        position-area: block-end span-inline-end;
-        position-try-fallbacks: flip-block;
-        inline-size: anchor-size(width);
-        margin-block: 0.5rem;
-    }
-}
-
 .team-dialog .dialog-heading button {
     min-inline-size: 3rem;
     min-block-size: 3rem;
 }
 
-.selected-skills,
 .search-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-}
-
-.selected-skills {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.selected-skill {
-    min-block-size: 3rem;
-    padding: 0.5rem;
-    border: 0;
-    background: transparent;
-    color: var(--dm-accent);
 }
 
 .search-actions {

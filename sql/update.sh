@@ -16,7 +16,6 @@ if ! command -v psql >/dev/null; then
 fi
 
 unset POSTGRES_HOST POSTGRES_PORT POSTGRES_DB POSTGRES_USER POSTGRES_PASSWORD
-# Load the project's trusted, shell-compatible .env file.
 source "$env_file"
 
 : "${POSTGRES_HOST:?Set POSTGRES_HOST in .env}"

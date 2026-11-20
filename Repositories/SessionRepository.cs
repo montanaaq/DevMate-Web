@@ -66,7 +66,7 @@ public sealed class SessionRepository(NpgsqlDataSource dataSource) : ISessionRep
     )
     {
         await using var command = dataSource.CreateCommand(
-            "SELECT * FROM public.renew_session($1, $2)"
+            "CALL public.renew_session($1, $2, NULL, NULL, NULL, NULL, NULL, NULL)"
         );
 
         command.Parameters.AddWithValue(sessionId);
@@ -79,7 +79,7 @@ public sealed class SessionRepository(NpgsqlDataSource dataSource) : ISessionRep
 
     public async Task RevokeAsync(byte[] tokenHash, CancellationToken cancellationToken)
     {
-        await using var command = dataSource.CreateCommand("SELECT public.revoke_session($1)");
+        await using var command = dataSource.CreateCommand("CALL public.revoke_session($1)");
         command.Parameters.AddWithValue(tokenHash);
 
         await command.ExecuteNonQueryAsync(cancellationToken);
@@ -95,11 +95,17 @@ public sealed class SessionRepository(NpgsqlDataSource dataSource) : ISessionRep
             return null;
         }
 
+        int idOrdinal = reader.GetOrdinal("id");
+        if (reader.IsDBNull(idOrdinal))
+        {
+            return null;
+        }
+
         int revokedAtOrdinal = reader.GetOrdinal("revoked_at");
 
         return new Session
         {
-            Id = reader.GetInt32(reader.GetOrdinal("id")),
+            Id = reader.GetInt32(idOrdinal),
             UserId = reader.GetInt32(reader.GetOrdinal("user_id")),
             TokenHash = reader.GetFieldValue<byte[]>(reader.GetOrdinal("token_hash")),
             CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),

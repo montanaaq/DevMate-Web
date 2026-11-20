@@ -1,27 +1,20 @@
 BEGIN;
-INSERT INTO
-    users (email, full_name, password_hash)
-VALUES
-    ('artyom@example.com', 'Артём', 'art123') ON CONFLICT (lower(email)) DO NOTHING;
-DO $$ DECLARE captain INTEGER;
+INSERT INTO users (email, full_name, password_hash)
+VALUES ('artyom@example.com', 'Артём', 'art123') ON CONFLICT (lower(email)) DO NOTHING;
+DO $$
+DECLARE captain INTEGER;
 demo RECORD;
 category INTEGER;
 required_skills INTEGER [];
 team_id INTEGER;
 BEGIN
-SELECT
-    id INTO captain
-FROM
-    users
-WHERE
-    lower(email) = 'artyom@example.com';
+SELECT id INTO captain
+FROM users
+WHERE lower(email) = 'artyom@example.com';
 FOR demo IN
-SELECT
-    *
-FROM
-    (
-        VALUES
-            (
+SELECT *
+FROM (
+        VALUES (
                 'Commit Together',
                 'Платформа для разработчиков, где можно найти напарника для учёбы и вместе создавать небольшие проекты. Помогите нам разработать веб-интерфейс.',
                 'Фронтенд-разработчик',
@@ -64,31 +57,21 @@ FROM
                 ARRAY ['React', 'TypeScript', 'CSS']
             )
     ) AS examples(name, description, title, category_name, skills) LOOP IF EXISTS (
-        SELECT
-            1
-        FROM
-            teams
-        WHERE
-            captain_id = captain
+        SELECT 1
+        FROM teams
+        WHERE captain_id = captain
             AND name = demo.name
     ) THEN CONTINUE;
 END IF;
-SELECT
-    id INTO category
-FROM
-    position_categories
-WHERE
-    name = demo.category_name;
-SELECT
-    array_agg(id) INTO required_skills
-FROM
-    skills
-WHERE
-    name = ANY(demo.skills);
+SELECT id INTO category
+FROM position_categories
+WHERE name = demo.category_name;
+SELECT array_agg(id) INTO required_skills
+FROM skills
+WHERE name = ANY(demo.skills);
 IF category IS NULL
 OR cardinality(required_skills) IS DISTINCT
-FROM
-    cardinality(demo.skills) THEN RAISE EXCEPTION 'Run the skill catalog seed before the team seed.';
+FROM cardinality(demo.skills) THEN RAISE EXCEPTION 'Run the skill catalog seed before the team seed.';
 END IF;
 team_id := public.create_team(
     captain,

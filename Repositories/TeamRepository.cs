@@ -49,14 +49,23 @@ public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepositor
 
         while (await reader.ReadAsync(cancellationToken))
         {
-            var item = new { id = reader.GetInt32(1), name = reader.GetString(2) };
+            int id = reader.GetInt32(1);
+            string name = reader.GetString(2);
             if (reader.GetString(0) == "skill")
             {
-                skills.Add(item);
+                skills.Add(
+                    new
+                    {
+                        id,
+                        name,
+                        categoryId = reader.GetInt32(3),
+                        relatedSkillIds = reader.GetFieldValue<int[]>(4),
+                    }
+                );
             }
             else
             {
-                categories.Add(item);
+                categories.Add(new { id, name });
             }
         }
 

@@ -1,2 +1,2 @@
 ALTER TABLE public.applications
-    ADD COLUMN IF NOT EXISTS resolution_reason TEXT;
+ADD COLUMN IF NOT EXISTS resolution_reason TEXT;

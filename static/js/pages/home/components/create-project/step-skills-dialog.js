@@ -28,10 +28,7 @@ export function createSkillsStep(section, draft, catalog) {
             }
 
             const input = group.querySelector("input");
-            const list = group.querySelector('[role="listbox"]');
             input.id = `project-skills-${index}`;
-            list.id = `${input.id}-suggestions`;
-            input.setAttribute("aria-controls", list.id);
             group.querySelector("label").htmlFor = input.id;
 
             skillGroups.append(group);
@@ -57,15 +54,11 @@ export function createSkillsStep(section, draft, catalog) {
             const inputs = [...skillGroups.querySelectorAll("input")];
 
             for (const [index, input] of inputs.entries()) {
-                let message = "";
-                if (input.value.trim()) {
-                    message =
-                        "Choose a skill from the suggestions or clear the search.";
-                } else if (!draft.positions[index].skillIds.length) {
-                    message = "Choose at least one required skill.";
-                }
-
-                input.setCustomValidity(message);
+                input.setCustomValidity(
+                    draft.positions[index].skillIds.length
+                        ? ""
+                        : "Choose at least one required skill.",
+                );
             }
 
             return reportFirstInvalid(section);

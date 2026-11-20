@@ -56,15 +56,21 @@ CREATE TABLE skills (
     CHECK (length(trim(name)) > 0)
 );
 CREATE UNIQUE INDEX skills_name_unique ON skills (lower(name));
+CREATE TABLE skill_relations (
+    first_skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE RESTRICT,
+    second_skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE RESTRICT,
+    PRIMARY KEY (first_skill_id, second_skill_id),
+    CHECK (first_skill_id < second_skill_id)
+);
+CREATE INDEX skill_relations_second_skill_idx ON skill_relations (second_skill_id);
 -- 5. Current user skills
 CREATE TABLE user_skills (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE RESTRICT,
-    level SMALLINT NOT NULL,
+    skill_level SMALLINT NOT NULL,
     PRIMARY KEY (user_id, skill_id),
     CHECK (
-        level BETWEEN 1
-        AND 3
+        skill_level BETWEEN 1 AND 3
     )
 );
 -- 6. Teams
@@ -124,12 +130,10 @@ CREATE TABLE position_required_skills (
     importance SMALLINT NOT NULL DEFAULT 2,
     PRIMARY KEY (position_id, skill_id),
     CHECK (
-        required_level BETWEEN 1
-        AND 3
+        required_level BETWEEN 1 AND 3
     ),
     CHECK (
-        importance BETWEEN 1
-        AND 3
+        importance BETWEEN 1 AND 3
     )
 );
 -- 10. Membership periods
@@ -142,8 +146,7 @@ CREATE TABLE team_members (
     CHECK (left_at >= joined_at)
 );
 CREATE UNIQUE INDEX team_members_active_unique ON team_members (team_id, user_id)
-WHERE
-    left_at IS NULL;
+WHERE left_at IS NULL;
 -- 11. Position assignment periods
 CREATE TABLE team_member_positions (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -157,8 +160,7 @@ CREATE TABLE team_member_positions (
     CHECK (ended_at >= assigned_at)
 );
 CREATE UNIQUE INDEX team_member_positions_active_unique ON team_member_positions (membership_id, position_id)
-WHERE
-    ended_at IS NULL;
+WHERE ended_at IS NULL;
 -- 12. Applications to positions
 CREATE TABLE applications (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -173,8 +175,7 @@ CREATE TABLE applications (
     CHECK (resolved_at >= created_at)
 );
 CREATE UNIQUE INDEX applications_pending_unique ON applications (position_id, applicant_id)
-WHERE
-    status = 'pending';
+WHERE status = 'pending';
 -- 13. Invitations to positions
 CREATE TABLE invitations (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -188,8 +189,7 @@ CREATE TABLE invitations (
     CHECK (resolved_at >= created_at)
 );
 CREATE UNIQUE INDEX invitations_pending_unique ON invitations (position_id, invitee_id)
-WHERE
-    status = 'pending';
+WHERE status = 'pending';
 -- 14. Authentication sessions
 CREATE TABLE sessions (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

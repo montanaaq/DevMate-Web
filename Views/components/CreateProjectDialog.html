@@ -220,32 +220,19 @@
             <legend></legend>
             <div class="skill-picker">
                 <label class="form-label">Required skills</label>
-                <div class="skill-input-wrap">
-                    <input
-                        class="form-control"
-                        name="skillQuery"
-                        type="text"
-                        role="combobox"
-                        aria-autocomplete="list"
-                        aria-expanded="false"
-                        autocomplete="off"
-                        autocapitalize="none"
-                        spellcheck="false"
-                        maxlength="80"
-                    />
-                    <ul
-                        class="skill-suggestions"
-                        role="listbox"
-                        aria-label="Skill suggestions"
-                        hidden
-                    ></ul>
-                </div>
+                <input
+                    class="form-control"
+                    name="skillQuery"
+                    type="search"
+                    placeholder="e.g. C#, React, Figma"
+                    autocomplete="off"
+                    autocapitalize="none"
+                    spellcheck="false"
+                    maxlength="80"
+                />
+                <ul class="selected-skills" aria-label="Selected required skills"></ul>
+                <ul class="skill-suggestions" aria-label="Available skills"></ul>
                 <p class="field-hint" data-skill-status role="status"></p>
-                <ul
-                    class="selected-skills"
-                    aria-label="Selected required skills"
-                    data-selected-skills
-                ></ul>
             </div>
         </fieldset>
     </template>

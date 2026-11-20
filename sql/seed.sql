@@ -1,8 +1,6 @@
 BEGIN;
-INSERT INTO
-    skill_categories (name)
-VALUES
-    ('Языки программирования'),
+INSERT INTO skill_categories (name)
+VALUES ('Языки программирования'),
     ('Серверная разработка'),
     ('Клиентская разработка'),
     ('Мобильная разработка'),
@@ -15,16 +13,12 @@ VALUES
     ('Анализ и обработка данных'),
     ('Машинное обучение'),
     ('Информационная безопасность') ON CONFLICT (lower(name)) DO NOTHING;
-INSERT INTO
-    skills (category_id, name, description)
-SELECT
-    categories.id,
+INSERT INTO skills (category_id, name, description)
+SELECT categories.id,
     seed.name,
     seed.description
-FROM
-    (
-        VALUES
-            (
+FROM (
+        VALUES (
                 'Языки программирования',
                 'C#',
                 'Разработка приложений на C#.'
@@ -456,10 +450,30 @@ FROM
             )
     ) AS seed(category_name, name, description)
     JOIN skill_categories AS categories ON lower(categories.name) = lower(seed.category_name) ON CONFLICT (lower(name)) DO NOTHING;
-INSERT INTO
-    position_categories (name)
-VALUES
-    ('Серверная разработка'),
+INSERT INTO skill_relations (first_skill_id, second_skill_id)
+SELECT LEAST(first_skill.id, second_skill.id),
+    GREATEST(first_skill.id, second_skill.id)
+FROM (
+        VALUES ('C#', '.NET'),
+            ('C#', 'ASP.NET Core'),
+            ('.NET', 'ASP.NET Core'),
+            ('JavaScript', 'React'),
+            ('JavaScript', 'Node.js'),
+            ('TypeScript', 'React'),
+            ('TypeScript', 'Angular'),
+            ('Python', 'Django'),
+            ('Python', 'FastAPI'),
+            ('Python', 'pandas'),
+            ('Java', 'Spring'),
+            ('Kotlin', 'Android'),
+            ('Swift', 'iOS'),
+            ('React', 'React Native'),
+            ('REST API', 'Postman')
+    ) AS seed(first_name, second_name)
+    JOIN skills AS first_skill ON lower(first_skill.name) = lower(seed.first_name)
+    JOIN skills AS second_skill ON lower(second_skill.name) = lower(seed.second_name) ON CONFLICT DO NOTHING;
+INSERT INTO position_categories (name)
+VALUES ('Серверная разработка'),
     ('Клиентская разработка'),
     ('Fullstack-разработка'),
     ('Мобильная разработка'),

@@ -2,251 +2,146 @@ import { MAX_SKILLS } from "../../../shared/constants/limits.js";
 
 export function createSkillPicker(root, skills, onChange, initialIds = []) {
     const input = root.querySelector("input");
-    const list = root.querySelector('[role="listbox"]');
-    const selectedList = root.querySelector("[data-selected-skills]");
+    const suggestions = root.querySelector(".skill-suggestions");
+    const selectedList = root.querySelector(".selected-skills");
     const status = root.querySelector("[data-skill-status]");
     const byId = new Map(skills.map((skill) => [skill.id, skill]));
     const controller = new AbortController();
     const { signal } = controller;
-    const supportsPopover = typeof list.showPopover === "function";
-    const anchor = `--${input.id}-anchor`;
+    const selected = new Set(initialIds.filter((id) => byId.has(id)));
 
-    list.classList.add("skill-popover");
-    input.style.setProperty("anchor-name", anchor);
-    list.style.setProperty("position-anchor", anchor);
+    function createBadge(skill, isSelected) {
+        const item = document.createElement("li");
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "btn skill-badge";
+        button.dataset.skillId = String(skill.id);
+        button.textContent = skill.name;
+        button.setAttribute("aria-pressed", String(isSelected));
 
-    if (supportsPopover) {
-        list.setAttribute("popover", "manual");
+        const marker = document.createElement("span");
+        marker.setAttribute("aria-hidden", "true");
+        marker.textContent = isSelected ? " ×" : " +";
+        button.append(marker);
+        item.append(button);
+        return item;
     }
 
-    let selected = [...new Set(initialIds)]
-        .filter((id) => byId.has(id))
-        .slice(0, MAX_SKILLS);
-    let suggestions = [];
-    let active = -1;
-
-    function close() {
-        if (supportsPopover && list.matches(":popover-open")) {
-            list.hidePopover();
-        }
-
-        list.hidden = true;
-        input.setAttribute("aria-expanded", "false");
-        input.removeAttribute("aria-activedescendant");
-        active = -1;
-    }
-
-    function highlight(index) {
-        active = index;
-
-        for (const [optionIndex, option] of [...list.children].entries()) {
-            option.setAttribute(
-                "aria-selected",
-                String(optionIndex === active),
-            );
-        }
-
-        const option = list.children[active];
-        if (option) {
-            input.setAttribute("aria-activedescendant", option.id);
-            option.scrollIntoView({ block: "nearest" });
-        }
-    }
-
-    function suggest() {
+    function renderSuggestions() {
         const query = input.value.trim().toLocaleLowerCase();
-        const selectedIds = new Set(selected);
-        suggestions = skills.filter(
+        const lastSkill = byId.get([...selected].at(-1));
+        const relatedIds = new Set(lastSkill?.relatedSkillIds);
+
+        const matches = skills.filter(
             (skill) =>
-                !selectedIds.has(skill.id) &&
+                !selected.has(skill.id) &&
                 skill.name.toLocaleLowerCase().includes(query),
         );
-
-        list.replaceChildren();
-        close();
-
-        if (selected.length >= MAX_SKILLS) {
-            status.textContent = `You can select up to ${MAX_SKILLS} skills.`;
-            return;
-        }
-        status.textContent = suggestions.length ? "" : "No skills found.";
-
-        for (const [index, skill] of suggestions.entries()) {
-            const option = document.createElement("li");
-            option.id = `${input.id}-option-${index}`;
-            option.setAttribute("role", "option");
-            option.setAttribute("aria-selected", "false");
-            option.textContent = skill.name;
-            list.append(option);
-        }
-
-        list.hidden = suggestions.length === 0;
-        if (!list.hidden && supportsPopover) {
-            list.showPopover();
-        }
-
-        input.setAttribute("aria-expanded", String(!list.hidden));
-    }
-
-    function renderSelected() {
-        selectedList.replaceChildren();
-
-        for (const id of selected) {
-            const skill = byId.get(id);
-            if (!skill) {
-                continue;
+        const rank = ({ id, name, categoryId }) => {
+            const normalized = name.toLocaleLowerCase();
+            if (query && normalized === query) {
+                return 3;
             }
-
-            const item = document.createElement("li");
-
-            const remove = document.createElement("button");
-            remove.type = "button";
-            remove.className = "selected-skill";
-            remove.append(document.createTextNode(`${skill.name} `));
-
-            const icon = document.createElement("span");
-            icon.className = "ui-icon";
-            icon.setAttribute("aria-hidden", "true");
-            icon.textContent = "\uf00d";
-
-            remove.append(icon);
-            remove.setAttribute("aria-label", `Remove ${skill.name}`);
-            remove.dataset.skillId = String(id);
-
-            item.append(remove);
-            selectedList.append(item);
-        }
-    }
-
-    function choose(skill) {
-        if (
-            !skill ||
-            selected.length >= MAX_SKILLS ||
-            selected.includes(skill.id)
-        ) {
-            return;
-        }
-
-        selected = [...selected, skill.id];
-        input.value = "";
-        status.textContent = "";
-
-        renderSelected();
-        input.focus();
-        close();
-        status.textContent = `${skill.name} added.`;
-        onChange([...selected]);
-    }
-
-    list.addEventListener("pointerdown", (event) => event.preventDefault(), {
-        signal,
-    });
-
-    list.addEventListener(
-        "click",
-        (event) => {
-            const option = event.target.closest('[role="option"]');
-            if (option && option.parentElement === list) {
-                choose(suggestions[[...list.children].indexOf(option)]);
+            if (query && normalized.startsWith(query)) {
+                return 2;
             }
-        },
-        { signal },
-    );
+            return Number(
+                relatedIds.size
+                    ? relatedIds.has(id)
+                    : lastSkill?.categoryId === categoryId,
+            );
+        };
+        matches.sort((left, right) => rank(right) - rank(left));
 
-    selectedList.addEventListener(
+        const atLimit = selected.size >= MAX_SKILLS;
+        suggestions.replaceChildren(
+            ...(atLimit
+                ? []
+                : matches.map((skill) => createBadge(skill, false))),
+        );
+        suggestions.scrollTop = 0;
+        status.textContent = atLimit
+            ? `You can select up to ${MAX_SKILLS} skills.`
+            : matches.length
+              ? ""
+              : "No matching skills.";
+    }
+
+    function renderSelection() {
+        selectedList.replaceChildren(
+            ...[...selected].map((id) => createBadge(byId.get(id), true)),
+        );
+        renderSuggestions();
+    }
+
+    root.addEventListener(
         "click",
         (event) => {
             const button = event.target.closest("button[data-skill-id]");
-            if (!button || !selectedList.contains(button)) {
+            if (!button) {
                 return;
             }
-            const id = selected.find(
-                (value) => String(value) === button.dataset.skillId,
-            );
-            const skill = byId.get(id);
 
-            selected = selected.filter((value) => value !== id);
-            renderSelected();
-            input.focus();
-            close();
-            status.textContent = `${skill?.name ?? "Skill"} removed.`;
+            const id = Number(button.dataset.skillId);
+            const removed = selected.delete(id);
+            if (!removed) {
+                if (selected.size >= MAX_SKILLS) {
+                    return;
+                }
+                selected.add(id);
+                input.value = "";
+            }
+
+            renderSelection();
+            const next = (removed ? selectedList : suggestions).querySelector(
+                "button",
+            );
+            (next ?? selectedList.querySelector("button") ?? input).focus({
+                preventScroll: true,
+            });
             onChange([...selected]);
         },
         { signal },
     );
 
-    input.addEventListener("input", suggest, { signal });
-    input.closest("dialog")?.addEventListener("close", close, { signal });
-    input.addEventListener("focus", suggest, { signal });
     input.addEventListener(
-        "blur",
+        "input",
         () => {
-            close();
-            status.textContent = "";
+            input.setCustomValidity("");
+            renderSuggestions();
         },
         { signal },
     );
+
     input.addEventListener(
         "keydown",
         (event) => {
             if (
-                event.isComposing ||
-                event.altKey ||
-                event.ctrlKey ||
-                event.metaKey
+                event.key === "Enter" &&
+                !event.isComposing &&
+                input.value.trim()
             ) {
-                return;
-            }
-
-            if (event.key === "Escape" && !list.hidden) {
                 event.preventDefault();
-                event.stopPropagation();
-                close();
-            } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-                event.preventDefault();
-                if (list.hidden) {
-                    suggest();
-                }
-                if (!list.hidden) {
-                    let nextIndex;
-                    if (event.key === "ArrowDown") {
-                        nextIndex = Math.min(
-                            active + 1,
-                            suggestions.length - 1,
-                        );
-                    } else if (active < 0) {
-                        nextIndex = suggestions.length - 1;
-                    } else {
-                        nextIndex = Math.max(active - 1, 0);
-                    }
-
-                    highlight(nextIndex);
-                }
-            } else if (event.key === "Enter" && !list.hidden && active >= 0) {
-                event.preventDefault();
-                choose(suggestions[active]);
+                suggestions.querySelector("button")?.click();
             }
         },
         { signal },
     );
 
-    renderSelected();
+    renderSelection();
 
     return {
         get ids() {
             return [...selected];
         },
         clear() {
-            selected = [];
+            selected.clear();
             input.value = "";
-            status.textContent = "";
-            renderSelected();
-            close();
+            renderSelection();
             return onChange([]);
         },
         destroy() {
             controller.abort();
-            close();
         },
     };
 }

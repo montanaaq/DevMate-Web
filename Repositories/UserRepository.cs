@@ -20,6 +20,7 @@ public interface IUserRepository
     Task<User?> FindByIdAsync(int userId, CancellationToken cancellationToken);
 
     Task<JsonElement> GetProfileAsync(int userId, CancellationToken cancellationToken);
+    Task<bool> SaveSkillsAsync(int userId, int[] skillIds, CancellationToken cancellationToken);
     Task SaveSocialLinksAsync(
         int userId,
         UpdateSocialLinksRequest request,
@@ -37,6 +38,21 @@ public sealed class UserRepository(NpgsqlDataSource dataSource) : IUserRepositor
         return JsonSerializer.Deserialize<JsonElement>(json);
     }
 
+    public async Task<bool> SaveSkillsAsync(
+        int userId,
+        int[] skillIds,
+        CancellationToken cancellationToken
+    )
+    {
+        await using var command = dataSource.CreateCommand(
+            "CALL public.save_user_skills($1, $2, NULL)"
+        );
+        command.Parameters.AddWithValue(userId);
+        command.Parameters.AddWithValue(skillIds);
+
+        return (bool)(await command.ExecuteScalarAsync(cancellationToken))!;
+    }
+
     public async Task SaveSocialLinksAsync(
         int userId,
         UpdateSocialLinksRequest request,
@@ -44,7 +60,7 @@ public sealed class UserRepository(NpgsqlDataSource dataSource) : IUserRepositor
     )
     {
         await using var command = dataSource.CreateCommand(
-            "SELECT public.save_user_social_links($1, $2)"
+            "CALL public.save_user_social_links($1, $2)"
         );
         command.Parameters.AddWithValue(userId);
         command.Parameters.AddWithValue(

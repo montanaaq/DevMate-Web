@@ -54,7 +54,7 @@
                         <div class="profile-links" data-profile-links></div>
                     </div>
                     <a class="btn profile-edit" href="#settings"
-                        >Edit links &amp; appearance
+                        >Edit profile settings
                         <svg
                             class="link-icon"
                             viewBox="0 0 24 24"
@@ -93,6 +93,33 @@
                     </section>
                 </div>
                 <div id="settings" data-section="settings" hidden>
+                    <section class="profile-section settings-section" aria-labelledby="skills-heading">
+                        <h2 id="skills-heading">Skills</h2>
+                        <form data-skills-form aria-labelledby="skills-heading">
+                            <fieldset data-skills-fields>
+                                <div class="skill-picker" data-profile-skill-picker>
+                                    <label class="form-label" for="profile-skill-query">Find skills</label>
+                                    <input
+                                        class="form-control"
+                                        id="profile-skill-query"
+                                        name="skillQuery"
+                                        type="search"
+                                        placeholder="e.g. C#, React, Figma"
+                                        autocomplete="off"
+                                        autocapitalize="none"
+                                        spellcheck="false"
+                                        maxlength="80"
+                                    />
+                                    <ul class="selected-skills" aria-label="Selected skills"></ul>
+                                    <ul class="skill-suggestions" aria-label="Available skills"></ul>
+                                    <p class="form-text" data-skill-status role="status"></p>
+                                </div>
+                                <button class="btn btn-primary" type="submit">Save skills</button>
+                            </fieldset>
+                            <p class="form-text mt-3" data-skills-status role="status"></p>
+                            <p class="alert alert-danger" data-skills-error role="alert" hidden></p>
+                        </form>
+                    </section>
                     <section
                         class="profile-section settings-section"
                         aria-labelledby="links-heading"

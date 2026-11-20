@@ -98,11 +98,6 @@ searchForm.addEventListener("submit", (event) => {
     if (event.isComposing) {
         return;
     }
-    if (searchInput.value.trim()) {
-        status.textContent = "Choose a skill from the suggestions first.";
-        searchInput.focus();
-        return;
-    }
     loadTeams();
 });
 

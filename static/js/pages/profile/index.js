@@ -1,8 +1,15 @@
-import { getCurrentUser, getProfile, signOut } from "../../api/auth-api.js";
+import {
+    getCurrentUser,
+    getProfile,
+    saveSkills,
+    signOut,
+} from "../../api/auth-api.js";
+import { getTeamCatalog } from "../../api/teams-api.js";
 import { errorMessages } from "../../shared/constants/error-messages.js";
 import { clearError, showError } from "../../shared/ui.js";
 import { initAccent } from "./accent.js";
 import { $ } from "../../shared/dom.js";
+import { createSkillPicker } from "../home/components/skill-picker.js";
 import { renderApplications } from "./render.js";
 import { initSocialLinks, renderLinks } from "./social-links.js";
 
@@ -26,14 +33,63 @@ function selectSection() {
     }
 }
 
-function renderProfile(user, profile) {
+function renderSkillNames(names) {
+    const skills = $("profile-skills");
+    skills.textContent = names.join(" · ");
+    skills.hidden = names.length === 0;
+}
+
+function initProfileSkills(profile, skills) {
+    const form = $("skills-form");
+    const fields = $("skills-fields");
+    const status = $("skills-status");
+    const error = $("skills-error");
+    const byId = new Map(skills.map(({ id, name }) => [id, name]));
+    const editableNames = new Set(profile.skillIds.map((id) => byId.get(id)));
+    const inactiveNames = profile.skills.filter(
+        (name) => !editableNames.has(name),
+    );
+
+    const picker = createSkillPicker(
+        $("profile-skill-picker"),
+        skills,
+        () => {
+            clearError(error);
+            status.textContent = "";
+        },
+        profile.skillIds,
+    );
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (fields.disabled) {
+            return;
+        }
+
+        fields.disabled = true;
+        clearError(error);
+        status.textContent = "";
+        const ids = picker.ids;
+        try {
+            await saveSkills(ids);
+            renderSkillNames(
+                [...inactiveNames, ...ids.map((id) => byId.get(id))].sort(),
+            );
+            status.textContent = "Skills saved.";
+        } catch (cause) {
+            showError(error, cause.message || errorMessages.requestFailed);
+        } finally {
+            fields.disabled = false;
+        }
+    });
+}
+
+function renderProfile(user, profile, catalog) {
     $("profile-name").textContent = user.fullName;
     $("profile-email").textContent = user.email;
 
-    const skills = $("profile-skills");
-    skills.textContent = profile.skills.join(" · ");
-    skills.hidden = profile.skills.length === 0;
-
+    renderSkillNames(profile.skills);
+    initProfileSkills(profile, catalog.skills);
     renderLinks(profile.links);
     renderApplications(profile.applications);
     $("profile").hidden = false;
@@ -51,7 +107,11 @@ async function loadProfile() {
         }
         logout.disabled = false;
         $("profile-role").textContent = user.role;
-        renderProfile(user, await getProfile());
+        const [profile, catalog] = await Promise.all([
+            getProfile(),
+            getTeamCatalog(),
+        ]);
+        renderProfile(user, profile, catalog);
     } catch {
         showError(errorSummary, errorMessages.requestFailed);
         retry.hidden = false;
