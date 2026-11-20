@@ -18,41 +18,34 @@ if (context) {
     };
     let pixels;
     let cellSize;
-    let frame;
+    let frame = 0;
     let lastTime = 0;
-    let time = 0;
 
     function draw() {
-        pointer.x += (pointer.targetX - pointer.x) * 0.12;
-        pointer.y += (pointer.targetY - pointer.y) * 0.12;
-        pointer.strength +=
-            ((pointer.active ? 1 : 0) - pointer.strength) * 0.12;
-
         for (let y = 0; y < canvas.height; y++) {
-            const waveY = Math.sin(y * cellSize * 0.008 - time * 0.4);
+            const waveY = Math.sin(y * cellSize * 0.008);
+            const dy = y * cellSize - pointer.y;
 
             for (let x = 0; x < canvas.width; x++) {
                 const dx = x * cellSize - pointer.x;
-                const dy = y * cellSize - pointer.y;
                 const influence =
-                    pointer.strength > 0.001
-                        ? Math.max(0, 1 - Math.hypot(dx, dy) / 240) *
+                    pointer.strength > 0
+                        ? Math.max(0, 1 - (dx * dx + dy * dy) / (300 * 300)) **
+                              2 *
                           pointer.strength
                         : 0;
                 const wave = Math.sin(
-                    x * cellSize * 0.006 +
-                        waveY * 1.8 +
-                        time * 0.3 +
-                        influence * 3,
+                    x * cellSize * 0.006 + waveY * 1.8 + influence * 4,
                 );
-                const brightness = 0.45 + wave * 0.25 + influence * 0.25;
+                const brightness = 0.4 + wave * 0.3 + influence * 0.4;
                 const threshold =
                     (thresholds[(y % 4) * 4 + (x % 4)] + 0.5) / 16;
                 const offset = (y * canvas.width + x) * 4;
                 pixels.data[offset] = 160;
                 pixels.data[offset + 1] = 180;
                 pixels.data[offset + 2] = 200;
-                pixels.data[offset + 3] = brightness > threshold ? 255 : 0;
+                pixels.data[offset + 3] =
+                    brightness > threshold ? 112 + influence * 48 : 0;
             }
         }
 
@@ -60,21 +53,49 @@ if (context) {
     }
 
     function animate(timestamp) {
+        frame = 0;
         if (timestamp - lastTime >= 1000 / 30) {
-            time += Math.min((timestamp - lastTime) / 1000, 0.1);
             lastTime = timestamp;
+
+            const dx = pointer.targetX - pointer.x;
+            const dy = pointer.targetY - pointer.y;
+            const strength = pointer.active ? 1 : 0;
+            const delta = strength - pointer.strength;
+            const settled =
+                Math.abs(dx) < 1 && Math.abs(dy) < 1 && Math.abs(delta) < 0.01;
+
+            pointer.x = settled ? pointer.targetX : pointer.x + dx * 0.24;
+            pointer.y = settled ? pointer.targetY : pointer.y + dy * 0.24;
+            pointer.strength = settled
+                ? strength
+                : pointer.strength + delta * 0.24;
             draw();
+
+            if (settled) {
+                return;
+            }
         }
 
-        frame = requestAnimationFrame(animate);
+        requestDraw();
     }
 
-    function updateAnimation() {
-        cancelAnimationFrame(frame);
-        if (!document.hidden && !reducedMotion.matches) {
-            lastTime = performance.now();
+    function requestDraw() {
+        if (!frame && !document.hidden && !reducedMotion.matches) {
             frame = requestAnimationFrame(animate);
         }
+    }
+
+    function releasePointer() {
+        pointer.active = false;
+        requestDraw();
+    }
+
+    function resetPointer() {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        pointer.active = false;
+        pointer.strength = 0;
+        draw();
     }
 
     function resize() {
@@ -103,24 +124,15 @@ if (context) {
             pointer.targetX = event.clientX;
             pointer.targetY = event.clientY;
             pointer.active = true;
+            requestDraw();
         },
         { passive: true },
     );
-    document.documentElement.addEventListener("pointerleave", () => {
-        pointer.active = false;
-    });
-    window.addEventListener("blur", () => {
-        pointer.active = false;
-    });
+    document.documentElement.addEventListener("pointerleave", releasePointer);
+    window.addEventListener("blur", releasePointer);
     window.addEventListener("resize", resize);
-    document.addEventListener("visibilitychange", updateAnimation);
-    reducedMotion.addEventListener("change", () => {
-        pointer.active = false;
-        pointer.strength = 0;
-        draw();
-        updateAnimation();
-    });
+    document.addEventListener("visibilitychange", resetPointer);
+    reducedMotion.addEventListener("change", resetPointer);
 
     resize();
-    updateAnimation();
 }
