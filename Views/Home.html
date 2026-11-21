@@ -1,66 +1,43 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>skill_issue — Find your project</title>
-        <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
-        <link
-            rel="preload"
-            href="/static/fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular-Web.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-        />
-        <link rel="stylesheet" href="/static/css/fonts.css" />
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>skill_issue — Find your project</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preload" href="/static/fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular-Web.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/static/css/fonts.css" />
         <script type="module" src="/static/js/shared/accent.js"></script>
         <link rel="stylesheet" href="/static/css/variables.css" />
         <link rel="stylesheet" href="/static/css/base.css" />
         <link rel="stylesheet" href="/static/css/ui.css" />
-        <script
-            type="module"
-            src="/static/js/shared/dither-background.js"
-        ></script>
-        <link rel="stylesheet" href="/static/css/home.css" />
+        <link rel="stylesheet" href="/static/css/ui/skill-picker.css" />
+        <link rel="stylesheet" href="/static/css/ui/project-dialogs.css" />
+        <script type="module" src="/static/js/shared/dither-background.js"></script>
+        <link rel="stylesheet" href="/static/css/pages/home.css" />
         <script type="module" src="/static/js/pages/home/index.js"></script>
-    </head>
-    <body class="home-page">
-        <a class="skip-link" href="#content">Skip to content</a>
-        {{#include components/SiteHeader.html}}
+</head>
+
+<body class="home-page">
+    <a class="skip-link" href="#content">Skip to content</a>
+    {{#include components/SiteHeader.html}}
         <main class="home-main">
-            <h1
-                class="brand-logo"
-                id="content"
-                tabindex="-1"
-                aria-label="skill.issue"
-            >
-                <span class="brand-name"
-                    >skill<span class="brand-mark">.</span><wbr />issue</span
-                >
+            <h1 class="brand-logo" id="content" tabindex="-1" aria-label="skill.issue">
+                <span class="brand-name">skill<span class="brand-mark">.</span><wbr />issue</span>
             </h1>
             <p class="home-subtitle">Find people to build your next project.</p>
             <search id="team-search">
                 <form id="search-form" action="/projects" method="get">
                     <fieldset class="skill-picker" id="search-skills" disabled>
-                        <label class="mb-2" for="skill-query"
-                            >What skills can you bring?</label
-                        >
+                        <label class="mb-2" for="skill-query">What skills can you bring?</label>
                         {{#include components/SkillPicker.html}}
                     </fieldset>
                     <div class="search-actions">
-                        <button
-                            class="btn btn-primary"
-                            type="submit"
-                            id="search-submit"
-                            disabled
-                        >
+                        <button class="btn btn-primary" type="submit" id="search-submit" disabled>
                             Find a project
                         </button>
-                        <button
-                            class="btn btn-link"
-                            type="button"
-                            id="reset-search"
-                        >
+                        <button class="btn btn-link" type="button" id="reset-search">
                             Reset search
                         </button>
                         <button class="btn" type="button" data-create-team hidden>
@@ -69,28 +46,22 @@
                     </div>
                 </form>
             </search>
-            <noscript
-                ><p class="alert alert-warning">
-                    Enable JavaScript to pick skills here, or <a href="/projects">browse projects</a>.
-                </p></noscript
-            >
-            <p
-                class="alert alert-danger"
-                id="account-error"
-                role="alert"
-                hidden
-            ></p>
+            <noscript>
+                <p class="alert alert-warning">
+                    Enable JavaScript to pick skills here, or
+                    <a href="/projects">browse projects</a>.
+                </p>
+            </noscript>
+            <p class="alert alert-danger" id="account-error" role="alert" hidden></p>
         </main>
         {{#include components/CreateProjectDialog.html}}
-        <footer class="home-footer">
-            <p>No project? Skill issue.</p>
-            <a
-                class="footer-github"
-                href="https://github.com/montanaaq/Skill-Issue-Web"
-            >
-                <span class="github-icon" aria-hidden="true">&#xf09b;</span>
-                <span class="github-label">Github</span>
-            </a>
-        </footer>
-    </body>
+            <footer class="home-footer">
+                <p>No project? Skill issue.</p>
+                <a class="footer-github" href="https://github.com/montanaaq/Skill-Issue-Web">
+                    <span class="github-icon" aria-hidden="true">&#xf09b;</span>
+                    <span class="github-label">Github</span>
+                </a>
+            </footer>
+</body>
+
 </html>

@@ -1,4 +1,11 @@
-{{#if hasProjects}} {{#foreach project in projects}} {{#include
-components/ProjectCard.html}} {{/foreach}} {{else}}
-<p>No projects found.</p>
+{{#param isSignedIn bool}}
+{{#param hasProjects bool}}
+{{#param projects SkillIssue.Models.Responses.TeamSearchResult[]}}
+
+{{#if hasProjects}}
+    {{#foreach project in projects}}
+        {{#include components/ProjectCard.html}}
+    {{/foreach}}
+{{else}}
+    <p>No projects found.</p>
 {{/if}}

@@ -88,53 +88,6 @@
     font-size: 0.875rem;
 }
 
-#application-positions {
-    margin-block: 1rem 1.5rem;
-}
-
-.application-position {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    column-gap: 0.75rem;
-    align-items: baseline;
-    inline-size: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--dm-border);
-    border-radius: var(--dm-radius);
-    cursor: pointer;
-}
-
-.application-position + .application-position {
-    margin-block-start: 0.5rem;
-}
-
-.application-position:has(:checked) {
-    border-color: var(--dm-accent);
-    background-color: var(--dm-surface);
-}
-
-.application-position:has(:disabled) {
-    cursor: default;
-}
-
-.application-position input {
-    accent-color: var(--dm-accent);
-}
-
-.application-position small {
-    grid-column: 2;
-    color: var(--dm-text-muted);
-}
-
-#application-error,
-#application-status:not(:empty) {
-    margin-block: 1rem 0;
-}
-
-#application-status:empty {
-    margin: 0;
-}
-
 @media (max-width: 48rem) {
     .projects-layout {
         grid-template-columns: minmax(0, 1fr);

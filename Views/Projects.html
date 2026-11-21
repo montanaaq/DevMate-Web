@@ -1,82 +1,50 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Projects — skill_issue</title>
-        <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
-        <link
-            rel="preload"
-            href="/static/fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular-Web.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-        />
-        <link rel="stylesheet" href="/static/css/fonts.css" />
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects — skill_issue</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preload" href="/static/fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular-Web.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/static/css/fonts.css" />
         <script type="module" src="/static/js/shared/accent.js"></script>
         <link rel="stylesheet" href="/static/css/variables.css" />
         <link rel="stylesheet" href="/static/css/base.css" />
         <link rel="stylesheet" href="/static/css/ui.css" />
+        <link rel="stylesheet" href="/static/css/ui/skill-picker.css" />
+        <link rel="stylesheet" href="/static/css/ui/project-dialogs.css" />
         <link rel="stylesheet" href="/static/css/pages/projects.css" />
         <script type="module" src="/static/js/pages/projects.js"></script>
-    </head>
-    <body>
-        <a class="skip-link" href="#content">Skip to content</a>
-        {{#include components/SiteHeader.html}}
+</head>
+
+<body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    {{#include components/SiteHeader.html}}
         <main id="content" class="page-main projects-main" tabindex="-1">
             <div class="projects-layout">
                 <div class="projects-sidebar">
                     <div class="results-heading">
                         <h1>Projects</h1>
-                        <button
-                            class="btn"
-                            type="button"
-                            data-create-team
-                            hidden
-                        >
+                        <button class="btn" type="button" data-create-team hidden>
                             Create a project
                         </button>
                     </div>
-                    <p
-                        class="alert alert-danger"
-                        id="account-error"
-                        role="alert"
-                        hidden
-                    ></p>
+                    <p class="alert alert-danger" id="account-error" role="alert" hidden></p>
                     <search class="project-filters">
                         <h2 id="project-filters-heading">Filter projects</h2>
-                        <form
-                            id="project-filters"
-                            action="/projects"
-                            method="get"
-                            aria-labelledby="project-filters-heading"
-                        >
-                            <fieldset
-                                aria-describedby="project-filter-hint"
-                                disabled
-                            >
+                        <form id="project-filters" action="/projects" method="get" aria-labelledby="project-filters-heading">
+                            <fieldset aria-describedby="project-filter-hint" disabled>
                                 <legend>Skills</legend>
-                                <div
-                                    class="skill-picker"
-                                    id="project-skill-picker"
-                                >
-                                    <label class="mb-2" for="skill-query"
-                                        >Find a skill</label
-                                    >
+                                <div class="skill-picker" id="project-skill-picker">
+                                    <label class="mb-2" for="skill-query">Find a skill</label>
                                     {{#include components/SkillPicker.html}}
                                 </div>
                                 <div class="search-actions">
-                                    <button
-                                        class="btn btn-primary"
-                                        type="submit"
-                                    >
+                                    <button class="btn btn-primary" type="submit">
                                         Apply filters
                                     </button>
-                                    <button
-                                        class="btn btn-link"
-                                        type="button"
-                                        id="reset-project-filters"
-                                    >
+                                    <button class="btn btn-link" type="button" id="reset-project-filters">
                                         Reset filters
                                     </button>
                                 </div>
@@ -88,49 +56,27 @@
                     <h2 id="teams-heading" tabindex="-1">
                         Projects looking for people
                     </h2>
-                    <noscript
-                        ><p>
+                    <noscript>
+                        <p>
                             Enable JavaScript to browse and filter projects.
-                        </p></noscript
-                    >
+                        </p>
+                    </noscript>
                     <p id="projects-status" role="status"></p>
-                    <p
-                        class="alert alert-danger"
-                        id="projects-error"
-                        role="alert"
-                        hidden
-                    ></p>
-                    <div
-                        id="project-results"
-                        data-signed-in="{{isSignedIn}}"
-                    ></div>
-                    <nav
-                        class="search-actions"
-                        aria-label="Project pages"
-                        id="project-pages"
-                        hidden
-                    >
-                        <button
-                            class="btn btn-link"
-                            type="button"
-                            id="first-project-page"
-                            hidden
-                        >
+                    <p class="alert alert-danger" id="projects-error" role="alert" hidden></p>
+                    <div id="project-results" data-signed-in="{{isSignedIn}}"></div>
+                    <nav class="search-actions" aria-label="Project pages" id="project-pages" hidden>
+                        <button class="btn btn-link" type="button" id="first-project-page" hidden>
                             First page
                         </button>
-                        <button
-                            class="btn btn-link"
-                            type="button"
-                            id="next-project-page"
-                            hidden
-                        >
+                        <button class="btn btn-link" type="button" id="next-project-page" hidden>
                             Next page
                         </button>
                     </nav>
                 </section>
             </div>
         </main>
-        {{#include components/ApplicationDialog.html}} {{#include
-        components/CreateProjectDialog.html}}
-    </body>
+        {{#include components/ApplicationDialog.html}}
+            {{#include components/CreateProjectDialog.html}}
+</body>
+
 </html>

@@ -1,26 +1,22 @@
-        <header class="site-header">
-            <div class="site-header-inner">
-                <a class="site-brand" href="/" aria-label="skill.issue — Home"{{#if currentPath == "/"}} aria-current="page"{{/if}}>
-                    <svg
-                        class="brand-mark brand-chevron"
-                        width="24"
-                        height="36"
-                        viewBox="0 0 24 36"
-                        fill="currentColor"
-                        aria-hidden="true"
-                        focusable="false"
-                    >
-                        <path d="M0 0h9l15 18L9 36H0l15-18Z" />
-                    </svg>
-                    <span class="brand-name">skill<span class="brand-mark">.</span><wbr />issue</span>
-                </a>
-                <nav class="site-nav account-nav" aria-label="Account">
-                    {{#if isSignedIn}}
-                    <a class="projects-link" href="/my-projects"{{#if currentPath == "/my-projects"}} aria-current="page"{{/if}}>My projects</a>
-                    <a class="account-name" href="/profile"{{#if currentPath == "/profile"}} aria-current="page"{{/if}}>{{accountName}}</a>
-                    {{else}}
-                    <a href="/signin"{{#if currentPath == "/signin"}} aria-current="page"{{/if}}>Sign in</a>
-                    {{/if}}
-                </nav>
-            </div>
-        </header>
+{{#param currentPath string}}
+{{#param isSignedIn bool}}
+{{#param accountName string}}
+
+<header class="site-header">
+    <div class="site-header-inner">
+        <a class="site-brand" href="/" aria-label="skill.issue — Home" aria-current='{{#if currentPath == "/"}}page{{else}}false{{/if}}'>
+            <svg class="brand-mark brand-chevron" width="24" height="36" viewBox="0 0 24 36" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M0 0h9l15 18L9 36H0l15-18Z" />
+            </svg>
+            <span class="brand-name">skill<span class="brand-mark">.</span><wbr />issue</span>
+        </a>
+        <nav class="site-nav account-nav" aria-label="Main navigation">
+            {{#if isSignedIn}}
+                <a class="projects-link" href="/my-projects" aria-current='{{#if currentPath == "/my-projects"}}page{{else}}false{{/if}}'>My projects</a>
+                <a class="account-name" href="/profile" aria-current='{{#if currentPath == "/profile"}}page{{else}}false{{/if}}'>{{accountName}}</a>
+            {{else}}
+                <a href="/signin" aria-current='{{#if currentPath == "/signin"}}page{{else}}false{{/if}}'>Sign in</a>
+            {{/if}}
+        </nav>
+    </div>
+</header>

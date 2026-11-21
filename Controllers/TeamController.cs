@@ -41,12 +41,11 @@ public sealed class TeamController(ITeamRepository repository)
         );
         string html = await TemplateEngine.RenderAsync(
             "components/ProjectResults.html",
-            new Dictionary<string, object?>
-            {
-                ["isSignedIn"] = context.User is not null,
-                ["hasProjects"] = teams.Count > 0,
-                ["projects"] = teams.Take(PageSize),
-            },
+            new ProjectResultsData(
+                IsSignedIn: context.User is not null,
+                HasProjects: teams.Count > 0,
+                Projects: teams.Take(PageSize).ToArray()
+            ),
             context.CancellationToken
         );
         int? nextBefore = teams.Count > PageSize ? teams[PageSize - 1].Id : null;

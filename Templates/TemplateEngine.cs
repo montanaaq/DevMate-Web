@@ -6,18 +6,23 @@ using System.Text;
 namespace SkillIssue.Templates;
 
 using RenderState = (
-    IReadOnlyDictionary<string, object?> TemplateData,
+    ITemplateData? TemplateData,
     StringBuilder Output,
     HashSet<string> ActiveFiles,
     Dictionary<string, object?> Locals,
     CancellationToken CancellationToken
 );
 
-public sealed class TemplateEngine
+internal interface ITemplateData
+{
+    (bool Found, object? Value) ReadValue(string name);
+}
+
+internal sealed class TemplateEngine
 {
     public static async Task<string> RenderAsync(
         string fileName,
-        IReadOnlyDictionary<string, object?> templateData,
+        ITemplateData? templateData,
         CancellationToken cancellationToken
     )
     {
@@ -87,6 +92,9 @@ public sealed class TemplateEngine
 
             switch (tag.Kind)
             {
+                case TemplateTagKind.Parameter when tag.Argument is not null:
+                    break;
+
                 case TemplateTagKind.If:
                     bool? condition = !visible ? null : ReadCondition(tag);
                     bool showIf = condition == true;
@@ -225,12 +233,10 @@ public sealed class TemplateEngine
         object? ReadValue(string name, TemplateTag tag)
         {
             string[] path = name.Split('.');
-            if (
-                !locals.TryGetValue(path[0], out object? value)
-                && !templateData.TryGetValue(path[0], out value)
-            )
+            if (!locals.TryGetValue(path[0], out object? value))
             {
-                throw InvalidTag(tag);
+                var (found, parameterValue) = templateData?.ReadValue(path[0]) ?? default;
+                value = found ? parameterValue : throw InvalidTag(tag);
             }
 
             const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;

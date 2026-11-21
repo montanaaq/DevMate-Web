@@ -8,44 +8,53 @@ public sealed class PagesController
 {
     public static Task HomeAsync(RequestContext context)
     {
-        return WritePageAsync(context, "Home.html");
+        return WritePageWithHeaderAsync(context, "Home.html");
     }
 
     public static Task ProjectsAsync(RequestContext context)
     {
-        return WritePageAsync(context, "Projects.html");
+        return WritePageWithHeaderAsync(context, "Projects.html");
     }
 
     public static Task SignInAsync(RequestContext context)
     {
-        return WritePageAsync(context, "SignIn.html");
+        return WritePageWithHeaderAsync(context, "SignIn.html");
     }
 
     public static Task ProfileAsync(RequestContext context)
     {
-        return WritePageAsync(context, "Profile.html");
+        return WritePageWithHeaderAsync(context, "Profile.html");
     }
 
     public static Task MyProjectsAsync(RequestContext context)
     {
-        return WritePageAsync(context, "MyProjects.html");
+        return WritePageWithHeaderAsync(context, "MyProjects.html");
     }
 
     public static Task SignUpAsync(RequestContext context)
     {
-        return WritePageAsync(context, "SignUp.html");
+        return WritePageWithHeaderAsync(context, "SignUp.html");
     }
 
-    private static async Task WritePageAsync(RequestContext context, string fileName)
+    private static Task WritePageWithHeaderAsync(RequestContext context, string fileName)
     {
         var user = context.User;
-        var templateData = new Dictionary<string, object?>
-        {
-            ["currentPath"] = "/" + string.Join('/', Router.GetPathSegments(context.Path)),
-            ["isSignedIn"] = user is not null,
-            ["accountName"] = user?.FullName ?? string.Empty,
-        };
+        string currentPath = "/" + string.Join('/', Router.GetPathSegments(context.Path));
+        var headerData = new SiteHeaderData(
+            CurrentPath: currentPath,
+            IsSignedIn: user is not null,
+            AccountName: user?.FullName ?? string.Empty
+        );
 
+        return WritePageAsync(context, fileName, headerData);
+    }
+
+    private static async Task WritePageAsync(
+        RequestContext context,
+        string fileName,
+        ITemplateData? templateData = null
+    )
+    {
         string html = await TemplateEngine.RenderAsync(
             fileName,
             templateData,

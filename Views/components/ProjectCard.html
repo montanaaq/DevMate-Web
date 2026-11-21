@@ -4,14 +4,14 @@
     <p class="project-label">Looking for</p>
     <ul class="project-tags">
         {{#foreach position in project.Positions}}
-        <li>{{position}}</li>
+            <li>{{position}}</li>
         {{/foreach}}
     </ul>
     <div class="project-skills">
         <p class="project-label">Required skills</p>
         <ul class="project-tags team-skills">
             {{#foreach skill in project.RequiredSkills}}
-            <li>{{skill}}</li>
+                <li>{{skill}}</li>
             {{/foreach}}
         </ul>
     </div>
@@ -19,23 +19,19 @@
         Members: {{project.MemberCount}} · Open positions:
         {{project.Positions.Length}}
     </p>
-    {{#if isSignedIn}} {{#if project.IsMember}}
-    <p class="team-meta">Your team</p>
-    {{else}} {{#if project.HasPendingApplication}}
-    <a href="/profile">Application pending</a>
+    {{#if isSignedIn}}
+        {{#if project.IsMember}}
+            <p class="team-meta">Your team</p>
+        {{else}}
+            {{#if project.HasPendingApplication}}
+                <a href="/profile">Application pending</a>
+            {{else}}
+                <button class="btn btn-primary" type="button" aria-haspopup="dialog" aria-describedby="team-heading-{{project.Id}}" data-apply-team="{{project.Id}}" data-positions="{{project.ApplicationPositions}}" hidden>
+                    Apply to join
+                </button>
+            {{/if}}
+        {{/if}}
     {{else}}
-    <button
-        class="btn btn-primary"
-        type="button"
-        aria-haspopup="dialog"
-        aria-describedby="team-heading-{{project.Id}}"
-        data-apply-team="{{project.Id}}"
-        data-positions="{{project.ApplicationPositions}}"
-        hidden
-    >
-        Apply to join
-    </button>
-    {{/if}} {{/if}} {{else}}
-    <a href="/signin">Sign in to apply</a>
+        <a href="/signin">Sign in to apply</a>
     {{/if}}
 </article>

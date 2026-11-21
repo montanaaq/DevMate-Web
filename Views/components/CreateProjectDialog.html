@@ -1,16 +1,7 @@
-<dialog
-    class="team-dialog"
-    id="create-team-dialog"
-    aria-labelledby="create-team-heading"
->
+<dialog class="team-dialog" id="create-team-dialog" aria-labelledby="create-team-heading">
     <div class="dialog-heading">
         <h2 id="create-team-heading">Create a project</h2>
-        <button
-            class="btn btn-link"
-            type="button"
-            id="close-create-team"
-            aria-label="Close create project"
-        >
+        <button class="btn btn-link" type="button" id="close-create-team" aria-label="Close create project">
             <span class="ui-icon" aria-hidden="true">&#xf00d;</span>
         </button>
     </div>
@@ -22,13 +13,7 @@
             <li>4. Review</li>
         </ol>
     </nav>
-    <form
-        id="create-team-form"
-        action="/api/teams"
-        method="post"
-        aria-labelledby="create-team-heading"
-        novalidate
-    >
+    <form id="create-team-form" action="/api/teams" method="post" aria-labelledby="create-team-heading" novalidate>
         <fieldset id="create-team-fields">
             <legend class="visually-hidden">
                 Project details and participants
@@ -38,70 +23,27 @@
                 <p class="field-hint">Both fields are required.</p>
                 <label class="form-label" for="team-name">Project name</label>
                 <div class="mb-3">
-                    <input
-                        class="form-control"
-                        id="team-name"
-                        name="name"
-                        maxlength="120"
-                        aria-describedby="team-name-count"
-                        data-counted
-                        required
-                        autofocus
-                    />
-                    <span
-                        class="character-count"
-                        id="team-name-count"
-                        data-character-count
-                        >120 left</span
-                    >
+                    <input class="form-control" id="team-name" name="name" maxlength="120" aria-describedby="team-name-count" data-counted required autofocus />
+                    <span class="character-count" id="team-name-count" data-character-count>120 left</span>
                 </div>
-                <label class="form-label" for="team-description"
-                    >Project description</label
-                >
+                <label class="form-label" for="team-description">Project description</label>
                 <p class="field-hint" id="project-description-hint">
                     Explain the problem, who it affects and what you want to
                     build.
                 </p>
                 <div class="mb-3">
-                    <textarea
-                        class="form-control"
-                        id="team-description"
-                        name="description"
-                        rows="4"
-                        maxlength="5000"
-                        aria-describedby="project-description-hint team-description-count"
-                        data-counted
-                        required
-                    ></textarea>
-                    <span
-                        class="character-count"
-                        id="team-description-count"
-                        data-character-count
-                        >5000 left</span
-                    >
+                    <textarea class="form-control" id="team-description" name="description" rows="4" maxlength="5000" aria-describedby="project-description-hint team-description-count" data-counted required></textarea>
+                    <span class="character-count" id="team-description-count" data-character-count>5000 left</span>
                 </div>
             </section>
             <section data-project-step hidden>
                 <h3 tabindex="-1">Who will work on the project?</h3>
                 <div id="project-positions"></div>
-                <button
-                    class="btn btn-link"
-                    type="button"
-                    id="add-project-position"
-                >
+                <button class="btn btn-link" type="button" id="add-project-position">
                     Add a position
                 </button>
-                <p
-                    class="field-hint"
-                    id="project-people-count"
-                    role="status"
-                ></p>
-                <p
-                    class="alert alert-danger"
-                    id="project-people-error"
-                    role="alert"
-                    hidden
-                ></p>
+                <p class="field-hint" id="project-people-count" role="status"></p>
+                <p class="alert alert-danger" id="project-people-error" role="alert" hidden></p>
             </section>
             <section data-project-step hidden>
                 <h3 tabindex="-1">Choose skills for each position</h3>
@@ -112,12 +54,7 @@
                 <div id="project-review"></div>
             </section>
             <div class="project-actions">
-                <button
-                    class="btn btn-link"
-                    type="button"
-                    id="project-back"
-                    hidden
-                >
+                <button class="btn btn-link" type="button" id="project-back" hidden>
                     Back
                 </button>
                 <button class="btn btn-primary" type="submit" id="project-next">
@@ -125,12 +62,7 @@
                 </button>
             </div>
         </fieldset>
-        <p
-            class="alert alert-danger mt-3"
-            id="create-team-error"
-            role="alert"
-            hidden
-        ></p>
+        <p class="alert alert-danger mt-3" id="create-team-error" role="alert" hidden></p>
     </form>
     <template id="project-review-position-template">
         <li class="project-position">
@@ -151,11 +83,7 @@
             </dl>
             <p data-review-captain hidden>You occupy one place.</p>
             <p class="field-hint">Required skills</p>
-            <ul
-                class="project-review-skills"
-                data-review-skills
-                role="list"
-            ></ul>
+            <ul class="project-review-skills" data-review-skills role="list"></ul>
         </li>
     </template>
     <template id="project-position-template">
@@ -163,50 +91,15 @@
             <legend></legend>
             <label class="form-label" data-label="title">Position title</label>
             <div class="mb-3">
-                <input
-                    class="form-control"
-                    name="title"
-                    data-field="title"
-                    maxlength="120"
-                    placeholder="e.g. Backend developer"
-                    aria-describedby="project-people-error"
-                    data-counted
-                    required
-                />
-                <span class="character-count" data-character-count
-                    >120 left</span
-                >
+                <input class="form-control" name="title" data-field="title" maxlength="120" placeholder="e.g. Backend developer" aria-describedby="project-people-error" data-counted required />
+                <span class="character-count" data-character-count>120 left</span>
             </div>
-            <label class="form-label" data-label="categoryId"
-                >Position category</label
-            >
-            <select
-                class="form-select mb-3"
-                name="categoryId"
-                data-field="categoryId"
-                required
-            ></select>
-            <label class="form-label" data-label="count"
-                >Number of people</label
-            >
-            <input
-                class="form-control mb-3"
-                name="count"
-                data-field="count"
-                type="number"
-                min="1"
-                max="20"
-                step="1"
-                aria-describedby="project-people-error"
-                required
-            />
+            <label class="form-label" data-label="categoryId">Position category</label>
+            <select class="form-select mb-3" name="categoryId" data-field="categoryId" required></select>
+            <label class="form-label" data-label="count">Number of people</label>
+            <input class="form-control mb-3" name="count" data-field="count" type="number" min="1" max="20" step="1" aria-describedby="project-people-error" required />
             <div class="project-actions">
-                <button
-                    class="btn btn-link"
-                    type="button"
-                    data-include-captain
-                    aria-pressed="false"
-                >
+                <button class="btn btn-link" type="button" data-include-captain aria-pressed="false">
                     Add yourself
                 </button>
                 <button class="btn btn-link" type="button" data-remove-position>

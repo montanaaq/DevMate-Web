@@ -1,40 +1,33 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Profile — skill_issue</title>
-        <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
-        <link
-            rel="preload"
-            href="/static/fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular-Web.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-        />
-        <link rel="stylesheet" href="/static/css/fonts.css" />
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile — skill_issue</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preload" href="/static/fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular-Web.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/static/css/fonts.css" />
         <script type="module" src="/static/js/shared/accent.js"></script>
         <link rel="stylesheet" href="/static/css/variables.css" />
         <link rel="stylesheet" href="/static/css/base.css" />
         <link rel="stylesheet" href="/static/css/ui.css" />
-        <link rel="stylesheet" href="/static/css/profile.css" />
+        <link rel="stylesheet" href="/static/css/ui/skill-picker.css" />
+        <link rel="stylesheet" href="/static/css/ui/project-cards.css" />
+        <link rel="stylesheet" href="/static/css/pages/profile.css" />
         <script type="module" src="/static/js/pages/profile/index.js"></script>
-    </head>
-    <body>
-        <a class="skip-link" href="#content">Skip to content</a>
-        {{#include components/SiteHeader.html}}
+</head>
+
+<body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    {{#include components/SiteHeader.html}}
         <main class="page-main profile-main">
-            <noscript
-                ><p class="alert alert-warning">
+            <noscript>
+                <p class="alert alert-warning">
                     Enable JavaScript to view your profile.
-                </p></noscript
-            >
-            <p
-                class="alert alert-danger"
-                id="account-error"
-                role="alert"
-                hidden
-            ></p>
+                </p>
+            </noscript>
+            <p class="alert alert-danger" id="account-error" role="alert" hidden></p>
             <p data-loading role="status">Loading profile…</p>
             <button class="btn btn-link" type="button" data-retry hidden>
                 Try again
@@ -46,43 +39,20 @@
                             Profile
                         </h1>
                         <p class="profile-email" data-profile-email></p>
-                        <p
-                            class="profile-skills"
-                            data-profile-skills
-                            hidden
-                        ></p>
+                        <p class="profile-skills" data-profile-skills hidden></p>
                         <div class="profile-links" data-profile-links></div>
                     </div>
-                    <a class="btn profile-edit" href="#settings"
-                        >Edit profile settings
-                        <svg
-                            class="link-icon"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            aria-hidden="true"
-                            focusable="false"
-                        >
-                            <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-                    ></a>
+                    <a class="btn profile-edit" href="#settings">Edit profile settings
+                        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                            <path d="M5 12h14m-6-6 6 6-6 6" />
+                        </svg></a>
                 </section>
                 <nav class="profile-nav" aria-label="Profile sections">
-                    <a
-                        href="#overview"
-                        data-section-link="overview"
-                        aria-current="page"
-                        >Overview</a
-                    >
-                    <a href="#settings" data-section-link="settings"
-                        >Settings</a
-                    >
+                    <a href="#overview" data-section-link="overview" aria-current="page">Overview</a>
+                    <a href="#settings" data-section-link="settings">Settings</a>
                 </nav>
                 <div id="overview" data-section="overview">
-                    <section
-                        class="profile-section"
-                        aria-labelledby="applications-heading"
-                    >
+                    <section class="profile-section" aria-labelledby="applications-heading">
                         <div class="section-heading">
                             <h2 id="applications-heading">
                                 Applications
@@ -98,21 +68,8 @@
                         <form data-skills-form aria-labelledby="skills-heading">
                             <fieldset data-skills-fields>
                                 <div class="skill-picker" data-profile-skill-picker>
-                                    <label class="form-label" for="profile-skill-query">Find skills</label>
-                                    <input
-                                        class="form-control"
-                                        id="profile-skill-query"
-                                        name="skillQuery"
-                                        type="search"
-                                        placeholder="e.g. C#, React, Figma"
-                                        autocomplete="off"
-                                        autocapitalize="none"
-                                        spellcheck="false"
-                                        maxlength="80"
-                                    />
-                                    <ul class="selected-skills" aria-label="Selected skills"></ul>
-                                    <ul class="skill-suggestions" aria-label="Available skills"></ul>
-                                    <p class="form-text" data-skill-status role="status"></p>
+                                    <label class="form-label" for="skill-query">Find skills</label>
+                                    {{#include components/SkillPicker.html}}
                                 </div>
                                 <button class="btn btn-primary" type="submit">Save skills</button>
                             </fieldset>
@@ -120,19 +77,12 @@
                             <p class="alert alert-danger" data-skills-error role="alert" hidden></p>
                         </form>
                     </section>
-                    <section
-                        class="profile-section settings-section"
-                        aria-labelledby="links-heading"
-                    >
+                    <section class="profile-section settings-section" aria-labelledby="links-heading">
                         <h2 id="links-heading">Social links</h2>
                         <form data-social-form>
                             <fieldset data-social-fields>
                                 <div data-social-rows></div>
-                                <button
-                                    class="btn btn-link"
-                                    type="button"
-                                    data-add-social-link
-                                >
+                                <button class="btn btn-link" type="button" data-add-social-link>
                                     Add link
                                 </button>
                                 <button class="btn btn-primary" type="submit">
@@ -141,92 +91,44 @@
                             </fieldset>
                             <template data-social-row-template>
                                 <div class="social-link-row">
-                                    <label
-                                        >Network
-                                        <input
-                                            class="form-control"
-                                            name="network"
-                                            maxlength="80"
-                                            required
-                                            placeholder="Network name"
-                                        />
+                                    <label>Network
+                                        <input class="form-control" name="network" maxlength="80" required placeholder="Network name" />
                                     </label>
-                                    <label
-                                        >URL
-                                        <input
-                                            class="form-control"
-                                            name="url"
-                                            type="url"
-                                            maxlength="500"
-                                            required
-                                            placeholder="https://example.com/username"
-                                        />
+                                    <label>URL
+                                        <input class="form-control" name="url" type="url" maxlength="500" required placeholder="https://example.com/username" />
                                     </label>
                                     <button class="btn btn-link" type="button">
                                         Remove
                                     </button>
                                 </div>
                             </template>
-                            <p
-                                class="form-text mt-3"
-                                role="status"
-                                data-links-status
-                            ></p>
-                            <p
-                                class="alert alert-danger"
-                                role="alert"
-                                data-links-error
-                                hidden
-                            ></p>
+                            <p class="form-text mt-3" role="status" data-links-status></p>
+                            <p class="alert alert-danger" role="alert" data-links-error hidden></p>
                         </form>
                     </section>
-                    <section
-                        class="profile-section settings-section"
-                        aria-labelledby="appearance-heading"
-                    >
+                    <section class="profile-section settings-section" aria-labelledby="appearance-heading">
                         <h2 id="appearance-heading">Appearance</h2>
                         <fieldset>
                             <legend>Accent color</legend>
-                            <div
-                                class="accent-picker"
-                                data-accent-presets
-                            ></div>
-                            <label class="custom-accent"
-                                >Custom color
-                                <input
-                                    type="color"
-                                    value="#58a6ff"
-                                    data-custom-accent
-                                />
+                            <div class="accent-picker" data-accent-presets></div>
+                            <label class="custom-accent">Custom color
+                                <input type="color" value="#58a6ff" data-custom-accent />
                             </label>
                         </fieldset>
-                        <p
-                            class="form-text mt-3"
-                            role="status"
-                            data-accent-warning
-                            hidden
-                        >
+                        <p class="form-text mt-3" role="status" data-accent-warning hidden>
                             This accent is too dark and may be hard to read.
                         </p>
-                        <p
-                            class="form-text mt-3"
-                            role="status"
-                            data-accent-status
-                        ></p>
+                        <p class="form-text mt-3" role="status" data-accent-status></p>
                     </section>
                 </div>
             </div>
             <footer class="profile-footer">
                 <span class="text-capitalize" data-profile-role></span>
-                <button
-                    class="btn btn-outline-danger"
-                    type="button"
-                    data-signout
-                    disabled
-                >
+                <button class="btn btn-outline-danger" type="button" data-signout disabled>
                     Sign out
                 </button>
             </footer>
         </main>
-    </body>
+</body>
+
 </html>

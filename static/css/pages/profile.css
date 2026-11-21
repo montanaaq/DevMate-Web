@@ -1,0 +1,165 @@
+.profile-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-block: 1rem 2.5rem;
+}
+
+.profile-email,
+.profile-skills,
+.profile-footer,
+.section-heading h2 span {
+    color: var(--dm-text-muted);
+}
+
+.profile-email {
+    margin-block-end: 1.5rem;
+}
+
+.profile-skills {
+    max-inline-size: 48rem;
+}
+
+.profile-links,
+.profile-nav,
+.profile-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+}
+
+.profile-edit {
+    padding-inline: 0;
+    color: var(--dm-accent);
+}
+
+.profile-nav {
+    border-block-end: 1px solid var(--dm-border);
+}
+
+.profile-nav a {
+    padding: 1rem 0;
+    border-block-end: 2px solid transparent;
+    color: var(--dm-text-muted);
+}
+
+.profile-nav a[aria-current] {
+    border-color: var(--dm-accent);
+    color: var(--dm-text);
+}
+
+.profile-section {
+    padding-block-start: 2.5rem;
+}
+
+.profile-section h2 {
+    margin-block: 0;
+    font-size: 1.25rem;
+}
+
+.section-heading h2 span {
+    margin-inline-start: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.settings-section {
+    max-inline-size: 36rem;
+}
+
+.settings-section h2 {
+    margin-block-end: 1.5rem;
+}
+
+.accent-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.accent-picker label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-block-size: 3rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--dm-input-border);
+    border-radius: var(--dm-radius);
+    cursor: pointer;
+}
+
+.accent-picker input {
+    accent-color: var(--dm-accent);
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+}
+
+.accent-picker label:has(:checked) {
+    border-color: var(--dm-accent);
+}
+
+.profile-footer {
+    justify-content: space-between;
+    margin-block-start: 4rem;
+    padding-block-start: 1.5rem;
+    border-block-start: 1px solid var(--dm-border);
+    font-size: 0.875rem;
+}
+
+@media (forced-colors: active) {
+    .profile-nav a[aria-current],
+    .accent-picker label:has(:checked) {
+        border-color: Highlight;
+    }
+}
+
+@media (max-width: 40rem) {
+    .profile-heading {
+        gap: 0.5rem;
+        padding-block-start: 0;
+    }
+}
+
+.social-link-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto;
+    align-items: end;
+    gap: 0.75rem;
+    margin-block-end: 1.5rem;
+}
+
+.social-link-row input {
+    margin-block-start: 0.5rem;
+}
+
+.custom-accent {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-block-start: 1rem;
+}
+
+.custom-accent input {
+    inline-size: 4rem;
+    block-size: 3rem;
+    padding: 0.25rem;
+    border: 1px solid var(--dm-input-border);
+    border-radius: var(--dm-radius);
+    background: var(--dm-surface);
+    cursor: pointer;
+}
+
+@media (max-width: 40rem) {
+    .social-link-row {
+        grid-template-columns: minmax(0, 1fr);
+        padding-block-end: 1rem;
+        border-block-end: 1px solid var(--dm-border);
+    }
+
+    .social-link-row button {
+        justify-self: start;
+    }
+}

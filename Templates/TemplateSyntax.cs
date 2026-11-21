@@ -5,6 +5,7 @@ namespace SkillIssue.Templates;
 internal enum TemplateTagKind
 {
     Invalid,
+    Parameter,
     Variable,
     If,
     Else,
@@ -60,6 +61,23 @@ internal static partial class TemplateSyntax
         string arguments = content[separator..].TrimStart();
         switch (command)
         {
+            case "#param":
+                string[] parameter = arguments.Split(
+                    (char[]?)null,
+                    2,
+                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
+                );
+                if (
+                    parameter is [string name, string type]
+                    && !name.Contains('.')
+                    && ValuePathPattern().IsMatch(name)
+                )
+                {
+                    return tag with { Kind = TemplateTagKind.Parameter, Name = name, Argument = type };
+                }
+
+                return tag with { Kind = TemplateTagKind.Parameter };
+
             case "#if":
                 var condition = ConditionPattern().Match(arguments);
                 if (condition.Success)

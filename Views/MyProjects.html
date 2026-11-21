@@ -1,46 +1,41 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>My projects — skill_issue</title>
-        <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
-        <link
-            rel="preload"
-            href="/static/fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular-Web.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-        />
-        <link rel="stylesheet" href="/static/css/fonts.css" />
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My projects — skill_issue</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preload" href="/static/fonts/jetbrains-mono/JetBrainsMonoNerdFontMono-Regular-Web.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/static/css/fonts.css" />
         <script type="module" src="/static/js/shared/accent.js"></script>
         <link rel="stylesheet" href="/static/css/variables.css" />
         <link rel="stylesheet" href="/static/css/base.css" />
         <link rel="stylesheet" href="/static/css/ui.css" />
-        <link rel="stylesheet" href="/static/css/profile.css" />
+        <link rel="stylesheet" href="/static/css/ui/project-cards.css" />
+        <link rel="stylesheet" href="/static/css/pages/my-projects.css" />
         <script type="module" src="/static/js/pages/my-projects.js"></script>
-    </head>
-    <body>
-        <a class="skip-link" href="#content">Skip to content</a>
-        {{#include components/SiteHeader.html}}
+</head>
+
+<body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    {{#include components/SiteHeader.html}}
         <main id="content" class="page-main profile-main" tabindex="-1">
             <div class="section-heading">
                 <h1>My projects: <span data-team-count></span></h1>
                 <a href="/profile">Back to profile</a>
             </div>
-            <noscript><p>Enable JavaScript to view your projects.</p></noscript>
+            <noscript>
+                <p>Enable JavaScript to view your projects.</p>
+            </noscript>
             <p data-loading>Loading projects…</p>
             <p data-project-status role="status"></p>
-            <p
-                data-project-error
-                class="alert alert-danger"
-                role="alert"
-                hidden
-            ></p>
+            <p data-project-error class="alert alert-danger" role="alert" hidden></p>
             <button data-retry class="btn btn-link" type="button" hidden>
                 Try again
             </button>
             <div data-profile-teams></div>
         </main>
-    </body>
+</body>
+
 </html>
