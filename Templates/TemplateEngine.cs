@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Net;
+using System.Reflection;
 using System.Text;
 
 namespace SkillIssue.Templates;
@@ -223,11 +224,35 @@ public sealed class TemplateEngine
 
         object? ReadValue(string name, TemplateTag tag)
         {
-            return
-                locals.TryGetValue(name, out object? value)
-                || templateData.TryGetValue(name, out value)
-                ? value
-                : throw InvalidTag(tag);
+            string[] path = name.Split('.');
+            if (
+                !locals.TryGetValue(path[0], out object? value)
+                && !templateData.TryGetValue(path[0], out value)
+            )
+            {
+                throw InvalidTag(tag);
+            }
+
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
+            foreach (string member in path.Skip(1))
+            {
+                var type = value?.GetType() ?? throw InvalidTag(tag);
+                var property = type.GetProperty(member, flags);
+                if (
+                    property?.GetMethod is { IsPublic: true }
+                    && property.GetIndexParameters().Length == 0
+                )
+                {
+                    value = property.GetValue(value);
+                }
+                else
+                {
+                    var field = type.GetField(member, flags) ?? throw InvalidTag(tag);
+                    value = field.GetValue(value);
+                }
+            }
+
+            return value;
         }
 
         InvalidOperationException InvalidTag(TemplateTag tag)

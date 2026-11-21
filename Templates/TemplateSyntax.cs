@@ -25,6 +25,7 @@ internal readonly record struct TemplateTag(
 internal static partial class TemplateSyntax
 {
     private const string Identifier = "[A-Za-z_][A-Za-z0-9_]*";
+    private const string ValuePath = Identifier + @"(?:\." + Identifier + ")*";
 
     public static bool IsTemplatePath(string path) => TemplatePathPattern().IsMatch(path);
 
@@ -99,7 +100,7 @@ internal static partial class TemplateSyntax
                 return tag with { Kind = TemplateTagKind.EndForEach };
 
             default:
-                if (arguments.Length == 0 && IdentifierPattern().IsMatch(command))
+                if (arguments.Length == 0 && ValuePathPattern().IsMatch(command))
                 {
                     return tag with { Kind = TemplateTagKind.Variable, Name = command };
                 }
@@ -115,12 +116,12 @@ internal static partial class TemplateSyntax
     [GeneratedRegex(@"\A(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_][A-Za-z0-9_.-]*\.html\z")]
     private static partial Regex TemplatePathPattern();
 
-    [GeneratedRegex(@"\A" + Identifier + @"\z")]
-    private static partial Regex IdentifierPattern();
+    [GeneratedRegex(@"\A" + ValuePath + @"\z")]
+    private static partial Regex ValuePathPattern();
 
-    [GeneratedRegex(@"\A(?<name>" + Identifier + """)(?:\s*==\s*"(?<literal>[^"{}]*)")?\z""")]
+    [GeneratedRegex(@"\A(?<name>" + ValuePath + """)(?:\s*==\s*"(?<literal>[^"{}]*)")?\z""")]
     private static partial Regex ConditionPattern();
 
-    [GeneratedRegex(@"\A(?<name>" + Identifier + @")\s+in\s+(?<collection>" + Identifier + @")\z")]
+    [GeneratedRegex(@"\A(?<name>" + Identifier + @")\s+in\s+(?<collection>" + ValuePath + @")\z")]
     private static partial Regex LoopPattern();
 }

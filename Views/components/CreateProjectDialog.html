@@ -219,20 +219,8 @@
         <fieldset class="project-position">
             <legend></legend>
             <div class="skill-picker">
-                <label class="form-label">Required skills</label>
-                <input
-                    class="form-control"
-                    name="skillQuery"
-                    type="search"
-                    placeholder="e.g. C#, React, Figma"
-                    autocomplete="off"
-                    autocapitalize="none"
-                    spellcheck="false"
-                    maxlength="80"
-                />
-                <ul class="selected-skills" aria-label="Selected required skills"></ul>
-                <ul class="skill-suggestions" aria-label="Available skills"></ul>
-                <p class="field-hint" data-skill-status role="status"></p>
+                <label class="form-label" for="skill-query">Required skills</label>
+                {{#include components/SkillPicker.html}}
             </div>
         </fieldset>
     </template>

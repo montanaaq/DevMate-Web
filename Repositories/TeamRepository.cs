@@ -13,7 +13,8 @@ public interface ITeamRepository
         int[] skillIds,
         int beforeId,
         int? viewerId,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken,
+        bool matchAnySkill = false
     );
     Task<int?> CreateAsync(
         int captainId,
@@ -76,15 +77,17 @@ public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepositor
         int[] skillIds,
         int beforeId,
         int? viewerId,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken,
+        bool matchAnySkill = false
     )
     {
         await using var command = dataSource.CreateCommand(
-            "SELECT * FROM public.search_teams($1, $2, $3)"
+            "SELECT * FROM public.search_teams($1, $2, $3, $4)"
         );
         command.Parameters.AddWithValue(skillIds);
         command.Parameters.AddWithValue(beforeId);
         command.Parameters.AddWithValue(NpgsqlDbType.Integer, (object?)viewerId ?? DBNull.Value);
+        command.Parameters.AddWithValue(matchAnySkill);
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         var teams = new List<TeamSearchResult>();
 

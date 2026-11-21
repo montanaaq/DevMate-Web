@@ -5,14 +5,8 @@ export async function getTeamCatalog() {
     return data;
 }
 
-export async function getTeams(skillIds, before) {
-    const params = new URLSearchParams({ skills: skillIds.join(",") });
-
-    if (before !== undefined) {
-        params.set("before", String(before));
-    }
-
-    const { data } = await api.get(`/teams?${params}`);
+export async function searchProjects(skillIds, before) {
+    const { data } = await api.post("/teams/search", { skillIds, before });
     return data;
 }
 

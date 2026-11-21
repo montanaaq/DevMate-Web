@@ -4,12 +4,14 @@ using SkillIssue.Http;
 using SkillIssue.Http.Errors;
 using SkillIssue.Models.Requests;
 using SkillIssue.Repositories;
+using SkillIssue.Templates;
 using SkillIssue.Validators;
 
 namespace SkillIssue.Controllers;
 
 public sealed class TeamController(ITeamRepository repository)
 {
+    private const int PageSize = 12;
     private readonly CreateTeamRequestValidator _validator = new();
     private readonly CreateApplicationRequestValidator _applicationValidator = new();
 
@@ -18,46 +20,37 @@ public sealed class TeamController(ITeamRepository repository)
         await context.WriteJsonAsync(await repository.GetCatalogAsync(context.CancellationToken));
     }
 
-    public async Task SearchAsync(RequestContext context)
+    public async Task SearchProjectsAsync(RequestContext context)
     {
-        int[] skillIds = ParseSkillIds(context.Request.QueryString["skills"]);
-
-        int beforeId = int.MaxValue;
-        string? rawBefore = context.Request.QueryString["before"];
-        if (rawBefore is not null && (!int.TryParse(rawBefore, out beforeId) || beforeId <= 0))
+        var request = await context.ReadJsonAsync<SearchProjectsRequest>();
+        if (
+            request.SkillIds is not { } skillIds
+            || skillIds.Any(id => id <= 0)
+            || request.Before is <= 0
+        )
         {
             throw new HttpException(ApiError.BadRequest);
         }
 
         var teams = await repository.SearchAsync(
-            skillIds,
-            beforeId,
+            skillIds.Distinct().ToArray(),
+            request.Before ?? int.MaxValue,
             context.User?.Id,
+            context.CancellationToken,
+            matchAnySkill: true
+        );
+        string html = await TemplateEngine.RenderAsync(
+            "components/ProjectResults.html",
+            new Dictionary<string, object?>
+            {
+                ["isSignedIn"] = context.User is not null,
+                ["hasProjects"] = teams.Count > 0,
+                ["projects"] = teams.Take(PageSize),
+            },
             context.CancellationToken
         );
-        bool hasMore = teams.Count > 12;
-        await context.WriteJsonAsync(
-            new
-            {
-                teams = teams
-                    .Take(12)
-                    .Select(team => new
-                    {
-                        id = team.Id,
-                        name = team.Name,
-                        description = team.Description,
-                        memberCount = team.MemberCount,
-                        positions = team.Positions,
-                        requiredSkills = team.RequiredSkills,
-                        positionIds = team.PositionIds,
-                        isMember = team.IsMember,
-                        applicationPositions = team.ApplicationPositions,
-                        hasPendingApplication = team.HasPendingApplication,
-                    }),
-                hasMore,
-                isAuthenticated = context.User is not null,
-            }
-        );
+        int? nextBefore = teams.Count > PageSize ? teams[PageSize - 1].Id : null;
+        await context.WriteJsonAsync(new { html, nextBefore });
     }
 
     public async Task CreateAsync(RequestContext context)
@@ -128,27 +121,5 @@ public sealed class TeamController(ITeamRepository repository)
         }
 
         await context.WriteJsonAsync(new { applicationId });
-    }
-
-    private static int[] ParseSkillIds(string? rawSkills)
-    {
-        string[] values = string.IsNullOrEmpty(rawSkills) ? [] : rawSkills.Split(',');
-        if (values.Length > 20)
-        {
-            throw new HttpException(ApiError.BadRequest);
-        }
-
-        var skillIds = new HashSet<int>();
-        foreach (string value in values)
-        {
-            if (!int.TryParse(value, out int id) || id <= 0)
-            {
-                throw new HttpException(ApiError.BadRequest);
-            }
-
-            skillIds.Add(id);
-        }
-
-        return skillIds.ToArray();
     }
 }

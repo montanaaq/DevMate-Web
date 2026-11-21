@@ -40,31 +40,13 @@
             </h1>
             <p class="home-subtitle">Find people to build your next project.</p>
             <search id="team-search">
-                <form id="search-form" action="/" method="get">
-                    <div class="skill-picker" id="search-skills">
-                        <label for="skill-query" class="mb-2"
+                <form id="search-form" action="/projects" method="get">
+                    <fieldset class="skill-picker" id="search-skills" disabled>
+                        <label class="mb-2" for="skill-query"
                             >What skills can you bring?</label
                         >
-                        <input
-                            class="form-control"
-                            id="skill-query"
-                            name="query"
-                            type="search"
-                            placeholder="e.g. C#, React, Figma"
-                            autocomplete="off"
-                            autocapitalize="none"
-                            spellcheck="false"
-                            maxlength="80"
-                            disabled
-                        />
-                        <ul class="selected-skills" aria-label="Selected skills"></ul>
-                        <ul class="skill-suggestions" aria-label="Available skills"></ul>
-                        <p
-                            class="field-hint"
-                            data-skill-status
-                            role="status"
-                        ></p>
-                    </div>
+                        {{#include components/SkillPicker.html}}
+                    </fieldset>
                     <div class="search-actions">
                         <button
                             class="btn btn-primary"
@@ -81,7 +63,7 @@
                         >
                             Reset search
                         </button>
-                        <button class="btn" type="button" data-create-team>
+                        <button class="btn" type="button" data-create-team hidden>
                             Create a project
                         </button>
                     </div>
@@ -89,7 +71,7 @@
             </search>
             <noscript
                 ><p class="alert alert-warning">
-                    Enable JavaScript to search for teams and use your account.
+                    Enable JavaScript to pick skills here, or <a href="/projects">browse projects</a>.
                 </p></noscript
             >
             <p
@@ -98,30 +80,7 @@
                 role="alert"
                 hidden
             ></p>
-            <section class="team-results" aria-labelledby="teams-heading">
-                <div class="results-heading">
-                    <h2 id="teams-heading">Projects looking for people</h2>
-                    <span class="field-hint">Build something together.</span>
-                </div>
-                <p id="teams-status" role="status">Loading projects…</p>
-                <div id="teams-error" class="alert alert-danger" hidden>
-                    <p id="teams-error-message" role="alert"></p>
-                    <button class="btn btn-link" type="button" id="retry-teams">
-                        Try again
-                    </button>
-                </div>
-                <div id="team-list"></div>
-                <button
-                    class="btn btn-link"
-                    type="button"
-                    id="more-teams"
-                    hidden
-                >
-                    Show more projects
-                </button>
-            </section>
         </main>
-        {{#include components/ApplicationDialog.html}}
         {{#include components/CreateProjectDialog.html}}
         <footer class="home-footer">
             <p>No project? Skill issue.</p>

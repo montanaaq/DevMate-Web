@@ -90,7 +90,6 @@ export function openApplicationDialog(team, trigger, refreshTeams) {
                 positionId: id,
                 coverLetter: letter.value,
             });
-            team.hasPendingApplication = true;
             form.hidden = true;
             const profile = createLink("View in profile", "/profile");
             status.append(`Application sent for ${position.title}. `, profile);

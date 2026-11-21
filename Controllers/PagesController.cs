@@ -11,6 +11,11 @@ public sealed class PagesController
         return WritePageAsync(context, "Home.html");
     }
 
+    public static Task ProjectsAsync(RequestContext context)
+    {
+        return WritePageAsync(context, "Projects.html");
+    }
+
     public static Task SignInAsync(RequestContext context)
     {
         return WritePageAsync(context, "SignIn.html");

@@ -1,0 +1,157 @@
+.projects-main {
+    inline-size: auto;
+    margin-inline: 1rem;
+}
+
+.team-results {
+    text-align: start;
+}
+
+.projects-layout {
+    display: grid;
+    grid-template-columns: 40dvw minmax(0, 1fr);
+    gap: 2rem;
+}
+
+.project-filters {
+    margin-block-start: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--dm-border);
+    border-radius: var(--dm-radius);
+}
+
+.project-filters h2 {
+    font-size: 1.25rem;
+}
+
+.results-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+}
+
+.team-results h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.team-results > h2 {
+    margin-block-end: 1rem;
+}
+
+.team-row {
+    padding-block: 1.75rem;
+    border-block-start: 1px solid var(--dm-border);
+}
+
+.team-row h3 {
+    margin-block-end: 0.75rem;
+    font-size: 1.25rem;
+}
+
+.team-row p {
+    margin-block-end: 0.75rem;
+}
+
+.team-row .project-label {
+    margin-block-end: 0.25rem;
+}
+
+.project-tags {
+    padding-inline-start: 1.5rem;
+}
+
+.project-skills:not(:has(li)) {
+    display: none;
+}
+
+.team-description,
+.team-meta {
+    color: var(--dm-text-muted);
+}
+
+.team-description {
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.team-skills {
+    color: var(--dm-accent);
+}
+
+.team-meta {
+    font-size: 0.875rem;
+}
+
+#application-positions {
+    margin-block: 1rem 1.5rem;
+}
+
+.application-position {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.75rem;
+    align-items: baseline;
+    inline-size: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--dm-border);
+    border-radius: var(--dm-radius);
+    cursor: pointer;
+}
+
+.application-position + .application-position {
+    margin-block-start: 0.5rem;
+}
+
+.application-position:has(:checked) {
+    border-color: var(--dm-accent);
+    background-color: var(--dm-surface);
+}
+
+.application-position:has(:disabled) {
+    cursor: default;
+}
+
+.application-position input {
+    accent-color: var(--dm-accent);
+}
+
+.application-position small {
+    grid-column: 2;
+    color: var(--dm-text-muted);
+}
+
+#application-error,
+#application-status:not(:empty) {
+    margin-block: 1rem 0;
+}
+
+#application-status:empty {
+    margin: 0;
+}
+
+@media (max-width: 48rem) {
+    .projects-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (width > 48rem) {
+    .projects-sidebar {
+        display: flex;
+        flex-direction: column;
+        align-self: start;
+        position: sticky;
+        inset-block-start: 0.75rem;
+        max-block-size: calc(100dvh - 1.5rem);
+    }
+
+    .project-filters {
+        overflow: auto;
+    }
+}

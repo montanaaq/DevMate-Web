@@ -59,15 +59,19 @@ COMMIT;
 BEGIN;
 DROP FUNCTION IF EXISTS public.search_teams(INTEGER [], INTEGER, INTEGER);
 DROP FUNCTION IF EXISTS public.search_teams(INTEGER [], INTEGER);
-CREATE FUNCTION public.search_teams(selected_skills INTEGER [], before_id INTEGER) RETURNS TABLE (
-    id INTEGER,
-    name TEXT,
-    description TEXT,
-    member_count INTEGER,
-    positions TEXT [],
-    required_skills TEXT [],
-    position_ids INTEGER []
-) LANGUAGE sql STABLE AS $$
+CREATE OR REPLACE FUNCTION public.search_teams(
+        selected_skills INTEGER [],
+        before_id INTEGER,
+        match_any_skill BOOLEAN DEFAULT FALSE
+    ) RETURNS TABLE (
+        id INTEGER,
+        name TEXT,
+        description TEXT,
+        member_count INTEGER,
+        positions TEXT [],
+        required_skills TEXT [],
+        position_ids INTEGER []
+    ) LANGUAGE sql STABLE AS $$
 SELECT t.id,
     t.name::TEXT,
     t.description::TEXT,
@@ -117,22 +121,28 @@ WHERE t.closed_at IS NULL
             AND p.is_open
             AND p.deleted_at IS NULL
     )
-    AND NOT EXISTS (
-        SELECT 1
-        FROM unnest(selected_skills) AS selected(skill_id)
-        WHERE NOT EXISTS (
-                SELECT 1
-                FROM public.team_positions p
-                    JOIN public.position_required_skills r ON r.position_id = p.id
-                    JOIN public.skills s ON s.id = r.skill_id
-                    JOIN public.skill_categories c ON c.id = s.category_id
-                WHERE p.team_id = t.id
-                    AND p.is_open
-                    AND p.deleted_at IS NULL
-                    AND s.is_active
-                    AND c.is_active
-                    AND r.skill_id = selected.skill_id
-            )
+    AND (
+        COALESCE(cardinality(selected_skills), 0) = 0
+        OR (
+            SELECT count(*)
+            FROM unnest(selected_skills) AS selected(skill_id)
+            WHERE EXISTS (
+                    SELECT 1
+                    FROM public.team_positions p
+                        JOIN public.position_required_skills r ON r.position_id = p.id
+                        JOIN public.skills s ON s.id = r.skill_id
+                        JOIN public.skill_categories c ON c.id = s.category_id
+                    WHERE p.team_id = t.id
+                        AND p.is_open
+                        AND p.deleted_at IS NULL
+                        AND s.is_active
+                        AND c.is_active
+                        AND r.skill_id = selected.skill_id
+                )
+        ) >= CASE
+            WHEN match_any_skill THEN 1
+            ELSE cardinality(selected_skills)
+        END
     )
 ORDER BY t.id DESC
 LIMIT 13;
@@ -140,7 +150,8 @@ $$;
 CREATE OR REPLACE FUNCTION public.search_teams(
         selected_skills INTEGER [],
         before_id INTEGER,
-        viewer_id INTEGER
+        viewer_id INTEGER,
+        match_any_skill BOOLEAN DEFAULT FALSE
     ) RETURNS TABLE (
         id INTEGER,
         name TEXT,
@@ -211,7 +222,7 @@ SELECT found.id,
             AND a.applicant_id = viewer_id
             AND a.status = 'pending'
     )
-FROM public.search_teams(selected_skills, before_id) found
+FROM public.search_teams(selected_skills, before_id, match_any_skill) found
     JOIN public.teams t ON t.id = found.id
 ORDER BY found.id DESC;
 $$;

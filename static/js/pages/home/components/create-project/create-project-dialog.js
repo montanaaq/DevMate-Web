@@ -1,4 +1,5 @@
-import { createTeam } from "../../../../api/teams-api.js";
+import { getCurrentUser } from "../../../../api/auth-api.js";
+import { createTeam, getTeamCatalog } from "../../../../api/teams-api.js";
 import { errorMessages } from "../../../../shared/constants/error-messages.js";
 import { clearError, showError } from "../../../../shared/ui.js";
 import { createStepper } from "../stepper.js";
@@ -9,16 +10,13 @@ import { createPositionsStep } from "./step-positions-dialog.js";
 import { createSkillsStep } from "./step-skills-dialog.js";
 import { createReviewStep } from "./step-review-dialog.js";
 
-export function initCreateProject({
-    accountRequest,
-    ensureCatalog,
-    onCreated,
-}) {
+export function initCreateProject(ensureCatalog = getTeamCatalog) {
     const dialog = document.getElementById("create-team-dialog");
     const form = document.getElementById("create-team-form");
     const fields = document.getElementById("create-team-fields");
     const error = document.getElementById("create-team-error");
     const accountError = document.getElementById("account-error");
+    const trigger = document.querySelector("[data-create-team]");
     const close = document.getElementById("close-create-team");
     const back = document.getElementById("project-back");
     const next = document.getElementById("project-next");
@@ -63,21 +61,19 @@ export function initCreateProject({
     }
 
     async function openDialog() {
-        const user = await accountRequest;
-
-        if (user === null) {
-            window.location.assign("/signin");
-            return;
-        }
-
-        if (user === undefined) {
-            return;
-        }
-
+        clearError(accountError);
         try {
-            const catalog = await ensureCatalog();
+            const user = await getCurrentUser();
+            if (user === null) {
+                window.location.assign("/signin");
+                return;
+            }
 
             if (!stepModules.length) {
+                const catalog = await ensureCatalog();
+                if (stepModules.length) {
+                    return;
+                }
                 stepModules.push(
                     createDetailsStep(sections[0], draft),
                     createPositionsStep(sections[1], draft, catalog),
@@ -107,9 +103,8 @@ export function initCreateProject({
         }
     });
 
-    document
-        .querySelector("[data-create-team]")
-        .addEventListener("click", openDialog);
+    trigger.addEventListener("click", openDialog);
+    trigger.hidden = false;
     back.addEventListener("click", () => steps.back());
 
     close.addEventListener("click", () => {
@@ -156,7 +151,7 @@ export function initCreateProject({
             stepModules.forEach((step) => step.reset());
             steps.reset();
 
-            await onCreated();
+            window.location.assign("/projects");
         } catch (cause) {
             showError(error, cause.message || errorMessages.requestFailed);
         } finally {
@@ -165,7 +160,7 @@ export function initCreateProject({
     });
 
     if (window.location.hash === "#create-project") {
-        document.querySelector("[data-create-team]").focus();
+        trigger.focus();
         openDialog();
     }
 }

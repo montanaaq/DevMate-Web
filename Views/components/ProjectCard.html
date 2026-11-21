@@ -1,0 +1,41 @@
+<article class="team-row">
+    <h3 id="team-heading-{{project.Id}}">{{project.Name}}</h3>
+    <p class="team-description">{{project.Description}}</p>
+    <p class="project-label">Looking for</p>
+    <ul class="project-tags">
+        {{#foreach position in project.Positions}}
+        <li>{{position}}</li>
+        {{/foreach}}
+    </ul>
+    <div class="project-skills">
+        <p class="project-label">Required skills</p>
+        <ul class="project-tags team-skills">
+            {{#foreach skill in project.RequiredSkills}}
+            <li>{{skill}}</li>
+            {{/foreach}}
+        </ul>
+    </div>
+    <p class="team-meta">
+        Members: {{project.MemberCount}} · Open positions:
+        {{project.Positions.Length}}
+    </p>
+    {{#if isSignedIn}} {{#if project.IsMember}}
+    <p class="team-meta">Your team</p>
+    {{else}} {{#if project.HasPendingApplication}}
+    <a href="/profile">Application pending</a>
+    {{else}}
+    <button
+        class="btn btn-primary"
+        type="button"
+        aria-haspopup="dialog"
+        aria-describedby="team-heading-{{project.Id}}"
+        data-apply-team="{{project.Id}}"
+        data-positions="{{project.ApplicationPositions}}"
+        hidden
+    >
+        Apply to join
+    </button>
+    {{/if}} {{/if}} {{else}}
+    <a href="/signin">Sign in to apply</a>
+    {{/if}}
+</article>

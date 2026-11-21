@@ -41,6 +41,7 @@ internal static class Program
         UserRole[] publicRoles = [UserRole.Guest, UserRole.User, UserRole.Admin];
 
         router.Map("GET", "/", PagesController.HomeAsync, publicRoles);
+        router.Map("GET", "/projects", PagesController.ProjectsAsync, publicRoles);
         router.Map("GET", "/signin", PagesController.SignInAsync, publicRoles);
         router.Map("GET", "/signup", PagesController.SignUpAsync, publicRoles);
 
@@ -56,7 +57,7 @@ internal static class Program
         router.Map("POST", "/api/user/social-links", users.SaveSocialLinksAsync);
 
         router.Map("GET", "/api/teams/catalog", teams.CatalogAsync, publicRoles);
-        router.Map("GET", "/api/teams", teams.SearchAsync, publicRoles);
+        router.Map("POST", "/api/teams/search", teams.SearchProjectsAsync, publicRoles);
         router.Map("POST", "/api/teams", teams.CreateAsync);
         router.Map("POST", "/api/teams/{teamId}/applications", teams.ApplyAsync);
         router.Map(
