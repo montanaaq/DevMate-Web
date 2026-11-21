@@ -8,7 +8,7 @@ namespace SkillIssue.Repositories;
 
 public interface ITeamRepository
 {
-    Task<object> GetCatalogAsync(CancellationToken cancellationToken);
+    Task<TeamCatalog> GetCatalogAsync(CancellationToken cancellationToken);
     Task<List<TeamSearchResult>> SearchAsync(
         int[] skillIds,
         int beforeId,
@@ -39,14 +39,14 @@ public interface ITeamRepository
 
 public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepository
 {
-    public async Task<object> GetCatalogAsync(CancellationToken cancellationToken)
+    public async Task<TeamCatalog> GetCatalogAsync(CancellationToken cancellationToken)
     {
         await using var command = dataSource.CreateCommand(
             "SELECT * FROM public.get_team_catalog()"
         );
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        var skills = new List<object>();
-        var categories = new List<object>();
+        var skills = new List<CatalogSkill>();
+        var categories = new List<CatalogCategory>();
 
         while (await reader.ReadAsync(cancellationToken))
         {
@@ -55,22 +55,16 @@ public sealed class TeamRepository(NpgsqlDataSource dataSource) : ITeamRepositor
             if (reader.GetString(0) == "skill")
             {
                 skills.Add(
-                    new
-                    {
-                        id,
-                        name,
-                        categoryId = reader.GetInt32(3),
-                        relatedSkillIds = reader.GetFieldValue<int[]>(4),
-                    }
+                    new CatalogSkill(id, name, reader.GetInt32(3), reader.GetFieldValue<int[]>(4))
                 );
             }
             else
             {
-                categories.Add(new { id, name });
+                categories.Add(new CatalogCategory(id, name));
             }
         }
 
-        return new { skills, categories };
+        return new TeamCatalog(skills, categories);
     }
 
     public async Task<List<TeamSearchResult>> SearchAsync(

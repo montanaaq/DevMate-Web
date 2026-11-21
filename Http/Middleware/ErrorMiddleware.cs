@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
-using SkillIssue.Http.Errors;
 using FluentValidation;
+using SkillIssue.Http.Errors;
 
 namespace SkillIssue.Http.Middleware;
 

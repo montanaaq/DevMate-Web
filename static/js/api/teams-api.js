@@ -10,14 +10,19 @@ export async function searchProjects(skillIds, before) {
     return data;
 }
 
-export function createTeam(data) {
-    return api.post("/teams", data);
+export async function createTeam(request) {
+    const { data } = await api.post("/teams", request);
+    return data;
 }
 
-export function applyToTeam(teamId, data) {
-    return api.post(`/teams/${teamId}/applications`, data);
+export async function applyToTeam(teamId, request) {
+    const { data } = await api.post(`/teams/${teamId}/applications`, request);
+    return data;
 }
 
-export function resolveTeamApplication(teamId, applicationId, decision) {
-    return api.post(`/teams/${teamId}/applications/${applicationId}`, { decision });
+export async function resolveTeamApplication(teamId, applicationId, decision) {
+    const { data } = await api.post(`/teams/${teamId}/applications/${applicationId}`, {
+        decision,
+    });
+    return data;
 }

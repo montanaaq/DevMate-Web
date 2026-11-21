@@ -17,7 +17,24 @@ public sealed class TeamController(ITeamRepository repository)
 
     public async Task CatalogAsync(RequestContext context)
     {
-        await context.WriteJsonAsync(await repository.GetCatalogAsync(context.CancellationToken));
+        var catalog = await repository.GetCatalogAsync(context.CancellationToken);
+        await context.WriteJsonAsync(
+            new
+            {
+                skills = catalog.Skills.Select(skill => new
+                {
+                    id = skill.Id,
+                    name = skill.Name,
+                    categoryId = skill.CategoryId,
+                    relatedSkillIds = skill.RelatedSkillIds,
+                }),
+                categories = catalog.Categories.Select(category => new
+                {
+                    id = category.Id,
+                    name = category.Name,
+                }),
+            }
+        );
     }
 
     public async Task SearchProjectsAsync(RequestContext context)

@@ -1,4 +1,4 @@
-namespace SkillIssue.Http.Middleware;
+namespace SkillIssue.Http;
 
 public sealed class MiddlewarePipeline
 {
