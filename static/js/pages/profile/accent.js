@@ -1,6 +1,6 @@
-import { ACCENT_PRESETS, ACCENT_STORAGE_KEY, DIM_ACCENT_BRIGHTNESS } from "../../shared/constants/accent.js";
-import { applyAccent } from "../../shared/accent.js";
-import { $, textElement } from "../../shared/dom.js";
+import { ACCENT_PRESETS, ACCENT_STORAGE_KEY, DIM_ACCENT_BRIGHTNESS } from "@shared/constants/accent.js";
+import { applyAccent } from "@shared/accent.js";
+import { $, textElement } from "@shared/dom.js";
 
 export function initAccent() {
     const picker = $("accent-presets");

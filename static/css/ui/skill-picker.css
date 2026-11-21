@@ -11,7 +11,33 @@
 
 .skill-suggestions {
     max-block-size: 10.5rem;
-    overflow-y: auto;
+    overflow-y: scroll;
+    background:
+        linear-gradient(transparent, var(--dm-background) 50%) bottom / 100%
+            1rem no-repeat local,
+        linear-gradient(transparent, var(--dm-border)) bottom / 100% 0.5rem
+            no-repeat,
+        var(--dm-background);
+}
+
+@supports selector(::-webkit-scrollbar) {
+    .skill-suggestions::-webkit-scrollbar {
+        width: 0.75rem;
+    }
+
+    .skill-suggestions::-webkit-scrollbar-track {
+        background-color: var(--dm-surface);
+    }
+
+    .skill-suggestions::-webkit-scrollbar-thumb {
+        background-color: var(--dm-accent);
+    }
+}
+
+@supports not selector(::-webkit-scrollbar) {
+    .skill-suggestions {
+        scrollbar-color: var(--dm-accent) var(--dm-surface);
+    }
 }
 
 .skill-picker ul:empty {

@@ -1,7 +1,7 @@
 import { getCurrentUser } from "../../../../api/auth-api.js";
 import { createTeam, getTeamCatalog } from "../../../../api/teams-api.js";
-import { errorMessages } from "../../../../shared/constants/error-messages.js";
-import { clearError, showError } from "../../../../shared/ui.js";
+import { errorMessages } from "@shared/constants/error-messages.js";
+import { clearError, showError } from "@shared/ui.js";
 import { createStepper } from "../stepper.js";
 import { createDraft } from "./draft.js";
 import { updateCharacterCount } from "./form-fields.js";

@@ -1,6 +1,6 @@
-import { HttpError } from "../../../shared/http.js";
-import { errorMessages } from "../../../shared/constants/error-messages.js";
-import { clearError, showError } from "../../../shared/ui.js";
+import { HttpError } from "@shared/http.js";
+import { errorMessages } from "@shared/constants/error-messages.js";
+import { clearError, showError } from "@shared/ui.js";
 
 export function clearFieldError(input) {
     input.classList.remove("is-invalid");

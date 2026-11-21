@@ -1,8 +1,8 @@
 import { getProfile } from "../api/auth-api.js";
 import { resolveTeamApplication } from "../api/teams-api.js";
-import { $, textElement } from "../shared/dom.js";
-import { APPLICATION_STATUSES } from "../shared/constants/applications.js";
-import { clearError, showError } from "../shared/ui.js";
+import { $, textElement } from "@shared/dom.js";
+import { APPLICATION_STATUSES } from "@shared/constants/applications.js";
+import { clearError, showError } from "@shared/ui.js";
 import { formatDate, renderProjects } from "./profile/render.js";
 
 const projects = $("profile-teams");

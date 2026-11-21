@@ -1,6 +1,6 @@
 import { signIn, signUp } from "../../api/auth-api.js";
-import { errorMessages } from "../../shared/constants/error-messages.js";
-import { clearError } from "../../shared/ui.js";
+import { errorMessages } from "@shared/constants/error-messages.js";
+import { clearError } from "@shared/ui.js";
 import {
     clearFieldError,
     clearFormErrors,

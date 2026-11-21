@@ -5,11 +5,11 @@ import {
     signOut,
 } from "../../api/auth-api.js";
 import { getTeamCatalog } from "../../api/teams-api.js";
-import { errorMessages } from "../../shared/constants/error-messages.js";
-import { clearError, showError } from "../../shared/ui.js";
+import { errorMessages } from "@shared/constants/error-messages.js";
+import { clearError, showError } from "@shared/ui.js";
 import { initAccent } from "./accent.js";
-import { $ } from "../../shared/dom.js";
-import { createSkillPicker } from "../home/components/skill-picker.js";
+import { $ } from "@shared/dom.js";
+import { createSkillPicker } from "@shared/skill-picker.js";
 import { renderApplications } from "./render.js";
 import { initSocialLinks, renderLinks } from "./social-links.js";
 

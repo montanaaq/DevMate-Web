@@ -1,14 +1,14 @@
 import { getProfile } from "../api/auth-api.js";
 import { getTeamCatalog, searchProjects } from "../api/teams-api.js";
-import { errorMessages } from "../shared/constants/error-messages.js";
+import { errorMessages } from "@shared/constants/error-messages.js";
 import {
     loadProjectSkillFilters,
     saveProjectSkillFilters,
-} from "../shared/project-skill-filters.js";
-import { clearError, showError } from "../shared/ui.js";
+} from "@shared/project-skill-filters.js";
+import { clearError, showError } from "@shared/ui.js";
 import { openApplicationDialog } from "./home/components/application-dialog.js";
 import { initCreateProject } from "./home/components/create-project/create-project-dialog.js";
-import { createSkillPicker } from "./home/components/skill-picker.js";
+import { createSkillPicker } from "@shared/skill-picker.js";
 
 const form = document.getElementById("project-filters");
 const fields = form.querySelector("fieldset");

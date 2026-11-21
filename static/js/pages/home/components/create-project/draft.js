@@ -1,4 +1,4 @@
-import { plural } from "../../../../shared/dom.js";
+import { plural } from "@shared/dom.js";
 
 export const createDraft = () => ({ name: "", description: "", positions: [] });
 export const createPosition = () => ({

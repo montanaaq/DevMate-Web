@@ -1,6 +1,6 @@
 import { applyToTeam } from "../../../api/teams-api.js";
-import { createLink, textElement } from "../../../shared/dom.js";
-import { clearError, showError } from "../../../shared/ui.js";
+import { createLink, textElement } from "@shared/dom.js";
+import { clearError, showError } from "@shared/ui.js";
 
 const dialog = document.getElementById("application-dialog");
 const form = document.getElementById("application-form");
@@ -95,11 +95,15 @@ export function openApplicationDialog(team, trigger, refreshTeams) {
             status.append(`Application sent for ${position.title}. `, profile);
             profile.focus();
 
-            dialog.addEventListener("close", () => {
-                const link = createLink("Application pending", "/profile");
-                trigger.replaceWith(link);
-                link.focus();
-            }, { once: true });
+            dialog.addEventListener(
+                "close",
+                () => {
+                    const link = createLink("Application pending", "/profile");
+                    trigger.replaceWith(link);
+                    link.focus();
+                },
+                { once: true },
+            );
         } catch (cause) {
             showError(error, cause.message);
             if (cause.status === 409 || cause.status === 401) {

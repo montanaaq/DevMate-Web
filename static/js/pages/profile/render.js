@@ -1,5 +1,5 @@
-import { APPLICATION_STATUSES } from "../../shared/constants/applications.js";
-import { $, createLink, plural, textElement } from "../../shared/dom.js";
+import { APPLICATION_STATUSES } from "@shared/constants/applications.js";
+import { $, createLink, plural, textElement } from "@shared/dom.js";
 
 function createRow({ name, meta, status, className, body }) {
     const row = document.createElement("details");

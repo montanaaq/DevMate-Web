@@ -1,8 +1,8 @@
-import { MAX_SOCIAL_LINKS } from "../../shared/constants/limits.js";
+import { MAX_SOCIAL_LINKS } from "@shared/constants/limits.js";
 import { saveSocialLinks } from "../../api/auth-api.js";
-import { errorMessages } from "../../shared/constants/error-messages.js";
-import { clearError, showError } from "../../shared/ui.js";
-import { $, createLink } from "../../shared/dom.js";
+import { errorMessages } from "@shared/constants/error-messages.js";
+import { clearError, showError } from "@shared/ui.js";
+import { $, createLink } from "@shared/dom.js";
 
 const form = $("social-form");
 const fields = $("social-fields");

@@ -1,8 +1,8 @@
 import { getTeamCatalog } from "../../api/teams-api.js";
-import { errorMessages } from "../../shared/constants/error-messages.js";
-import { saveProjectSkillFilters } from "../../shared/project-skill-filters.js";
+import { errorMessages } from "@shared/constants/error-messages.js";
+import { saveProjectSkillFilters } from "@shared/project-skill-filters.js";
 import { initCreateProject } from "./components/create-project/create-project-dialog.js";
-import { createSkillPicker } from "./components/skill-picker.js";
+import { createSkillPicker } from "@shared/skill-picker.js";
 
 const searchForm = document.getElementById("search-form");
 const searchInput = document.getElementById("skill-query");

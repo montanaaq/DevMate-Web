@@ -1,4 +1,4 @@
-import { createSkillPicker } from "../skill-picker.js";
+import { createSkillPicker } from "@shared/skill-picker.js";
 import { formatPlaces } from "./draft.js";
 import { reportFirstInvalid } from "./form-fields.js";
 

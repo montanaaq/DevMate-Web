@@ -1,5 +1,5 @@
-import { HttpError } from "../shared/http.js";
-import { errorMessages } from "../shared/constants/error-messages.js";
+import { HttpError } from "@shared/http.js";
+import { errorMessages } from "@shared/constants/error-messages.js";
 import { api } from "./client.js";
 
 export function signUp(data) {
